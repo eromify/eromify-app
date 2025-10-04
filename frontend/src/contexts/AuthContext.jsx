@@ -139,15 +139,10 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      console.log('Attempting login with:', { email, password: '***' })
-      console.log('API URL:', api.defaults.baseURL)
-      
       const response = await api.post('/auth/login', {
         email,
         password
       })
-      
-      console.log('Login response:', response.data)
       
       if (response.data.success) {
         localStorage.setItem('token', response.data.token)
@@ -156,8 +151,6 @@ export const AuthProvider = ({ children }) => {
       
       return { data: response.data, error: null }
     } catch (error) {
-      console.error('Login error:', error)
-      console.error('Error response:', error.response?.data)
       return { data: null, error: error.response?.data?.error || 'Login failed' }
     }
   }
