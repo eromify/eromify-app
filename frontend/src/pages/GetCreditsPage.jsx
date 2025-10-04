@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
-import { createCheckoutSession } from '../services/paymentService'
+import paymentService from '../services/paymentService'
 
 const GetCreditsPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
@@ -9,7 +9,7 @@ const GetCreditsPage = () => {
   const handleSubscribe = async (plan) => {
     try {
       setLoading(true)
-      const { url } = await createCheckoutSession(plan, billingToggle)
+      const { url } = await paymentService.createCheckoutSession(plan, billingToggle)
       window.location.href = url
     } catch (error) {
       console.error('Error creating checkout session:', error)

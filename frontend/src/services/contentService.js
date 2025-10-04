@@ -2,8 +2,8 @@ import api from '../utils/api'
 
 export const contentService = {
   // Get all content for user
-  getContent: async () => {
-    const response = await api.get('/content')
+  getContent: async (params = {}) => {
+    const response = await api.get('/content', { params })
     return response.data
   },
 
@@ -19,9 +19,15 @@ export const contentService = {
     return response.data
   },
 
-  // Update content
-  updateContent: async (id, contentData) => {
-    const response = await api.put(`/content/${id}`, contentData)
+  // Generate AI image
+  generateImage: async (imageData) => {
+    const response = await api.post('/content/generate-image', imageData)
+    return response.data
+  },
+
+  // Upscale image
+  upscaleImage: async (imageData) => {
+    const response = await api.post('/content/upscale-image', imageData)
     return response.data
   },
 
@@ -33,3 +39,4 @@ export const contentService = {
 }
 
 export default contentService
+
