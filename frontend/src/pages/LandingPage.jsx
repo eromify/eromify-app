@@ -276,7 +276,7 @@ const LandingPage = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 bg-black">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
@@ -318,19 +318,23 @@ const LandingPage = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Builder Plan */}
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 relative">
+            <div className="bg-gray-950 border border-gray-800 rounded-2xl p-8 relative">
               <div className="text-center mb-8">
                 <h3 className="text-xl font-semibold mb-2">Builder</h3>
                 <p className="text-gray-400 text-sm mb-4">For growing creators</p>
-                <div className="mb-2">
+                <div className="mb-6">
                   <span className="text-5xl font-semibold">
                     {billingToggle === 'monthly' ? '$12' : '$9'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
-                {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-sm">Billed $108 yearly</p>
-                )}
+                
+                {/* Credits and Training - Accentuated */}
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-5 h-5 bg-yellow-500 rounded-sm mr-2"></div>
+                  <span className="text-yellow-500 font-semibold">500 credits</span>
+                </div>
+                <div className="text-white font-medium mb-6">1 Influencer Training</div>
               </div>
               
               <div className="space-y-3 mb-8">
@@ -378,9 +382,9 @@ const LandingPage = () => {
             </div>
 
             {/* Launch Plan - Featured */}
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 relative">
+            <div className="bg-gray-950 border border-gray-800 rounded-2xl p-8 relative">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-gray-700 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <div className="bg-gray-900 border border-pink-500 text-white px-4 py-1 rounded-full text-sm font-medium">
                   Most Popular
                 </div>
               </div>
@@ -388,15 +392,19 @@ const LandingPage = () => {
               <div className="text-center mb-8">
                 <h3 className="text-xl font-semibold mb-2">Launch</h3>
                 <p className="text-gray-400 text-sm mb-4">Ready to scale</p>
-                <div className="mb-2">
+                <div className="mb-6">
                   <span className="text-5xl font-semibold">
                     {billingToggle === 'monthly' ? '$25' : '$19'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
-                {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-sm">Billed $228 yearly</p>
-                )}
+                
+                {/* Credits and Training - Accentuated */}
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-5 h-5 bg-yellow-500 rounded-sm mr-2"></div>
+                  <span className="text-yellow-500 font-semibold">2,000 credits</span>
+                </div>
+                <div className="text-white font-medium mb-6">2 Influencer Trainings</div>
               </div>
               
               <div className="space-y-3 mb-8">
@@ -444,19 +452,23 @@ const LandingPage = () => {
             </div>
 
             {/* Growth Plan */}
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 relative">
+            <div className="bg-gray-950 border border-gray-800 rounded-2xl p-8 relative">
               <div className="text-center mb-8">
                 <h3 className="text-xl font-semibold mb-2">Growth</h3>
                 <p className="text-gray-400 text-sm mb-4">Best for businesses</p>
-                <div className="mb-2">
+                <div className="mb-6">
                   <span className="text-5xl font-semibold">
                     {billingToggle === 'monthly' ? '$79' : '$65'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
-                {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-sm">Billed $780 yearly</p>
-                )}
+                
+                {/* Credits and Training - Accentuated */}
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-5 h-5 bg-yellow-500 rounded-sm mr-2"></div>
+                  <span className="text-yellow-500 font-semibold">8,000 credits</span>
+                </div>
+                <div className="text-white font-medium mb-6">5 Influencer Trainings</div>
               </div>
               
               <div className="space-y-3 mb-8">
