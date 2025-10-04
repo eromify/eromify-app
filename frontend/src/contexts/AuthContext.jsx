@@ -17,44 +17,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Handle OAuth callback from URL hash
-    const handleOAuthCallback = async () => {
-      console.log('Checking for OAuth callback...', window.location.hash)
-      const hashParams = new URLSearchParams(window.location.hash.substring(1))
-      const accessToken = hashParams.get('access_token')
-      const refreshToken = hashParams.get('refresh_token')
-      
-      if (accessToken) {
-        console.log('OAuth callback detected, processing tokens...', accessToken.substring(0, 20) + '...')
-        
-        // Store the tokens
-        localStorage.setItem('token', accessToken)
-        if (refreshToken) {
-          localStorage.setItem('refresh_token', refreshToken)
-        }
-        
-        console.log('Tokens stored, waiting for auth state...')
-        
-        // Clear the hash
-        window.location.hash = ''
-        
-        // Wait a bit for Supabase to process the auth state
-        setTimeout(() => {
-          console.log('Redirecting to dashboard...')
-          window.location.href = '/dashboard'
-        }, 1000)
-        return
-      }
-    }
-
-    // Check for OAuth callback first
-    handleOAuthCallback()
-
     // Check for existing token and get user profile
     const token = localStorage.getItem('token')
-    if (token && !window.location.hash.includes('access_token')) {
+    if (token) {
       getUserProfileFromToken()
-    } else if (!window.location.hash.includes('access_token')) {
+    } else {
       setLoading(false)
     }
 
