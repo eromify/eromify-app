@@ -277,26 +277,28 @@ const LandingPage = () => {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
             <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
               Pricing
             </div>
-            <h2 className="text-4xl md:text-5xl font-semibold mb-4">
-              Choose Your{' '}
+            <h2 className="text-5xl md:text-6xl font-bold mb-6">
+              Simple, Transparent{' '}
               <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                Plan
+                Pricing
               </span>
             </h2>
-            <p className="text-xl text-gray-300 mb-8">Start building your AI influencer empire today</p>
+            <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
+              Choose the perfect plan to start building your AI influencer empire. No hidden fees, cancel anytime.
+            </p>
             
-            <div className="flex items-center justify-center">
-              <div className="bg-gray-900 w-60 p-1 rounded-xl">
+            <div className="flex items-center justify-center mb-16">
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 w-80 p-1 rounded-2xl">
                 <button
                   onClick={() => setBillingToggle('monthly')}
-                  className={`px-8 py-2 text-sm rounded-lg flex-1 transition-all duration-200 ${
+                  className={`px-8 py-3 text-sm rounded-xl flex-1 transition-all duration-300 font-medium ${
                     billingToggle === 'monthly'
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'
+                      ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-pink-500/25'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
@@ -304,203 +306,251 @@ const LandingPage = () => {
                 </button>
                 <button
                   onClick={() => setBillingToggle('yearly')}
-                  className={`px-8 py-2 text-sm rounded-lg flex-1 transition-all duration-200 ${
+                  className={`px-8 py-3 text-sm rounded-xl flex-1 transition-all duration-300 font-medium relative ${
                     billingToggle === 'yearly'
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'
+                      ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-pink-500/25'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   Yearly
+                  <span className="absolute -top-2 -right-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                    Save 25%
+                  </span>
                 </button>
               </div>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Builder Plan */}
-            <div className="bg-black border border-gray-800 rounded-2xl p-8 relative">
+            <div className="group relative bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-8 hover:border-pink-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/10">
               <div className="text-center mb-8">
-                <h3 className="text-xl font-semibold mb-2">Builder</h3>
-                <p className="text-gray-400 text-sm mb-4">For growing creators</p>
-                <div className="mb-2">
-                  <span className="text-5xl font-semibold">
+                <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 text-pink-300 mb-4">
+                  Starter
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Builder</h3>
+                <p className="text-gray-400 mb-6">Perfect for getting started</p>
+                <div className="mb-4">
+                  <span className="text-6xl font-bold bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
                     {billingToggle === 'monthly' ? '$12' : '$9'}
                   </span>
-                  <span className="text-gray-400">/mo</span>
+                  <span className="text-gray-400 text-lg ml-2">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-sm">Billed $108 yearly</p>
+                  <p className="text-green-400 text-sm font-medium">Save $36/year</p>
                 )}
               </div>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">500 credits/mo</span>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">500 credits/month</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">1 influencer training</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">1 AI influencer training</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  <span className="text-sm">Image & video generation</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Image & video generation</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Video face swap</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Content templates</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Access to all features</span>
-                </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Standard support</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Email support</span>
                 </div>
               </div>
               
-              <Link to="/register" className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all text-center block">
-                Get Credits
+              <Link to="/register" className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-4 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-600 transition-all text-center block shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-105">
+                Start Building
               </Link>
             </div>
 
-            {/* Launch Plan */}
-            <div className="bg-black border border-gray-800 rounded-2xl p-8 relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Most Popular
+            {/* Launch Plan - Featured */}
+            <div className="group relative bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-sm border-2 border-pink-500/50 rounded-3xl p-8 hover:border-pink-400 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/20 transform lg:scale-105">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-pink-500/25">
+                  ⭐ Most Popular
                 </div>
               </div>
               
               <div className="text-center mb-8">
-                <h3 className="text-xl font-semibold mb-2">Launch</h3>
-                <p className="text-gray-400 text-sm mb-4">Ready to scale</p>
-                <div className="mb-2">
-                  <span className="text-5xl font-semibold">
+                <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-pink-500/30 to-purple-500/30 border border-pink-500/50 text-pink-300 mb-4">
+                  Professional
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Launch</h3>
+                <p className="text-gray-300 mb-6">For serious creators</p>
+                <div className="mb-4">
+                  <span className="text-6xl font-bold bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
                     {billingToggle === 'monthly' ? '$25' : '$19'}
                   </span>
-                  <span className="text-gray-400">/mo</span>
+                  <span className="text-gray-400 text-lg ml-2">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-sm">Billed $228 yearly</p>
+                  <p className="text-green-400 text-sm font-medium">Save $72/year</p>
                 )}
               </div>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">2,000 credits/mo</span>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">2,000 credits/month</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">2 influencer trainings</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">2 AI influencer trainings</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Image & video generation</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Advanced video generation</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Video face swap</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Voice cloning</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Access to all features</span>
-                </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Standard support</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Priority support</span>
                 </div>
               </div>
               
-              <Link to="/register" className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all text-center block">
-                Get Credits
+              <Link to="/register" className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-4 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-600 transition-all text-center block shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-105">
+                Launch Now
               </Link>
             </div>
 
             {/* Growth Plan */}
-            <div className="bg-black border border-gray-800 rounded-2xl p-8 relative">
+            <div className="group relative bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-8 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/10">
               <div className="text-center mb-8">
-                <h3 className="text-xl font-semibold mb-2">Growth</h3>
-                <p className="text-gray-400 text-sm mb-4">Best for businesses</p>
-                <div className="mb-2">
-                  <span className="text-5xl font-semibold">
+                <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 mb-4">
+                  Enterprise
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Growth</h3>
+                <p className="text-gray-400 mb-6">For agencies & businesses</p>
+                <div className="mb-4">
+                  <span className="text-6xl font-bold bg-gradient-to-r from-purple-400 to-pink-300 bg-clip-text text-transparent">
                     {billingToggle === 'monthly' ? '$79' : '$65'}
                   </span>
-                  <span className="text-gray-400">/mo</span>
+                  <span className="text-gray-400 text-lg ml-2">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-sm">Billed $780 yearly</p>
+                  <p className="text-green-400 text-sm font-medium">Save $168/year</p>
                 )}
               </div>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">8,000 credits/mo</span>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">8,000 credits/month</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">5 influencer trainings</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">5 AI influencer trainings</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Image & video generation</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Unlimited generations</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Video face swap</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">White-label options</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Access to all features</span>
-                </div>
-                <div className="flex items-center py-2 px-4 bg-gray-900 rounded-lg">
-                  <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm">Priority support</span>
+                <div className="flex items-center py-3 px-4 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-4">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Dedicated support</span>
                 </div>
               </div>
               
-              <Link to="/register" className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all text-center block">
-                Get Credits
+              <Link to="/register" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-4 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all text-center block shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105">
+                Scale Up
               </Link>
+            </div>
+          </div>
+          
+          <div className="text-center mt-16">
+            <p className="text-gray-400 mb-6">All plans include 14-day free trial • Cancel anytime • No setup fees</p>
+            <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                SSL Security
+              </div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                GDPR Compliant
+              </div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                99.9% Uptime
+              </div>
             </div>
           </div>
         </div>
