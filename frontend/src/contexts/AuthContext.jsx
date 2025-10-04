@@ -32,15 +32,23 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('refresh_token', refreshToken)
         }
         
-        // Get the session from Supabase
-        const { data: { session }, error } = await supabase.auth.getSession()
-        if (session?.user) {
-          await getUserProfile(session.user)
-          // Clear the hash and redirect to dashboard
-          window.location.hash = ''
-          window.location.href = '/dashboard'
-          return
-        }
+        // Clear the hash immediately
+        window.location.hash = ''
+        
+        // Wait a bit for Supabase to process the session
+        setTimeout(async () => {
+          const { data: { session }, error } = await supabase.auth.getSession()
+          if (session?.user) {
+            await getUserProfile(session.user)
+            // Redirect to dashboard
+            window.location.href = '/dashboard'
+          } else {
+            console.error('No session found after OAuth callback')
+            setLoading(false)
+          }
+        }, 100)
+        
+        return
       }
     }
 
@@ -58,10 +66,18 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth changes (for Google OAuth)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.email)
+      
       if (session?.user) {
         // Get user profile from backend
         await getUserProfile(session.user)
+        
+        // If this is a SIGNED_IN event and we have OAuth tokens in URL, redirect to dashboard
+        if (event === 'SIGNED_IN' && window.location.hash.includes('access_token')) {
+          window.location.hash = ''
+          window.location.href = '/dashboard'
+        }
       } else {
         setUser(null)
         setLoading(false)
