@@ -11,7 +11,10 @@ const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
+    console.log('Auth middleware - token received:', token ? token.substring(0, 20) + '...' : 'no token');
+
     if (!token) {
+      console.log('Auth middleware - no token provided');
       return res.status(401).json({ 
         success: false, 
         error: 'Access token required' 
@@ -19,15 +22,18 @@ const authenticateToken = async (req, res, next) => {
     }
 
     // Verify Supabase JWT token
+    console.log('Auth middleware - verifying token with Supabase...');
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
     if (error || !user) {
+      console.log('Auth middleware - Supabase verification failed:', error);
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid token' 
       });
     }
 
+    console.log('Auth middleware - token verified, user:', user.email);
     req.user = {
       id: user.id,
       email: user.email
