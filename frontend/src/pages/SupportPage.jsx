@@ -7,7 +7,7 @@ const SupportPage = () => {
       <div className="p-8">
         <div className="max-w-4xl mx-auto">
           {/* Support Card */}
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
+          <div className="bg-black border border-gray-800 rounded-2xl p-8 text-center">
             {/* Large Icon */}
             <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center">
               <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center">
@@ -28,11 +28,11 @@ const SupportPage = () => {
                 Send us an email and we'll get back to you as soon as possible
               </p>
               
-              {/* Contact Button */}
-              <button className="bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-600 transition-colors flex items-center mx-auto">
+              {/* Contact Info */}
+              <div className="flex items-center justify-center text-purple-400">
                 <Mail className="h-5 w-5 mr-2" />
-                Contact admin@eromify.com
-              </button>
+                <span>admin@eromify.com</span>
+              </div>
             </div>
             
             {/* Response Time */}

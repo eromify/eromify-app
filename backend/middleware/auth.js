@@ -19,7 +19,7 @@ const authenticateToken = async (req, res, next) => {
     }
 
     // Verify JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');
 
     req.user = {
       id: decoded.userId,

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { createClient } = require('@supabase/supabase-js');
-const auth = require('../middleware/auth');
+const { authenticateToken } = require('../middleware/auth');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -50,7 +51,7 @@ const PRICING_PLANS = {
 };
 
 // Create Stripe checkout session
-router.post('/create-checkout-session', auth, async (req, res) => {
+router.post('/create-checkout-session', authenticateToken, async (req, res) => {
   try {
     const { plan, billing } = req.body;
     const userId = req.user.id;
@@ -230,7 +231,7 @@ async function handleSubscriptionCancellation(subscription) {
 }
 
 // Get user subscription status
-router.get('/subscription', auth, async (req, res) => {
+router.get('/subscription', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -259,7 +260,7 @@ router.get('/subscription', auth, async (req, res) => {
 });
 
 // Cancel subscription
-router.post('/cancel-subscription', auth, async (req, res) => {
+router.post('/cancel-subscription', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
 

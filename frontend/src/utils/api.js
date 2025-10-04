@@ -30,10 +30,18 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token')
-      delete api.defaults.headers.common['Authorization']
-      window.location.href = '/login'
+      // Only redirect to login if we're not already on the login page
+      // and if this is a real authentication error (not mock mode)
+      const currentPath = window.location.pathname
+      if (currentPath !== '/login' && currentPath !== '/register') {
+        console.warn('Authentication error - token may be invalid')
+        // Don't auto-redirect in development mode
+        if (import.meta.env.PROD) {
+          localStorage.removeItem('token')
+          delete api.defaults.headers.common['Authorization']
+          window.location.href = '/login'
+        }
+      }
     }
     return Promise.reject(error)
   }

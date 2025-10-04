@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import { Users, Plus, Sparkles } from 'lucide-react'
 
 const GeneratePage = () => {
+  const navigate = useNavigate()
   return (
     <DashboardLayout>
       <div className="p-8">
@@ -22,7 +24,10 @@ const GeneratePage = () => {
             </p>
             
             {/* Call to Action Button */}
-            <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center mx-auto">
+            <button 
+              onClick={() => navigate('/dashboard')}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center mx-auto"
+            >
               <Plus className="h-5 w-5 mr-2" />
               Create New Influencer
             </button>

@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
+import LimitReachedModal from '../components/LimitReachedModal'
 import { Plus, Package } from 'lucide-react'
 
 const ProductsPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showProductLimitModal, setShowProductLimitModal] = useState(false)
 
   const handleCreateSuccess = () => {
     setShowCreateModal(false)
@@ -23,13 +25,13 @@ const ProductsPage = () => {
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="flex items-center bg-purple-600 text-white px-4 py-2 rounded-lg">
-                <Package className="h-5 w-5 mr-2" />
-                <span>0 Products</span>
+              <div className="flex items-center bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30 text-white px-4 py-2 rounded-lg">
+                <Package className="h-5 w-5 mr-2 text-purple-400" />
+                <span>0/0 Products</span>
               </div>
               <button 
-                onClick={() => setShowCreateModal(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all duration-200 flex items-center"
+                onClick={() => setShowProductLimitModal(true)}
+                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Add New Product
@@ -47,8 +49,8 @@ const ProductsPage = () => {
               Add your first product to start building your product collection
             </p>
             <button 
-              onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all duration-200 flex items-center mx-auto"
+              onClick={() => setShowProductLimitModal(true)}
+              className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center mx-auto"
             >
               <Plus className="h-6 w-6 mr-3" />
               Add Your First Product
@@ -56,6 +58,13 @@ const ProductsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Limit Reached Modal */}
+      <LimitReachedModal
+        isOpen={showProductLimitModal}
+        onClose={() => setShowProductLimitModal(false)}
+        type="product"
+      />
     </DashboardLayout>
   )
 }

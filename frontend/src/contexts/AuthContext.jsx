@@ -17,18 +17,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        // Get user profile from backend
-        getUserProfile(session.user)
-      } else {
-        setUser(null)
-        setLoading(false)
-      }
-    })
+    // Check for existing token and get user profile
+    const token = localStorage.getItem('token')
+    if (token) {
+      getUserProfileFromToken()
+    } else {
+      setLoading(false)
+    }
 
-    // Listen for auth changes
+    // Listen for auth changes (for Google OAuth)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -44,6 +41,24 @@ export const AuthProvider = ({ children }) => {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  const getUserProfileFromToken = async () => {
+    try {
+      const response = await api.get('/auth/me')
+      if (response.data.success) {
+        setUser(response.data.user)
+      } else {
+        setUser(null)
+        localStorage.removeItem('token')
+      }
+    } catch (error) {
+      console.error('Failed to get user profile from token:', error)
+      setUser(null)
+      localStorage.removeItem('token')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getUserProfile = async (supabaseUser) => {
     try {
@@ -126,6 +141,19 @@ export const AuthProvider = ({ children }) => {
     return { error }
   }
 
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout')
+    } catch (error) {
+      console.error('Backend logout failed:', error)
+    }
+    
+    const { error } = await supabase.auth.signOut()
+    setUser(null)
+    localStorage.removeItem('token')
+    return { error }
+  }
+
   const value = {
     user,
     loading,
@@ -133,6 +161,7 @@ export const AuthProvider = ({ children }) => {
     signIn,
     signInWithGoogle,
     signOut,
+    logout,
   }
 
   return (

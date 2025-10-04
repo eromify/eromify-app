@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import { CreditCard } from 'lucide-react'
 
 const ManageSubscriptionPage = () => {
+  const navigate = useNavigate()
   return (
     <DashboardLayout>
       <div className="p-8">
@@ -19,7 +21,7 @@ const ManageSubscriptionPage = () => {
             <div className="text-center">
               {/* Large Icon */}
               <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                <div className="w-20 h-20 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+                <div className="w-20 h-20 bg-black rounded-lg flex items-center justify-center">
                   <CreditCard className="h-10 w-10 text-gray-400" />
                 </div>
               </div>
@@ -31,7 +33,10 @@ const ManageSubscriptionPage = () => {
               </p>
               
               {/* Call to Action Button */}
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+              <button 
+                onClick={() => navigate('/credits')}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
+              >
                 Browse Plans
               </button>
             </div>

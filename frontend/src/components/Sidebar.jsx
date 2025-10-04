@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import { 
   Compass, 
   Users, 
@@ -17,11 +18,13 @@ import {
   Settings,
   Clock,
   User,
-  HelpCircle
+  HelpCircle,
+  LogOut
 } from 'lucide-react'
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [showSignOut, setShowSignOut] = useState(false)
   const [expandedSections, setExpandedSections] = useState({
     overview: true,
     tools: true,
@@ -30,6 +33,22 @@ const Sidebar = () => {
   })
   const navigate = useNavigate()
   const location = useLocation()
+  const { user, logout } = useAuth()
+  const userSectionRef = useRef(null)
+
+  // Close sign out dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userSectionRef.current && !userSectionRef.current.contains(event.target)) {
+        setShowSignOut(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -39,6 +58,11 @@ const Sidebar = () => {
   }
 
   const isActive = (path) => location.pathname === path
+
+  const handleSignOut = () => {
+    logout()
+    navigate('/login')
+  }
 
   const navigationItems = {
     overview: [
@@ -67,9 +91,9 @@ const Sidebar = () => {
   const NavItem = ({ item, isCollapsed }) => (
     <button
       onClick={() => navigate(item.path)}
-      className={`w-full flex items-center px-4 py-3 text-left transition-all duration-200 rounded-lg mb-1 ${
+              className={`w-full flex items-center px-3 py-2 text-left transition-all duration-200 rounded-lg mb-1 ${
         item.active 
-          ? 'bg-purple-500 text-white' 
+          ? 'bg-gradient-to-l from-purple-900 to-[#601a2f] text-white' 
           : 'text-gray-300 hover:text-white hover:bg-gray-800'
       }`}
     >
@@ -79,11 +103,11 @@ const Sidebar = () => {
   )
 
   const NavSection = ({ title, items, sectionKey }) => (
-    <div className="mb-6">
+            <div className="mb-6">
       {!isCollapsed && (
         <button
           onClick={() => toggleSection(sectionKey)}
-          className="w-full flex items-center justify-between px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-2 text-gray-400 hover:text-white transition-colors"
         >
           <span className="text-xs font-semibold uppercase tracking-wider">{title}</span>
           {expandedSections[sectionKey] ? (
@@ -104,20 +128,14 @@ const Sidebar = () => {
     </div>
   )
 
-  return (
-    <div className={`bg-gray-900 border-r border-gray-800 flex flex-col transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-64'
-    }`}>
+          return (
+            <div className={`bg-black border-r border-gray-900 flex flex-col transition-all duration-300 fixed h-screen ${
+              isCollapsed ? 'w-16' : 'w-56'
+            }`}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-800">
-        <div className="flex items-center justify-between">
-          {!isCollapsed && (
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-white">
-                Eromify
-              </h1>
-            </div>
-          )}
+      <div className="h-14 flex items-center px-4 border-b border-gray-900 flex-shrink-0">
+        {!isCollapsed && <img src="/logo copy.png" alt="Eromify" className="h-7 w-auto" />}
+        {isCollapsed && (
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="p-1 text-gray-400 hover:text-white transition-colors"
@@ -126,11 +144,23 @@ const Sidebar = () => {
               <div className="w-4 h-4 border border-gray-400 rounded"></div>
             </div>
           </button>
-        </div>
+        )}
+        {!isCollapsed && (
+          <div className="flex-1 flex justify-end">
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1 text-gray-400 hover:text-white transition-colors"
+            >
+              <div className="w-6 h-6 flex items-center justify-center">
+                <div className="w-4 h-4 border border-gray-400 rounded"></div>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 px-3 py-6 overflow-y-auto">
+              <div className="flex-1 px-3 py-6 overflow-y-auto">
         <NavSection 
           title="Overview" 
           items={navigationItems.overview} 
@@ -156,29 +186,45 @@ const Sidebar = () => {
         />
       </div>
 
-      {/* User Account Section */}
-      <div className="p-4 border-t border-gray-800">
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
-          {!isCollapsed && (
-            <div className="flex items-center">
+              {/* User Account Section - Fixed at bottom */}
+              <div className="mt-auto p-4 border-t border-gray-900 bg-black flex-shrink-0">
+        {!isCollapsed && (
+          <div className="relative" ref={userSectionRef}>
+            <div 
+              className="flex items-center cursor-pointer hover:bg-gray-800 rounded-lg p-2 -m-2 transition-colors"
+              onClick={() => setShowSignOut(!showSignOut)}
+            >
               <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
                 <User className="h-4 w-4 text-white" />
               </div>
-              <div>
-                <div className="text-sm font-medium text-white">user@example.com</div>
+              <div className="flex-1">
+                <div className="text-sm font-medium text-white">
+                  {user?.email ? `${user.email.substring(0, 10)}...` : 'user@exam...'}
+                </div>
                 <div className="text-xs text-purple-400">FREE</div>
               </div>
+              <ChevronDown className="h-4 w-4 text-gray-400" />
             </div>
-          )}
-          {isCollapsed && (
-            <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-              <User className="h-4 w-4 text-white" />
-            </div>
-          )}
-          {!isCollapsed && (
-            <ChevronDown className="h-4 w-4 text-gray-400" />
-          )}
-        </div>
+            
+            {showSignOut && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 bg-black border border-gray-700 rounded-lg p-1">
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center px-3 py-1.5 text-red-400 hover:text-red-300 hover:bg-gray-800 rounded transition-colors"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  <span className="text-sm">Sign out</span>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {isCollapsed && (
+          <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+            <User className="h-4 w-4 text-white" />
+          </div>
+        )}
       </div>
     </div>
   )
