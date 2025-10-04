@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 const GetCreditsPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [loading, setLoading] = useState(false)
+  const [promoCode, setPromoCode] = useState('')
   const [searchParams] = useSearchParams()
 
   // Handle payment success/cancel messages
@@ -22,7 +23,7 @@ const GetCreditsPage = () => {
   const handleSubscribe = async (plan) => {
     try {
       setLoading(true)
-      const { url } = await paymentService.createCheckoutSession(plan, billingToggle)
+      const { url } = await paymentService.createCheckoutSession(plan, billingToggle, promoCode)
       window.location.href = url
     } catch (error) {
       console.error('Payment error:', error)
@@ -71,6 +72,32 @@ const GetCreditsPage = () => {
                   Yearly
                 </button>
               </div>
+            </div>
+
+            {/* Promo Code Input */}
+            <div className="mt-8 max-w-md mx-auto">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enter promo code (optional)"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+                />
+                {promoCode && (
+                  <button
+                    onClick={() => setPromoCode('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+              {promoCode && (
+                <p className="text-sm text-green-400 mt-2 text-center">
+                  Promo code "{promoCode}" will be applied at checkout
+                </p>
+              )}
             </div>
           </div>
           

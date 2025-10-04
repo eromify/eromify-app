@@ -53,7 +53,7 @@ const PRICING_PLANS = {
 // Create Stripe checkout session
 router.post('/create-checkout-session', authenticateToken, async (req, res) => {
   try {
-    const { plan, billing } = req.body;
+    const { plan, billing, promoCode } = req.body;
     const userId = req.user.id;
 
     // Validate plan and billing
@@ -64,8 +64,8 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
     const planConfig = PRICING_PLANS[plan][billing];
     const isYearly = billing === 'yearly';
 
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    // Prepare checkout session options
+    const sessionOptions = {
       payment_method_types: ['card'],
       line_items: [
         {
@@ -96,7 +96,29 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         credits: planConfig.credits,
         influencerTrainings: planConfig.influencerTrainings
       }
-    });
+    };
+
+    // Add promo code if provided
+    if (promoCode && promoCode.trim()) {
+      try {
+        // Validate promo code exists in Stripe
+        const coupon = await stripe.coupons.retrieve(promoCode.trim());
+        if (coupon && coupon.valid) {
+          sessionOptions.discounts = [{
+            coupon: promoCode.trim()
+          }];
+          console.log(`Promo code ${promoCode} applied to checkout session`);
+        } else {
+          console.log(`Invalid promo code: ${promoCode}`);
+        }
+      } catch (error) {
+        console.log(`Error validating promo code ${promoCode}:`, error.message);
+        // Continue without promo code if validation fails
+      }
+    }
+
+    // Create Stripe checkout session
+    const session = await stripe.checkout.sessions.create(sessionOptions);
 
     res.json({ sessionId: session.id, url: session.url });
   } catch (error) {
