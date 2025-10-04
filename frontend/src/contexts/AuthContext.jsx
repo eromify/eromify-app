@@ -126,31 +126,23 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (email, password, fullName) => {
     try {
-      console.log('Frontend registration attempt:', { email, apiUrl: api.defaults.baseURL })
       const response = await api.post('/auth/register', {
         email,
         password,
         fullName
       })
-      
-      console.log('Frontend registration response:', response.data)
       return { data: response.data, error: null }
     } catch (error) {
-      console.error('Frontend registration error:', error)
-      console.error('Error response:', error.response?.data)
       return { data: null, error: error.response?.data?.error || 'Registration failed' }
     }
   }
 
   const signIn = async (email, password) => {
     try {
-      console.log('Frontend login attempt:', { email, apiUrl: api.defaults.baseURL })
       const response = await api.post('/auth/login', {
         email,
         password
       })
-      
-      console.log('Frontend login response:', response.data)
       
       if (response.data.success) {
         localStorage.setItem('token', response.data.token)
@@ -159,8 +151,6 @@ export const AuthProvider = ({ children }) => {
       
       return { data: response.data, error: null }
     } catch (error) {
-      console.error('Frontend login error:', error)
-      console.error('Error response:', error.response?.data)
       return { data: null, error: error.response?.data?.error || 'Login failed' }
     }
   }
