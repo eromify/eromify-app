@@ -9,9 +9,16 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI only when needed
+let openai = null;
+const getOpenAI = () => {
+  if (!openai && process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openai;
+};
 
 const router = express.Router();
 
@@ -100,7 +107,15 @@ ${additionalContext ? `- Additional Context: ${additionalContext}` : ''}
 Generate engaging, authentic content that matches this influencer's brand and resonates with their target audience. Make it platform-appropriate and include relevant hashtags if applicable.`;
 
     // Generate content using OpenAI
-    const completion = await openai.chat.completions.create({
+    const openaiClient = getOpenAI();
+    if (!openaiClient) {
+      return res.status(503).json({
+        success: false,
+        error: 'AI service not available. Please configure OpenAI API key.'
+      });
+    }
+    
+    const completion = await openaiClient.chat.completions.create({
       model: "gpt-4",
       messages: [
         {
