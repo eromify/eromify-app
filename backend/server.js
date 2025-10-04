@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const influencerRoutes = require('./routes/influencers');
 const contentRoutes = require('./routes/content');
 const userRoutes = require('./routes/users');
+const paymentRoutes = require('./routes/payments');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -52,6 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/influencers', influencerRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

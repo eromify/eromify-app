@@ -1,8 +1,23 @@
 import { useState } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
+import { createCheckoutSession } from '../services/paymentService'
 
 const GetCreditsPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubscribe = async (plan) => {
+    try {
+      setLoading(true)
+      const { url } = await createCheckoutSession(plan, billingToggle)
+      window.location.href = url
+    } catch (error) {
+      console.error('Error creating checkout session:', error)
+      alert('Failed to start checkout process. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <DashboardLayout>
@@ -102,8 +117,12 @@ const GetCreditsPage = () => {
                 </div>
               </div>
               
-              <button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                Get Credits
+              <button 
+                onClick={() => handleSubscribe('builder')}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Processing...' : 'Get Credits'}
               </button>
             </div>
 
@@ -168,8 +187,12 @@ const GetCreditsPage = () => {
                 </div>
               </div>
               
-              <button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                Get Credits
+              <button 
+                onClick={() => handleSubscribe('launch')}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Processing...' : 'Get Credits'}
               </button>
             </div>
 
@@ -228,8 +251,12 @@ const GetCreditsPage = () => {
                 </div>
               </div>
               
-              <button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                Get Credits
+              <button 
+                onClick={() => handleSubscribe('growth')}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Processing...' : 'Get Credits'}
               </button>
             </div>
           </div>
