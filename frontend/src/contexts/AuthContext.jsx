@@ -32,22 +32,9 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('refresh_token', refreshToken)
         }
         
-        // Clear the hash immediately
+        // Clear the hash and redirect immediately
         window.location.hash = ''
-        
-        // Wait a bit for Supabase to process the session
-        setTimeout(async () => {
-          const { data: { session }, error } = await supabase.auth.getSession()
-          if (session?.user) {
-            await getUserProfile(session.user)
-            // Redirect to dashboard
-            window.location.href = '/dashboard'
-          } else {
-            console.error('No session found after OAuth callback')
-            setLoading(false)
-          }
-        }, 100)
-        
+        window.location.href = '/dashboard'
         return
       }
     }
@@ -72,12 +59,6 @@ export const AuthProvider = ({ children }) => {
       if (session?.user) {
         // Get user profile from backend
         await getUserProfile(session.user)
-        
-        // If this is a SIGNED_IN event and we have OAuth tokens in URL, redirect to dashboard
-        if (event === 'SIGNED_IN' && window.location.hash.includes('access_token')) {
-          window.location.hash = ''
-          window.location.href = '/dashboard'
-        }
       } else {
         setUser(null)
         setLoading(false)
