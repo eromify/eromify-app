@@ -18,29 +18,23 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    // Verify JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');
+    // Verify Supabase JWT token
+    const { data: { user }, error } = await supabase.auth.getUser(token);
 
-    req.user = {
-      id: decoded.userId,
-      email: decoded.email
-    };
-    next();
-  } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
+    if (error || !user) {
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid token' 
       });
     }
-    
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Token expired' 
-      });
-    }
 
+    req.user = {
+      id: user.id,
+      email: user.email
+    };
+    next();
+  } catch (error) {
+    console.error('Auth middleware error:', error);
     return res.status(500).json({ 
       success: false, 
       error: 'Authentication error' 
