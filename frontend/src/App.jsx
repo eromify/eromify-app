@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -24,18 +25,66 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/influencers" element={<InfluencersPage />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/tools" element={<ToolsPage />} />
-        <Route path="/generate" element={<GeneratePage />} />
-        <Route path="/generate-video" element={<GenerateVideoPage />} />
-        <Route path="/upscale" element={<UpscalePage />} />
-        <Route path="/edit-image" element={<EditImagePage />} />
-        <Route path="/generate-prompt" element={<GeneratePromptPage />} />
-        <Route path="/view-all" element={<ToolsPage />} />
-        <Route path="/credits" element={<GetCreditsPage />} />
-        <Route path="/subscriptions" element={<ManageSubscriptionPage />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/influencers" element={
+          <ProtectedRoute>
+            <InfluencersPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/products" element={
+          <ProtectedRoute>
+            <ProductsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/tools" element={
+          <ProtectedRoute>
+            <ToolsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/generate" element={
+          <ProtectedRoute>
+            <GeneratePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/generate-video" element={
+          <ProtectedRoute>
+            <GenerateVideoPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/upscale" element={
+          <ProtectedRoute>
+            <UpscalePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/edit-image" element={
+          <ProtectedRoute>
+            <EditImagePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/generate-prompt" element={
+          <ProtectedRoute>
+            <GeneratePromptPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/view-all" element={
+          <ProtectedRoute>
+            <ToolsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/credits" element={
+          <ProtectedRoute>
+            <GetCreditsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/subscriptions" element={
+          <ProtectedRoute>
+            <ManageSubscriptionPage />
+          </ProtectedRoute>
+        } />
         <Route path="/support" element={<SupportPage />} />
       </Routes>
     </AuthProvider>
