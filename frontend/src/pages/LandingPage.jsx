@@ -677,9 +677,9 @@ const LandingPage = () => {
               <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started Today
               </Link>
-              <button className="bg-transparent border border-gray-600 text-gray-300 px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-all">
-                Learn More
-              </button>
+              <a href="#pricing" className="bg-transparent border border-gray-600 text-gray-300 px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-all text-center">
+                See Pricing
+              </a>
             </div>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-gray-400">
