@@ -33,13 +33,16 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('refresh_token', refreshToken)
         }
         
-        console.log('Tokens stored, redirecting to dashboard...')
+        console.log('Tokens stored, waiting for auth state...')
         
         // Clear the hash
         window.location.hash = ''
         
-        // Redirect to dashboard
-        window.location.href = '/dashboard'
+        // Wait a bit for Supabase to process the auth state
+        setTimeout(() => {
+          console.log('Redirecting to dashboard...')
+          window.location.href = '/dashboard'
+        }, 1000)
         return
       }
     }
