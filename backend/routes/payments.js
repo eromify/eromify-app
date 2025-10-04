@@ -1,14 +1,7 @@
 const express = require('express');
 const router = express.Router();
 require('dotenv').config();
-// Initialize Stripe only when needed
-let stripe = null;
-const getStripe = () => {
-  if (!stripe && process.env.STRIPE_SECRET_KEY) {
-    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-  }
-  return stripe;
-};
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -72,15 +65,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
     const isYearly = billing === 'yearly';
 
     // Create Stripe checkout session
-    const stripeClient = getStripe();
-    if (!stripeClient) {
-      return res.status(503).json({
-        success: false,
-        error: 'Payment service not available. Please configure Stripe API key.'
-      });
-    }
-    
-    const session = await stripeClient.checkout.sessions.create({
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
@@ -101,8 +86,8 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.FRONTEND_URL}/dashboard?payment=success`,
-      cancel_url: `${process.env.FRONTEND_URL}/get-credits?payment=cancelled`,
+      success_url: `https://www.eromify.com/dashboard?payment=success`,
+      cancel_url: `https://www.eromify.com/credits?payment=cancelled`,
       customer_email: req.user.email,
       metadata: {
         userId: userId,
@@ -126,15 +111,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   let event;
 
   try {
-    const stripeClient = getStripe();
-    if (!stripeClient) {
-      return res.status(503).json({
-        success: false,
-        error: 'Payment service not available. Please configure Stripe API key.'
-      });
-    }
-    
-    event = stripeClient.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -299,15 +276,7 @@ router.post('/cancel-subscription', authenticateToken, async (req, res) => {
     }
 
     // Cancel subscription in Stripe
-    const stripeClient = getStripe();
-    if (!stripeClient) {
-      return res.status(503).json({
-        success: false,
-        error: 'Payment service not available. Please configure Stripe API key.'
-      });
-    }
-    
-    await stripeClient.subscriptions.cancel(user.subscription_id);
+    await stripe.subscriptions.cancel(user.subscription_id);
 
     res.json({ message: 'Subscription cancelled successfully' });
   } catch (error) {

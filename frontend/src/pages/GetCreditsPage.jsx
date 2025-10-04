@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import paymentService from '../services/paymentService'
 import toast from 'react-hot-toast'
@@ -6,6 +7,17 @@ import toast from 'react-hot-toast'
 const GetCreditsPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [loading, setLoading] = useState(false)
+  const [searchParams] = useSearchParams()
+
+  // Handle payment success/cancel messages
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment')
+    if (paymentStatus === 'success') {
+      toast.success('Payment successful! Your subscription is now active.')
+    } else if (paymentStatus === 'cancelled') {
+      toast.error('Payment was cancelled. You can try again anytime.')
+    }
+  }, [searchParams])
 
   const handleSubscribe = async (plan) => {
     try {
