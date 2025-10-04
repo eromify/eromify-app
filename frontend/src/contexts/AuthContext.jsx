@@ -36,7 +36,8 @@ export const AuthProvider = ({ children }) => {
         const { data: { session }, error } = await supabase.auth.getSession()
         if (session?.user) {
           await getUserProfile(session.user)
-          // Redirect to dashboard after successful authentication
+          // Clear the hash and redirect to dashboard
+          window.location.hash = ''
           window.location.href = '/dashboard'
           return
         }
