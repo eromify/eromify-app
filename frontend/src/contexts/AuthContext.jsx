@@ -19,18 +19,21 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Handle OAuth callback from URL hash
     const handleOAuthCallback = async () => {
+      console.log('Checking for OAuth callback...', window.location.hash)
       const hashParams = new URLSearchParams(window.location.hash.substring(1))
       const accessToken = hashParams.get('access_token')
       const refreshToken = hashParams.get('refresh_token')
       
       if (accessToken) {
-        console.log('OAuth callback detected, processing tokens...')
+        console.log('OAuth callback detected, processing tokens...', accessToken.substring(0, 20) + '...')
         
         // Store the tokens
         localStorage.setItem('token', accessToken)
         if (refreshToken) {
           localStorage.setItem('refresh_token', refreshToken)
         }
+        
+        console.log('Tokens stored, redirecting to dashboard...')
         
         // Clear the hash
         window.location.hash = ''
