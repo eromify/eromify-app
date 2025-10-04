@@ -37,6 +37,11 @@ const allowedOrigins = [
   'https://app.eromify.com'
 ];
 
+console.log('🔧 CORS Configuration:', {
+  FRONTEND_URL: process.env.FRONTEND_URL,
+  allowedOrigins: allowedOrigins
+});
+
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
