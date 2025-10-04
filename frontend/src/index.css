@@ -1,14 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.025em;
   }
   
   body {
     @apply bg-gray-50 text-gray-900;
+    letter-spacing: -0.025em;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.05em;
+  }
+  
+  .font-medium {
+    letter-spacing: -0.03em;
+  }
+  
+  .font-semibold {
+    letter-spacing: -0.035em;
+  }
+  
+  .font-bold {
+    letter-spacing: -0.04em;
   }
 }
 

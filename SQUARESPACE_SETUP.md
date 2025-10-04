@@ -191,3 +191,4 @@ curl -I https://api.eromify.com/health
 3. **Scalability**: Easy to manage and scale separately
 4. **User Experience**: Clear navigation between marketing and app
 5. **Analytics**: Separate tracking for marketing vs app usage
+

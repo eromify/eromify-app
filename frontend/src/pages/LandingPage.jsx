@@ -267,7 +267,7 @@ const LandingPage = () => {
             </div>
           </div>
           
-          <div className="text-center mt-12">
+          <div className="text-center mt-20">
             <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
               Get Started Today
             </Link>
@@ -276,7 +276,7 @@ const LandingPage = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 bg-black">
+      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
@@ -318,201 +318,261 @@ const LandingPage = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Builder Plan */}
-            <div className="bg-gray-950 border border-gray-800 rounded-2xl p-8 relative">
-              <div className="text-center mb-8">
+            <div className="bg-black border border-gray-800 rounded-2xl p-10 relative h-full">
+              <div className="text-center mb-10">
                 <h3 className="text-xl font-semibold mb-2">Builder</h3>
-                <p className="text-gray-400 text-sm mb-4">For growing creators</p>
-                <div className="mb-6">
+                <p className="text-gray-400 text-sm mb-6">For growing creators</p>
+                <div className="mb-4">
                   <span className="text-5xl font-semibold">
                     {billingToggle === 'monthly' ? '$12' : '$9'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
+                {billingToggle === 'yearly' && (
+                  <p className="text-gray-400 text-xs mb-6">Billed $108 yearly</p>
+                )}
                 
-                {/* Credits and Training - Accentuated */}
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-5 h-5 bg-yellow-500 rounded-sm mr-2"></div>
-                  <span className="text-yellow-500 font-semibold">500 credits</span>
+                {/* Credits - Prominent like CelebifyAI */}
+                <div className="bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 rounded-lg p-2 mb-4">
+                  <div className="flex items-center justify-center">
+                    <svg className="w-4 h-4 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span className="text-yellow-400 font-medium text-sm">500 credits</span>
+                  </div>
                 </div>
-                <div className="text-white font-medium mb-6">1 Influencer Training</div>
+                
+            {/* Influencer Training - Prominent like CelebifyAI */}
+            <div className="bg-gradient-to-r from-purple-900/20 to-purple-700/20 rounded-lg p-2 mb-1">
+              <div className="flex items-center justify-center">
+                <svg className="w-4 h-4 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span className="text-purple-400 font-medium text-sm">1 Influencer Training</span>
               </div>
+            </div>
+          </div>
+          
+          {/* CTA Button Above Features */}
+              <Link to="/register" className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8">
+                Get Credits
+              </Link>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+              {/* Separator Line */}
+              <div className="border-t border-gray-700 mb-6"></div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">500 credits/mo</span>
+                  <span className="text-sm">1 Influencer trainings</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">1 influencer training</span>
+                  <span className="text-sm">500 credits/month</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                   <span className="text-sm">Image & video generation</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Video face swap</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Access to all features</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Standard support</span>
                 </div>
               </div>
-              
-              <Link to="/register" className="w-full bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-all text-center block">
-                Get Credits
-              </Link>
             </div>
 
-            {/* Launch Plan - Featured */}
-            <div className="bg-gray-950 border border-gray-800 rounded-2xl p-8 relative">
+            {/* Launch Plan */}
+            <div className="bg-black border border-gray-800 rounded-2xl p-10 relative h-full">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-gray-900 border border-pink-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <div className="bg-gray-800 border border-pink-500/50 text-white px-4 py-1 rounded-full text-sm font-medium shadow-lg shadow-pink-500/20">
                   Most Popular
                 </div>
               </div>
               
-              <div className="text-center mb-8">
+              <div className="text-center mb-10">
                 <h3 className="text-xl font-semibold mb-2">Launch</h3>
-                <p className="text-gray-400 text-sm mb-4">Ready to scale</p>
-                <div className="mb-6">
+                <p className="text-gray-400 text-sm mb-6">Ready to scale</p>
+                <div className="mb-4">
                   <span className="text-5xl font-semibold">
                     {billingToggle === 'monthly' ? '$25' : '$19'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
+                {billingToggle === 'yearly' && (
+                  <p className="text-gray-400 text-xs mb-6">Billed $228 yearly</p>
+                )}
                 
-                {/* Credits and Training - Accentuated */}
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-5 h-5 bg-yellow-500 rounded-sm mr-2"></div>
-                  <span className="text-yellow-500 font-semibold">2,000 credits</span>
+                {/* Credits - Prominent like CelebifyAI */}
+                <div className="bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 rounded-lg p-2 mb-4">
+                  <div className="flex items-center justify-center">
+                    <svg className="w-4 h-4 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span className="text-yellow-400 font-medium text-sm">2,000 credits</span>
+                  </div>
                 </div>
-                <div className="text-white font-medium mb-6">2 Influencer Trainings</div>
+                
+            {/* Influencer Training - Prominent like CelebifyAI */}
+            <div className="bg-gradient-to-r from-purple-900/20 to-purple-700/20 rounded-lg p-2 mb-1">
+              <div className="flex items-center justify-center">
+                <svg className="w-4 h-4 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span className="text-purple-400 font-medium text-sm">2 Influencer Trainings</span>
               </div>
+            </div>
+          </div>
+          
+          {/* CTA Button Above Features */}
+              <Link to="/register" className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8">
+                Get Credits
+              </Link>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+              {/* Separator Line */}
+              <div className="border-t border-gray-700 mb-6"></div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">2,000 credits/mo</span>
+                  <span className="text-sm">2 Influencer trainings</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">2 influencer trainings</span>
+                  <span className="text-sm">2,000 credits/month</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Image & video generation</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Video face swap</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Access to all features</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">Priority support</span>
+                  <span className="text-sm">Standard support</span>
                 </div>
               </div>
-              
-              <Link to="/register" className="w-full bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-all text-center block">
-                Get Credits
-              </Link>
             </div>
 
             {/* Growth Plan */}
-            <div className="bg-gray-950 border border-gray-800 rounded-2xl p-8 relative">
-              <div className="text-center mb-8">
+            <div className="bg-black border border-gray-800 rounded-2xl p-10 relative h-full">
+              <div className="text-center mb-10">
                 <h3 className="text-xl font-semibold mb-2">Growth</h3>
-                <p className="text-gray-400 text-sm mb-4">Best for businesses</p>
-                <div className="mb-6">
+                <p className="text-gray-400 text-sm mb-6">Best for businesses</p>
+                <div className="mb-4">
                   <span className="text-5xl font-semibold">
                     {billingToggle === 'monthly' ? '$79' : '$65'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
+                {billingToggle === 'yearly' && (
+                  <p className="text-gray-400 text-xs mb-6">Billed $780 yearly</p>
+                )}
                 
-                {/* Credits and Training - Accentuated */}
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-5 h-5 bg-yellow-500 rounded-sm mr-2"></div>
-                  <span className="text-yellow-500 font-semibold">8,000 credits</span>
+                {/* Credits - Prominent like CelebifyAI */}
+                <div className="bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 rounded-lg p-2 mb-4">
+                  <div className="flex items-center justify-center">
+                    <svg className="w-4 h-4 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span className="text-yellow-400 font-medium text-sm">8,000 credits</span>
+                  </div>
                 </div>
-                <div className="text-white font-medium mb-6">5 Influencer Trainings</div>
+                
+            {/* Influencer Training - Prominent like CelebifyAI */}
+            <div className="bg-gradient-to-r from-purple-900/20 to-purple-700/20 rounded-lg p-2 mb-1">
+              <div className="flex items-center justify-center">
+                <svg className="w-4 h-4 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span className="text-purple-400 font-medium text-sm">5 Influencer Trainings</span>
               </div>
+            </div>
+          </div>
+          
+          {/* CTA Button Above Features */}
+              <Link to="/register" className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8">
+                Get Credits
+              </Link>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+              {/* Separator Line */}
+              <div className="border-t border-gray-700 mb-6"></div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">8,000 credits/mo</span>
+                  <span className="text-sm">5 Influencer trainings</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">5 influencer trainings</span>
+                  <span className="text-sm">8,000 credits/month</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Image & video generation</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Video face swap</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Access to all features</span>
                 </div>
-                <div className="flex items-center py-2 px-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center">
                   <svg className="w-4 h-4 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm">Priority support</span>
                 </div>
               </div>
-              
-              <Link to="/register" className="w-full bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-all text-center block">
-                Get Credits
-              </Link>
             </div>
           </div>
         </div>
@@ -711,7 +771,7 @@ const LandingPage = () => {
                 <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                14-day free trial
+                24/7 support
               </div>
             </div>
           </div>
