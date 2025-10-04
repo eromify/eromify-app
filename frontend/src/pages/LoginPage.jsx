@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react'
 
@@ -10,6 +10,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { signIn, signInWithGoogle } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,7 +22,7 @@ const LoginPage = () => {
       if (error) {
         setError(error)
       } else {
-        window.location.href = '/dashboard'
+        navigate('/dashboard')
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -94,7 +95,7 @@ const LoginPage = () => {
             onClick={() => {
               // Temporary bypass for development
               localStorage.setItem('token', 'dev-token-123');
-              window.location.href = '/dashboard';
+              navigate('/dashboard');
             }}
             className="w-full mb-6 bg-gradient-to-r from-green-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-purple-600 transition-all duration-200 flex items-center justify-center space-x-3"
           >

@@ -44,6 +44,20 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfileFromToken = async () => {
     try {
+      const token = localStorage.getItem('token')
+      
+      // Handle dev mode token
+      if (token === 'dev-token-123') {
+        setUser({
+          id: 'dev-user-123',
+          email: 'dev@eromify.com',
+          fullName: 'Dev User',
+          isDev: true
+        })
+        setLoading(false)
+        return
+      }
+      
       const response = await api.get('/auth/me')
       if (response.data.success) {
         setUser(response.data.user)
