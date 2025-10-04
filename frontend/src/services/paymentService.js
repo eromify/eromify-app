@@ -2,11 +2,10 @@ import api from '../utils/api'
 
 export const paymentService = {
   // Create checkout session
-  createCheckoutSession: async (plan, billing, promoCode = '') => {
+  createCheckoutSession: async (plan, billing) => {
     const response = await api.post('/payments/create-checkout-session', {
       plan,
-      billing,
-      promoCode
+      billing
     })
     return response.data
   },
