@@ -77,9 +77,11 @@ export const AuthProvider = ({ children }) => {
   const getUserProfileFromToken = async () => {
     try {
       const token = localStorage.getItem('token')
+      console.log('Getting user profile from token:', token ? token.substring(0, 20) + '...' : 'no token')
       
       // Handle dev mode token
       if (token === 'dev-token-123') {
+        console.log('Dev token detected, setting dev user')
         setUser({
           id: 'dev-user-123',
           email: 'dev@eromify.com',
@@ -90,10 +92,15 @@ export const AuthProvider = ({ children }) => {
         return
       }
       
+      console.log('Calling /auth/me endpoint...')
       const response = await api.get('/auth/me')
+      console.log('Auth me response:', response.data)
+      
       if (response.data.success) {
+        console.log('Setting user:', response.data.user)
         setUser(response.data.user)
       } else {
+        console.log('Auth failed, clearing token')
         setUser(null)
         localStorage.removeItem('token')
       }
@@ -108,21 +115,30 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfile = async (supabaseUser) => {
     try {
+      console.log('Getting user profile from Supabase user:', supabaseUser?.email)
+      
       // Get the session token from Supabase
       const { data: { session } } = await supabase.auth.getSession()
       if (session?.access_token) {
+        console.log('Setting token from Supabase session')
         localStorage.setItem('token', session.access_token)
       }
 
       // Get user profile from backend
+      console.log('Calling /auth/me from getUserProfile...')
       const response = await api.get('/auth/me')
+      console.log('Auth me response from getUserProfile:', response.data)
+      
       if (response.data.success) {
+        console.log('Setting user from backend:', response.data.user)
         setUser(response.data.user)
       } else {
+        console.log('Backend auth failed, using Supabase user')
         setUser(supabaseUser)
       }
     } catch (error) {
       console.error('Failed to get user profile:', error)
+      console.log('Using Supabase user as fallback')
       setUser(supabaseUser)
     } finally {
       setLoading(false)
