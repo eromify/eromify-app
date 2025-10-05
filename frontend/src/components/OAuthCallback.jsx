@@ -26,19 +26,22 @@ const OAuthCallback = () => {
           console.log('Refresh token found:', refreshToken ? 'Yes' : 'No')
           
           if (accessToken) {
-            // Set the session in Supabase
-            const { data, error } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken
-            })
+            // Skip Supabase session setting due to API key issues
+            console.log('Skipping Supabase session setting, using token directly')
             
-            if (error) {
-              console.error('Error setting Supabase session:', error)
-              console.error('Full error details:', JSON.stringify(error, null, 2))
-              // Don't redirect to login with error, just try to proceed
-            }
+            // Set the session in Supabase (commented out due to API key issues)
+            // const { data, error } = await supabase.auth.setSession({
+            //   access_token: accessToken,
+            //   refresh_token: refreshToken
+            // })
             
-            console.log('Supabase session set successfully')
+            // if (error) {
+            //   console.error('Error setting Supabase session:', error)
+            //   console.error('Full error details:', JSON.stringify(error, null, 2))
+            //   // Don't redirect to login with error, just try to proceed
+            // }
+            
+            console.log('Proceeding with token processing')
             
             // Call our backend to convert Supabase token to JWT
             try {
