@@ -1,9 +1,69 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
+import api from '../utils/api'
 
 const LandingPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [openFAQ, setOpenFAQ] = useState(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const handleOAuthCallback = async () => {
+      try {
+        // Check if we have OAuth tokens in the URL hash
+        const hash = window.location.hash
+        if (hash && hash.includes('access_token')) {
+          console.log('OAuth callback detected on landing page')
+          
+          // Parse the hash parameters
+          const params = new URLSearchParams(hash.substring(1))
+          const accessToken = params.get('access_token')
+          const refreshToken = params.get('refresh_token')
+          
+          if (accessToken) {
+            // Set the session in Supabase
+            const { data, error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken
+            })
+            
+            if (error) {
+              console.error('Error setting Supabase session:', error)
+              return
+            }
+            
+            // Call our backend to convert Supabase token to JWT
+            try {
+              const response = await api.post('/auth/google-callback', {
+                access_token: accessToken
+              })
+              
+              if (response.data.success) {
+                localStorage.setItem('token', response.data.token)
+                // Clear the URL hash
+                window.history.replaceState({}, document.title, window.location.pathname)
+                // Redirect to dashboard
+                navigate('/dashboard')
+                return
+              }
+            } catch (callbackError) {
+              console.error('Backend callback failed:', callbackError)
+            }
+            
+            // Fallback: store Supabase token and redirect
+            localStorage.setItem('token', accessToken)
+            window.history.replaceState({}, document.title, window.location.pathname)
+            navigate('/dashboard')
+          }
+        }
+      } catch (error) {
+        console.error('OAuth callback error:', error)
+      }
+    }
+
+    handleOAuthCallback()
+  }, [navigate])
 
   return (
     <div className="min-h-screen bg-black text-white">
