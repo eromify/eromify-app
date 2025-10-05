@@ -93,6 +93,25 @@ export const AuthProvider = ({ children }) => {
       const { data: { session } } = await supabase.auth.getSession()
       if (session?.access_token) {
         console.log('Setting token from Supabase session')
+        
+        // Call our backend to convert Supabase token to our JWT token
+        try {
+          const response = await api.post('/auth/google-callback', {
+            access_token: session.access_token
+          })
+          
+          if (response.data.success) {
+            console.log('Successfully converted Supabase token to JWT')
+            localStorage.setItem('token', response.data.token)
+            setUser(response.data.user)
+            setLoading(false)
+            return
+          }
+        } catch (callbackError) {
+          console.error('Google callback failed:', callbackError)
+          // Fall through to try /auth/me
+        }
+        
         localStorage.setItem('token', session.access_token)
       }
 
@@ -104,6 +123,10 @@ export const AuthProvider = ({ children }) => {
       if (response.data.success) {
         console.log('Setting user from backend:', response.data.user)
         setUser(response.data.user)
+        // If we got a new token, update it
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token)
+        }
       } else {
         console.log('Backend auth failed, using Supabase user')
         setUser(supabaseUser)
@@ -152,7 +175,7 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/oauth-callback`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
