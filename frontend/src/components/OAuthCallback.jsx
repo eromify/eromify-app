@@ -7,6 +7,7 @@ const OAuthCallback = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('OAuthCallback component mounted')
     const handleOAuthCallback = async () => {
       try {
         console.log('Processing OAuth callback...')
