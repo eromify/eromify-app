@@ -41,9 +41,12 @@ const OAuthCallback = () => {
             
             // Call our backend to convert Supabase token to JWT
             try {
+              console.log('Calling backend /auth/google-callback...')
               const response = await api.post('/auth/google-callback', {
                 access_token: accessToken
               })
+              
+              console.log('Backend response:', response.data)
               
               if (response.data.success) {
                 console.log('Successfully converted to JWT token')
@@ -55,10 +58,13 @@ const OAuthCallback = () => {
                 // Redirect to dashboard
                 navigate('/dashboard')
                 return
+              } else {
+                console.error('Backend returned success: false', response.data)
               }
             } catch (callbackError) {
               console.error('Backend callback failed:', callbackError)
               console.error('Backend error details:', JSON.stringify(callbackError.response?.data || callbackError.message, null, 2))
+              console.error('Full error object:', callbackError)
               // Still try to proceed with Supabase token
             }
             
