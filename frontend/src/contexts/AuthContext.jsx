@@ -29,9 +29,11 @@ export const AuthProvider = ({ children }) => {
   const getUserProfileFromToken = async () => {
     try {
       const token = localStorage.getItem('token')
+      console.log('getUserProfileFromToken called with token:', token ? token.substring(0, 20) + '...' : 'no token')
       
       // Handle dev mode token
       if (token === 'dev-token-123') {
+        console.log('Using dev token, setting dev user')
         setUser({
           id: 'dev-user-123',
           email: 'dev@eromify.com',
@@ -42,15 +44,21 @@ export const AuthProvider = ({ children }) => {
         return
       }
       
+      console.log('Calling /auth/me with token...')
       const response = await api.get('/auth/me')
+      console.log('Auth me response:', response.data)
+      
       if (response.data.success) {
+        console.log('Setting user from response:', response.data.user)
         setUser(response.data.user)
       } else {
+        console.log('Auth failed, clearing user and token')
         setUser(null)
         localStorage.removeItem('token')
       }
     } catch (error) {
       console.error('Failed to get user profile from token:', error)
+      console.error('Error details:', error.response?.data)
       setUser(null)
       localStorage.removeItem('token')
     } finally {
