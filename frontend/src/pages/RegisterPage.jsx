@@ -41,16 +41,23 @@ const RegisterPage = () => {
     }
 
     try {
-      const { error } = await signUp(formData.email, formData.password, formData.fullName)
+      const { data, error } = await signUp(formData.email, formData.password, formData.fullName)
+      console.log('Register response:', data, error)
+      
       if (error) {
         setError(error)
-      } else {
-        // Registration successful, redirect to dashboard
+        setLoading(false)
+      } else if (data && data.success) {
+        console.log('Registration successful, redirecting to dashboard')
+        // Don't set loading to false here, let the redirect happen
         window.location.href = '/dashboard'
+      } else {
+        setError('Registration failed')
+        setLoading(false)
       }
     } catch (err) {
+      console.error('Register error:', err)
       setError('An unexpected error occurred')
-    } finally {
       setLoading(false)
     }
   }

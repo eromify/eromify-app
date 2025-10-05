@@ -16,6 +16,7 @@ import GeneratePromptPage from './pages/GeneratePromptPage'
 import GetCreditsPage from './pages/GetCreditsPage'
 import ManageSubscriptionPage from './pages/ManageSubscriptionPage'
 import SupportPage from './pages/SupportPage'
+import OAuthCallbackHandler from './pages/OAuthCallbackHandler'
 import './App.css'
 
 function App() {
@@ -86,6 +87,7 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/support" element={<SupportPage />} />
+        <Route path="/oauth-callback" element={<OAuthCallbackHandler />} />
       </Routes>
     </AuthProvider>
   )

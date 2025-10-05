@@ -18,15 +18,23 @@ const LoginPage = () => {
     setError('')
 
     try {
-      const { error } = await signIn(email, password)
+      const { data, error } = await signIn(email, password)
+      console.log('Login response:', data, error)
+      
       if (error) {
         setError(error)
-      } else {
+        setLoading(false)
+      } else if (data && data.success) {
+        console.log('Login successful, redirecting to dashboard')
+        // Don't set loading to false here, let the redirect happen
         navigate('/dashboard')
+      } else {
+        setError('Login failed')
+        setLoading(false)
       }
     } catch (err) {
+      console.error('Login error:', err)
       setError('An unexpected error occurred')
-    } finally {
       setLoading(false)
     }
   }
