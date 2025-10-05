@@ -55,9 +55,29 @@ const InfluencersPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
-      </div>
+      <DashboardLayout>
+        <div className="p-8">
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-2">Manage Influencers</h1>
+                <p className="text-gray-400">
+                  Manage your AI influencers and view analytics.
+                </p>
+              </div>
+            </div>
+            
+            {/* Loading State */}
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+                <p className="text-gray-400">Loading influencers...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
     )
   }
 
