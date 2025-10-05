@@ -25,25 +25,25 @@ export const AuthProvider = ({ children }) => {
       setLoading(false)
     }
 
-    // Listen for auth changes (for Google OAuth) - temporarily disabled to fix normal login
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange(async (event, session) => {
-    //   console.log('Auth state change:', event, session?.user?.email)
-    //   
-    //   if (session?.user) {
-    //     // Store the Supabase token
-    //     localStorage.setItem('token', session.access_token)
-    //     // Get user profile from backend
-    //     await getUserProfile(session.user)
-    //   } else {
-    //     setUser(null)
-    //     setLoading(false)
-    //     localStorage.removeItem('token')
-    //   }
-    // })
+    // Listen for auth changes (for Google OAuth)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.email)
+      
+      if (session?.user) {
+        // Store the Supabase token
+        localStorage.setItem('token', session.access_token)
+        // Get user profile from backend
+        await getUserProfile(session.user)
+      } else {
+        setUser(null)
+        setLoading(false)
+        localStorage.removeItem('token')
+      }
+    })
 
-    // return () => subscription.unsubscribe()
+    return () => subscription.unsubscribe()
   }, [])
 
   const getUserProfileFromToken = async () => {
@@ -181,7 +181,7 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/oauth-callback`,
+        redirectTo: `${window.location.origin}/dashboard`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
