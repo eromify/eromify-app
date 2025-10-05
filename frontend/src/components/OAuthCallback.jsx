@@ -33,7 +33,8 @@ const OAuthCallback = () => {
             
             if (error) {
               console.error('Error setting Supabase session:', error)
-              navigate('/login?error=oauth_failed')
+              console.error('Full error details:', JSON.stringify(error, null, 2))
+              navigate(`/login?error=supabase_session_failed&details=${encodeURIComponent(error.message)}`)
               return
             }
             
@@ -58,6 +59,7 @@ const OAuthCallback = () => {
               }
             } catch (callbackError) {
               console.error('Backend callback failed:', callbackError)
+              console.error('Backend error details:', JSON.stringify(callbackError.response?.data || callbackError.message, null, 2))
               // Still try to proceed with Supabase token
             }
             
