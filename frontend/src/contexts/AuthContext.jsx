@@ -17,11 +17,36 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Handle OAuth callback from URL hash
+    const handleOAuthCallback = async () => {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1))
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+      
+      if (accessToken) {
+        console.log('OAuth callback detected, processing tokens...')
+        
+        // Store the tokens
+        localStorage.setItem('token', accessToken)
+        if (refreshToken) {
+          localStorage.setItem('refresh_token', refreshToken)
+        }
+        
+        // Clear the hash and redirect immediately
+        window.location.hash = ''
+        window.location.href = '/dashboard'
+        return
+      }
+    }
+
+    // Check for OAuth callback first
+    handleOAuthCallback()
+
     // Check for existing token and get user profile
     const token = localStorage.getItem('token')
-    if (token) {
+    if (token && !window.location.hash.includes('access_token')) {
       getUserProfileFromToken()
-    } else {
+    } else if (!window.location.hash.includes('access_token')) {
       setLoading(false)
     }
 
@@ -32,8 +57,6 @@ export const AuthProvider = ({ children }) => {
       console.log('Auth state change:', event, session?.user?.email)
       
       if (session?.user) {
-        // Store the Supabase token
-        localStorage.setItem('token', session.access_token)
         // Get user profile from backend
         await getUserProfile(session.user)
       } else {
@@ -49,11 +72,9 @@ export const AuthProvider = ({ children }) => {
   const getUserProfileFromToken = async () => {
     try {
       const token = localStorage.getItem('token')
-      console.log('Getting user profile from token:', token ? token.substring(0, 20) + '...' : 'no token')
       
       // Handle dev mode token
       if (token === 'dev-token-123') {
-        console.log('Dev token detected, setting dev user')
         setUser({
           id: 'dev-user-123',
           email: 'dev@eromify.com',
@@ -64,15 +85,10 @@ export const AuthProvider = ({ children }) => {
         return
       }
       
-      console.log('Calling /auth/me endpoint...')
       const response = await api.get('/auth/me')
-      console.log('Auth me response:', response.data)
-      
       if (response.data.success) {
-        console.log('Setting user:', response.data.user)
         setUser(response.data.user)
       } else {
-        console.log('Auth failed, clearing token')
         setUser(null)
         localStorage.removeItem('token')
       }
@@ -87,53 +103,21 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfile = async (supabaseUser) => {
     try {
-      console.log('Getting user profile from Supabase user:', supabaseUser?.email)
-      
       // Get the session token from Supabase
       const { data: { session } } = await supabase.auth.getSession()
       if (session?.access_token) {
-        console.log('Setting token from Supabase session')
-        
-        // Call our backend to convert Supabase token to our JWT token
-        try {
-          const response = await api.post('/auth/google-callback', {
-            access_token: session.access_token
-          })
-          
-          if (response.data.success) {
-            console.log('Successfully converted Supabase token to JWT')
-            localStorage.setItem('token', response.data.token)
-            setUser(response.data.user)
-            setLoading(false)
-            return
-          }
-        } catch (callbackError) {
-          console.error('Google callback failed:', callbackError)
-          // Fall through to try /auth/me
-        }
-        
         localStorage.setItem('token', session.access_token)
       }
 
       // Get user profile from backend
-      console.log('Calling /auth/me from getUserProfile...')
       const response = await api.get('/auth/me')
-      console.log('Auth me response from getUserProfile:', response.data)
-      
       if (response.data.success) {
-        console.log('Setting user from backend:', response.data.user)
         setUser(response.data.user)
-        // If we got a new token, update it
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token)
-        }
       } else {
-        console.log('Backend auth failed, using Supabase user')
         setUser(supabaseUser)
       }
     } catch (error) {
       console.error('Failed to get user profile:', error)
-      console.log('Using Supabase user as fallback')
       setUser(supabaseUser)
     } finally {
       setLoading(false)
@@ -155,24 +139,18 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      console.log('Starting signIn process...')
       const response = await api.post('/auth/login', {
         email,
         password
       })
       
-      console.log('Login response:', response.data)
-      
       if (response.data.success) {
-        console.log('Login successful, setting token and user')
         localStorage.setItem('token', response.data.token)
         setUser(response.data.user)
-        console.log('Token set, user set:', response.data.user)
       }
       
       return { data: response.data, error: null }
     } catch (error) {
-      console.error('Login error:', error)
       return { data: null, error: error.response?.data?.error || 'Login failed' }
     }
   }
@@ -181,7 +159,7 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
