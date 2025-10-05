@@ -32,6 +32,8 @@ export const AuthProvider = ({ children }) => {
       console.log('Auth state change:', event, session?.user?.email)
       
       if (session?.user) {
+        // Store the Supabase token
+        localStorage.setItem('token', session.access_token)
         // Get user profile from backend
         await getUserProfile(session.user)
       } else {
@@ -147,25 +149,16 @@ export const AuthProvider = ({ children }) => {
   }
 
   const signInWithGoogle = async () => {
-    console.log('Starting Google OAuth with redirect:', `${window.location.origin}/`)
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/dashboard`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
-        },
-        skipBrowserRedirect: false
+        }
       }
     })
-    
-    if (error) {
-      console.error('Google OAuth error:', error)
-    } else {
-      console.log('Google OAuth initiated successfully:', data)
-    }
-    
     return { data, error }
   }
 
