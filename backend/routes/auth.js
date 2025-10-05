@@ -137,59 +137,6 @@ router.post('/logout', async (req, res) => {
   }
 });
 
-// Google OAuth callback handler
-router.post('/google-callback', async (req, res) => {
-  try {
-    const { access_token } = req.body;
-
-    if (!access_token) {
-      return res.status(400).json({
-        success: false,
-        error: 'Access token required'
-      });
-    }
-
-    // Verify the Supabase token and get user info
-    const { data: { user }, error } = await supabase.auth.getUser(access_token);
-
-    if (error || !user) {
-      console.error('Supabase token verification failed:', error);
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid token'
-      });
-    }
-
-    // Generate our own JWT token for consistency with the rest of the app
-    const token = jwt.sign(
-      { 
-        userId: user.id,
-        email: user.email
-      },
-      process.env.JWT_SECRET || 'fallback_jwt_secret',
-      { expiresIn: '7d' }
-    );
-
-    res.json({
-      success: true,
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.user_metadata?.full_name || user.email.split('@')[0],
-        avatar: user.user_metadata?.avatar_url || null
-      }
-    });
-
-  } catch (error) {
-    console.error('Google callback error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Authentication failed'
-    });
-  }
-});
-
 // Get current user
 router.get('/me', async (req, res) => {
   try {
@@ -203,51 +150,17 @@ router.get('/me', async (req, res) => {
       });
     }
 
-    // First try to verify as our JWT token
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');
-      return res.json({
-        success: true,
-        user: {
-          id: decoded.userId,
-          email: decoded.email,
-          fullName: decoded.email.split('@')[0]
-        }
-      });
-    } catch (jwtError) {
-      // If JWT verification fails, try as Supabase token
-      console.log('JWT verification failed, trying Supabase token...');
-      const { data: { user }, error } = await supabase.auth.getUser(token);
+    // Verify JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');
 
-      if (error || !user) {
-        console.error('Both JWT and Supabase verification failed:', error);
-        return res.status(401).json({
-          success: false,
-          error: 'Invalid token'
-        });
+    res.json({
+      success: true,
+      user: {
+        id: decoded.userId,
+        email: decoded.email,
+        fullName: decoded.email.split('@')[0] // Use email prefix as fullName
       }
-
-      // Generate a new JWT token for future requests
-      const newToken = jwt.sign(
-        { 
-          userId: user.id,
-          email: user.email
-        },
-        process.env.JWT_SECRET || 'fallback_jwt_secret',
-        { expiresIn: '7d' }
-      );
-
-      res.json({
-        success: true,
-        token: newToken, // Return new JWT token
-        user: {
-          id: user.id,
-          email: user.email,
-          fullName: user.user_metadata?.full_name || user.email.split('@')[0],
-          avatar: user.user_metadata?.avatar_url || null
-        }
-      });
-    }
+    });
 
   } catch (error) {
     console.error('Get user error:', error);
