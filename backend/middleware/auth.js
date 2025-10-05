@@ -21,7 +21,21 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    // Verify Supabase JWT token
+    // Try to verify as JWT token first (for normal login)
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');
+      console.log('Auth middleware - JWT token verified, user:', decoded.email);
+      req.user = {
+        id: decoded.userId,
+        email: decoded.email
+      };
+      next();
+      return;
+    } catch (jwtError) {
+      console.log('Auth middleware - JWT verification failed, trying Supabase...');
+    }
+
+    // If JWT fails, try Supabase token verification
     console.log('Auth middleware - verifying token with Supabase...');
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
@@ -33,7 +47,7 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    console.log('Auth middleware - token verified, user:', user.email);
+    console.log('Auth middleware - Supabase token verified, user:', user.email);
     req.user = {
       id: user.id,
       email: user.email
