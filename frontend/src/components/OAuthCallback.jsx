@@ -34,8 +34,7 @@ const OAuthCallback = () => {
             if (error) {
               console.error('Error setting Supabase session:', error)
               console.error('Full error details:', JSON.stringify(error, null, 2))
-              navigate(`/login?error=supabase_session_failed&details=${encodeURIComponent(error.message)}`)
-              return
+              // Don't redirect to login with error, just try to proceed
             }
             
             console.log('Supabase session set successfully')
@@ -69,15 +68,18 @@ const OAuthCallback = () => {
             navigate('/dashboard')
           } else {
             console.log('No access token found in URL')
-            navigate('/login?error=no_token')
+            // Just redirect to dashboard, let the auth system handle it
+            navigate('/dashboard')
           }
         } else {
           console.log('No hash found in URL')
-          navigate('/login?error=no_hash')
+          // Just redirect to dashboard, let the auth system handle it
+          navigate('/dashboard')
         }
       } catch (error) {
         console.error('OAuth callback error:', error)
-        navigate('/login?error=callback_failed')
+        // Just redirect to dashboard, let the auth system handle it
+        navigate('/dashboard')
       }
     }
 
