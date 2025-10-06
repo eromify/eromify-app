@@ -13,12 +13,18 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token')
+    console.log('🔑 API Request interceptor - token found:', token ? token.substring(0, 20) + '...' : 'no token')
+    console.log('🌐 API Request to:', config.method?.toUpperCase(), config.url)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+      console.log('✅ Authorization header set')
+    } else {
+      console.log('⚠️ No token found, request will be unauthenticated')
     }
     return config
   },
   (error) => {
+    console.error('❌ API Request interceptor error:', error)
     return Promise.reject(error)
   }
 )
@@ -26,9 +32,13 @@ api.interceptors.request.use(
 // Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => {
+    console.log('✅ API Response received:', response.status, response.config.url)
     return response
   },
   (error) => {
+    console.error('❌ API Response error:', error.response?.status, error.config?.url)
+    console.error('❌ Error details:', error.response?.data)
+    
     if (error.response?.status === 401) {
       // Only redirect to login if we're not already on the login page
       // and if this is a real authentication error (not mock mode)

@@ -192,3 +192,6 @@ curl -I https://api.eromify.com/health
 4. **User Experience**: Clear navigation between marketing and app
 5. **Analytics**: Separate tracking for marketing vs app usage
 
+
+
+

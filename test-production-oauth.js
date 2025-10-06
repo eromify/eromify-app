@@ -43,3 +43,6 @@ console.log('   localStorage.setItem("oauth_source", "production");');
 console.log('   window.location.href = "/oauth-callback";');
 
 console.log('🎯 OAuth fix deployment test complete!');
+
+
+

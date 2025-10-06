@@ -1,13 +1,35 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
-import paymentService from '../services/paymentService'
+import { paymentService } from '../services/paymentService'
 import toast from 'react-hot-toast'
+import { useAuth } from '../contexts/AuthContext'
 
 const GetCreditsPage = () => {
+  console.log('🚀 GetCreditsPage component loaded!')
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [loading, setLoading] = useState(false)
   const [searchParams] = useSearchParams()
+  const { user } = useAuth()
+  
+  // Test if component is rendering
+  console.log('🎯 GetCreditsPage render - user:', user)
+  console.log('🎯 GetCreditsPage render - billingToggle:', billingToggle)
+  console.log('🎯 GetCreditsPage render - loading:', loading)
+  
+  // Debug user authentication state
+  useEffect(() => {
+    console.log('👤 GetCreditsPage - User state:', user)
+    console.log('🔑 GetCreditsPage - Token in localStorage:', localStorage.getItem('token') ? localStorage.getItem('token').substring(0, 20) + '...' : 'no token')
+    
+    // For development, set dev token if no token exists
+    if (!localStorage.getItem('token') && !user) {
+      console.log('🔧 No token found, setting dev token for testing')
+      localStorage.setItem('token', 'dev-token-123')
+      // Force a page reload to trigger auth context
+      window.location.reload()
+    }
+  }, [user])
 
   // Handle payment success/cancel messages
   useEffect(() => {
@@ -20,13 +42,56 @@ const GetCreditsPage = () => {
   }, [searchParams])
 
   const handleSubscribe = async (plan) => {
+    console.log('🚀 handleSubscribe called with plan:', plan, 'billing:', billingToggle)
+    console.log('👤 Current user state:', user)
+    console.log('🔑 Token in localStorage:', localStorage.getItem('token') ? localStorage.getItem('token').substring(0, 20) + '...' : 'no token')
+    
     try {
       setLoading(true)
-      const { url } = await paymentService.createCheckoutSession(plan, billingToggle)
-      window.location.href = url
+      console.log('📞 Calling paymentService.createCheckoutSession...')
+      
+      // For development, allow checkout even without user (using dev token)
+      if (!user && !localStorage.getItem('token')) {
+        console.error('❌ User not authenticated and no token found')
+        toast.error('Please log in to purchase credits')
+        return
+      }
+      
+      const response = await paymentService.createCheckoutSession(plan, billingToggle)
+      console.log('✅ Got response:', response)
+      
+      if (!response.url) {
+        console.error('❌ No checkout URL in response:', response)
+        toast.error('Failed to get checkout URL')
+        return
+      }
+      
+      console.log('✅ Got checkout URL:', response.url)
+      console.log('🔄 Redirecting to Stripe checkout...')
+      
+      // Try to redirect
+      try {
+        window.location.href = response.url
+        console.log('✅ Redirect initiated')
+      } catch (redirectError) {
+        console.error('❌ Redirect failed:', redirectError)
+        // Fallback: open in new tab
+        window.open(response.url, '_blank')
+      }
     } catch (error) {
-      console.error('Payment error:', error)
-      toast.error('Failed to start payment process')
+      console.error('❌ Payment error:', error)
+      console.error('❌ Error details:', error.response?.data)
+      console.error('❌ Error message:', error.message)
+      console.error('❌ Error stack:', error.stack)
+      
+      let errorMessage = 'Failed to start payment process'
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error
+      } else if (error.message) {
+        errorMessage = error.message
+      }
+      
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -113,7 +178,10 @@ const GetCreditsPage = () => {
               
               {/* CTA Button Above Features */}
               <button 
-                onClick={() => handleSubscribe('builder')}
+                onClick={() => {
+                  console.log('🔘 Builder button clicked!')
+                  handleSubscribe('builder')
+                }}
                 disabled={loading}
                 className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -207,7 +275,10 @@ const GetCreditsPage = () => {
               
               {/* CTA Button Above Features */}
               <button 
-                onClick={() => handleSubscribe('launch')}
+                onClick={() => {
+                  console.log('🔘 Launch button clicked!')
+                  handleSubscribe('launch')
+                }}
                 disabled={loading}
                 className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -295,7 +366,10 @@ const GetCreditsPage = () => {
               
               {/* CTA Button Above Features */}
               <button 
-                onClick={() => handleSubscribe('growth')}
+                onClick={() => {
+                  console.log('🔘 Growth button clicked!')
+                  handleSubscribe('growth')
+                }}
                 disabled={loading}
                 className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
               >

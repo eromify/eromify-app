@@ -66,3 +66,6 @@ To fix this permanently, you need to update the Supabase OAuth configuration:
 4. Update the site URL to include localhost for development
 
 The current fix works around this by handling the OAuth callback regardless of which domain it comes from.
+
+
+

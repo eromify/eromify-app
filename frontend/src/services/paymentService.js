@@ -3,11 +3,27 @@ import api from '../utils/api'
 export const paymentService = {
   // Create checkout session
   createCheckoutSession: async (plan, billing) => {
-    const response = await api.post('/payments/create-checkout-session', {
-      plan,
-      billing
-    })
-    return response.data
+    console.log('💳 paymentService.createCheckoutSession called with:', { plan, billing })
+    console.log('🌐 Making API call to /payments/create-checkout-session')
+    
+    try {
+      const response = await api.post('/payments/create-checkout-session', {
+        plan,
+        billing
+      })
+      console.log('📨 API response received:', response.data)
+      
+      if (!response.data.url) {
+        throw new Error('No checkout URL received from server')
+      }
+      
+      return response.data
+    } catch (error) {
+      console.error('❌ Payment service error:', error)
+      console.error('❌ Error response:', error.response?.data)
+      console.error('❌ Error status:', error.response?.status)
+      throw error
+    }
   },
 
   // Get subscription status

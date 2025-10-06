@@ -27,3 +27,6 @@ echo "   ✅ Automatic user creation from Google data"
 echo ""
 echo "🎯 The OAuth callback will now work at:"
 echo "   https://www.eromify.com/oauth-callback"
+
+
+

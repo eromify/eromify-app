@@ -61,3 +61,6 @@ curl -X POST http://localhost:3001/api/auth/register \
 1. Test the frontend login flow
 2. If Google OAuth needed, configure Supabase Google OAuth settings
 3. All authentication should now work properly!
+
+
+

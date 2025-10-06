@@ -48,3 +48,6 @@ echo "   1. Go to https://www.eromify.com/login"
 echo "   2. Click 'Continue with Google'"
 echo "   3. Complete Google OAuth"
 echo "   4. Should redirect back and log you in automatically!"
+
+
+
