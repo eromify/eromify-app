@@ -16,6 +16,8 @@ import GeneratePromptPage from './pages/GeneratePromptPage'
 import GetCreditsPage from './pages/GetCreditsPage'
 import ManageSubscriptionPage from './pages/ManageSubscriptionPage'
 import SupportPage from './pages/SupportPage'
+import TermsOfServicePage from './pages/TermsOfServicePage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import OAuthCallbackHandler from './pages/OAuthCallbackHandler'
 import './App.css'
 
@@ -87,6 +89,8 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/support" element={<SupportPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/oauth-callback" element={<OAuthCallbackHandler />} />
       </Routes>
     </AuthProvider>
