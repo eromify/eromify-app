@@ -40,8 +40,9 @@ export const AuthProvider = ({ children }) => {
               if (response.data.success) {
                 localStorage.setItem('token', response.data.token)
                 setUser(response.data.user)
-                // Clear the hash from URL
+                // Clear the hash from URL and redirect to dashboard
                 window.history.replaceState({}, document.title, '/')
+                window.location.href = '/dashboard'
                 return
               }
             } catch (error) {
@@ -64,8 +65,9 @@ export const AuthProvider = ({ children }) => {
                 if (jwtResponse.data.success) {
                   localStorage.setItem('token', jwtResponse.data.token)
                   setUser(jwtResponse.data.user)
-                  // Clear the hash from URL
+                  // Clear the hash from URL and redirect to dashboard
                   window.history.replaceState({}, document.title, '/')
+                  window.location.href = '/dashboard'
                   return
                 }
               } catch (fallbackError) {
