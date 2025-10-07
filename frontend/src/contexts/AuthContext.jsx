@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     try {
       // Use the correct OAuth callback URL for production
-      const redirectUrl = 'https://www.eromify.com/auth/callback'
+      const redirectUrl = 'https://www.eromify.com/oauth-callback'
       
       console.log('Starting Google OAuth with redirect:', redirectUrl);
       
