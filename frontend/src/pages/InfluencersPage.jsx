@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import DashboardLayout from '../components/DashboardLayout'
 import CreateInfluencerModal from '../components/CreateInfluencerModal'
 import LimitReachedModal from '../components/LimitReachedModal'
 import influencerService from '../services/influencerService'
@@ -53,7 +54,7 @@ const InfluencersPage = () => {
   }
 
   return (
-    <>
+    <DashboardLayout>
       <div className="p-8">
         <div className="space-y-6">
           {/* Header */}
@@ -164,7 +165,7 @@ const InfluencersPage = () => {
           type="influencer"
         />
       </div>
-    </>
+    </DashboardLayout>
   )
 }
 
