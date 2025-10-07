@@ -37,7 +37,10 @@ const OAuthCallbackHandler = () => {
                 
                 // Clear the hash from URL and redirect to dashboard
                 window.history.replaceState({}, document.title, '/')
-                navigate('/dashboard', { replace: true })
+                // Use setTimeout to ensure state is updated before redirect
+                setTimeout(() => {
+                  navigate('/dashboard', { replace: true })
+                }, 100)
                 return
               }
             } catch (error) {
@@ -64,7 +67,10 @@ const OAuthCallbackHandler = () => {
                   
                   // Clear the hash from URL and redirect to dashboard
                   window.history.replaceState({}, document.title, '/')
-                  navigate('/dashboard', { replace: true })
+                  // Use setTimeout to ensure state is updated before redirect
+                  setTimeout(() => {
+                    navigate('/dashboard', { replace: true })
+                  }, 100)
                   return
                 }
               } catch (fallbackError) {

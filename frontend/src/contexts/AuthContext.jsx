@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import api from '../utils/api'
 
@@ -15,6 +16,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Check for OAuth callback first
@@ -48,7 +50,7 @@ export const AuthProvider = ({ children }) => {
                 window.history.replaceState({}, document.title, '/')
                 // Use setTimeout to ensure state is updated before redirect
                 setTimeout(() => {
-                  window.location.href = '/dashboard'
+                  navigate('/dashboard', { replace: true })
                 }, 100)
                 return
               }
@@ -77,7 +79,7 @@ export const AuthProvider = ({ children }) => {
                   window.history.replaceState({}, document.title, '/')
                   // Use setTimeout to ensure state is updated before redirect
                   setTimeout(() => {
-                    window.location.href = '/dashboard'
+                    navigate('/dashboard', { replace: true })
                   }, 100)
                   return
                 }
