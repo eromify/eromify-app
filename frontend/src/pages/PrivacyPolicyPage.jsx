@@ -1,16 +1,11 @@
-import DashboardLayout from '../components/DashboardLayout'
-
 const PrivacyPolicyPage = () => {
   return (
-    <DashboardLayout>
-      <div className="p-4 lg:p-8 bg-black text-white min-h-screen">
+    <div className="min-h-screen bg-black text-white">
+      <div className="p-4 lg:p-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">Privacy Policy</h1>
-            <p className="text-gray-400 text-sm lg:text-base">
-              Last updated: {new Date().toLocaleDateString()}
-            </p>
           </div>
 
           {/* Content */}
@@ -146,7 +141,7 @@ const PrivacyPolicyPage = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </div>
   )
 }
 
