@@ -9,6 +9,7 @@ const GetCreditsPage = () => {
   console.log('🚀 GetCreditsPage component loaded!')
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [loading, setLoading] = useState(false)
+  const [promoCode, setPromoCode] = useState('')
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
   
@@ -57,7 +58,7 @@ const GetCreditsPage = () => {
         return
       }
       
-      const response = await paymentService.createCheckoutSession(plan, billingToggle)
+      const response = await paymentService.createCheckoutSession(plan, billingToggle, promoCode || null)
       console.log('✅ Got response:', response)
       
       if (!response.url) {
@@ -113,7 +114,7 @@ const GetCreditsPage = () => {
             </h2>
             <p className="text-xl text-gray-300 mb-8">Start building your AI influencer empire today</p>
             
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center mb-6">
               <div className="bg-gray-900 w-60 p-1 rounded-xl">
                 <button
                   onClick={() => setBillingToggle('monthly')}
@@ -135,6 +136,25 @@ const GetCreditsPage = () => {
                 >
                   Yearly
                 </button>
+              </div>
+            </div>
+
+            {/* Promo Code Input */}
+            <div className="flex items-center justify-center mb-8">
+              <div className="bg-gray-900 w-80 p-4 rounded-xl">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Promo Code (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  placeholder="Enter promo code"
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                />
+                {promoCode && (
+                  <p className="text-green-400 text-xs mt-1">Promo code will be applied at checkout</p>
+                )}
               </div>
             </div>
           </div>

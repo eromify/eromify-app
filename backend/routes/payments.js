@@ -56,7 +56,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
     console.log('💳 Creating checkout session for user:', req.user.id);
     console.log('💳 Request body:', req.body);
     
-    const { plan, billing } = req.body;
+    const { plan, billing, promoCode } = req.body;
     const userId = req.user.id;
 
     // Validate plan and billing
@@ -94,6 +94,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
       success_url: `https://www.eromify.com/dashboard?payment=success`,
       cancel_url: `https://www.eromify.com/credits?payment=cancelled`,
       customer_email: req.user.email,
+      ...(promoCode && { discounts: [{ promotion_code: promoCode }] }),
       metadata: {
         userId: userId,
         plan: plan,
