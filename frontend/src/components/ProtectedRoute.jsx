@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext'
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth()
 
+  console.log('ProtectedRoute - user:', user, 'loading:', loading)
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -15,7 +17,13 @@ const ProtectedRoute = ({ children }) => {
     )
   }
 
-  return user ? children : <Navigate to="/login" />
+  if (!user) {
+    console.log('ProtectedRoute - No user, redirecting to login')
+    return <Navigate to="/login" />
+  }
+
+  console.log('ProtectedRoute - User authenticated, rendering children')
+  return children
 }
 
 export default ProtectedRoute

@@ -43,9 +43,13 @@ export const AuthProvider = ({ children }) => {
               if (response.data.success) {
                 localStorage.setItem('token', response.data.token)
                 setUser(response.data.user)
+                console.log('OAuth success, user set:', response.data.user)
                 // Clear the hash from URL and redirect to dashboard
                 window.history.replaceState({}, document.title, '/')
-                window.location.href = '/dashboard'
+                // Use setTimeout to ensure state is updated before redirect
+                setTimeout(() => {
+                  window.location.href = '/dashboard'
+                }, 100)
                 return
               }
             } catch (error) {
@@ -68,9 +72,13 @@ export const AuthProvider = ({ children }) => {
                 if (jwtResponse.data.success) {
                   localStorage.setItem('token', jwtResponse.data.token)
                   setUser(jwtResponse.data.user)
+                  console.log('OAuth fallback success, user set:', jwtResponse.data.user)
                   // Clear the hash from URL and redirect to dashboard
                   window.history.replaceState({}, document.title, '/')
-                  window.location.href = '/dashboard'
+                  // Use setTimeout to ensure state is updated before redirect
+                  setTimeout(() => {
+                    window.location.href = '/dashboard'
+                  }, 100)
                   return
                 }
               } catch (fallbackError) {
