@@ -21,6 +21,16 @@
   <body>
     <div id="root"></div>
     
+    <script>
+      // Handle OAuth callback redirects
+      (function() {
+        const hash = window.location.hash;
+        if (hash && hash.includes('access_token')) {
+          console.log('OAuth callback detected on main page, redirecting to oauth-callback');
+          window.location.href = '/oauth-callback' + hash;
+        }
+      })();
+    </script>
   </body>
 </html>
 
