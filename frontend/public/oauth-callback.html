@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Callback - Eromify</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #ec4899;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status {
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+        .sub-status {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <div class="status">Processing Google OAuth...</div>
+        <div class="sub-status">Please wait...</div>
+    </div>
+
+    <script>
+        // Handle OAuth callback
+        (function() {
+            const hash = window.location.hash;
+            console.log('OAuth callback detected with hash:', hash);
+            
+            if (hash && hash.includes('access_token')) {
+                console.log('Found OAuth token in hash');
+                
+                // Extract token from hash
+                const params = new URLSearchParams(hash.substring(1));
+                const accessToken = params.get('access_token');
+                
+                if (accessToken) {
+                    console.log('Processing OAuth token...');
+                    
+                    // Call backend to convert Supabase token to JWT
+                    fetch('https://eromify-backend.onrender.com/api/auth/google-callback', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            access_token: accessToken
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            localStorage.setItem('token', data.token);
+                            console.log('Authentication successful, redirecting to dashboard');
+                            
+                            // Clear the hash from URL and redirect to dashboard
+                            window.history.replaceState({}, document.title, '/');
+                            window.location.href = '/dashboard';
+                        } else {
+                            console.error('OAuth backend failed:', data);
+                            // Fallback: try to decode token and create user
+                            try {
+                                const payload = JSON.parse(atob(accessToken.split('.')[1]));
+                                const mockUser = {
+                                    email: payload.email,
+                                    fullName: payload.user_metadata?.full_name || payload.email?.split('@')[0] || 'Google User'
+                                };
+                                
+                                fetch('https://eromify-backend.onrender.com/api/auth/register', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        email: mockUser.email,
+                                        password: 'google_oauth_user_' + Date.now(),
+                                        fullName: mockUser.fullName
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(jwtResponse => {
+                                    if (jwtResponse.success) {
+                                        localStorage.setItem('token', jwtResponse.token);
+                                        console.log('Account created, redirecting to dashboard');
+                                        
+                                        // Clear the hash from URL and redirect to dashboard
+                                        window.history.replaceState({}, document.title, '/');
+                                        window.location.href = '/dashboard';
+                                    } else {
+                                        console.error('OAuth fallback failed:', jwtResponse);
+                                        window.location.href = '/login';
+                                    }
+                                })
+                                .catch(fallbackError => {
+                                    console.error('OAuth fallback failed:', fallbackError);
+                                    window.location.href = '/login';
+                                });
+                            } catch (fallbackError) {
+                                console.error('OAuth fallback failed:', fallbackError);
+                                window.location.href = '/login';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('OAuth backend failed:', error);
+                        // Fallback: try to decode token and create user
+                        try {
+                            const payload = JSON.parse(atob(accessToken.split('.')[1]));
+                            const mockUser = {
+                                email: payload.email,
+                                fullName: payload.user_metadata?.full_name || payload.email?.split('@')[0] || 'Google User'
+                            };
+                            
+                            fetch('https://eromify-backend.onrender.com/api/auth/register', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    email: mockUser.email,
+                                    password: 'google_oauth_user_' + Date.now(),
+                                    fullName: mockUser.fullName
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(jwtResponse => {
+                                if (jwtResponse.success) {
+                                    localStorage.setItem('token', jwtResponse.token);
+                                    console.log('Account created, redirecting to dashboard');
+                                    
+                                    // Clear the hash from URL and redirect to dashboard
+                                    window.history.replaceState({}, document.title, '/');
+                                    window.location.href = '/dashboard';
+                                } else {
+                                    console.error('OAuth fallback failed:', jwtResponse);
+                                    window.location.href = '/login';
+                                }
+                            })
+                            .catch(fallbackError => {
+                                console.error('OAuth fallback failed:', fallbackError);
+                                window.location.href = '/login';
+                            });
+                        } catch (fallbackError) {
+                            console.error('OAuth fallback failed:', fallbackError);
+                            window.location.href = '/login';
+                        }
+                    });
+                } else {
+                    console.log('No access token found');
+                    window.location.href = '/login';
+                }
+            } else {
+                console.log('No OAuth token found in hash');
+                window.location.href = '/login';
+            }
+        })();
+    </script>
+</body>
+</html>
