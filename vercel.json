@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/auth/callback",
+      "destination": "/auth/callback.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
