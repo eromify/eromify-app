@@ -19,6 +19,7 @@ import SupportPage from './pages/SupportPage'
 import TermsOfServicePage from './pages/TermsOfServicePage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import OAuthCallbackHandler from './pages/OAuthCallbackHandler'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import './App.css'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <DashboardPage />

@@ -98,17 +98,6 @@ const LoginPage = () => {
             <span>Continue with Google</span>
           </button>
 
-          {/* Temporary Skip Button for Development */}
-          <button
-            onClick={() => {
-              // Temporary bypass for development
-              localStorage.setItem('token', 'dev-token-123');
-              navigate('/dashboard');
-            }}
-            className="w-full mb-6 bg-gradient-to-r from-green-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-purple-600 transition-all duration-200 flex items-center justify-center space-x-3"
-          >
-            <span>🚀 Skip Login (Dev Mode)</span>
-          </button>
 
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
