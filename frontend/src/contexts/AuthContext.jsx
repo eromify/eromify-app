@@ -17,14 +17,83 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for existing token on app load
-    const token = localStorage.getItem('token')
-    
-    if (token) {
-      getUserProfileFromToken()
-    } else {
-      setLoading(false)
+    // Check for OAuth callback first
+    const handleOAuthCallback = async () => {
+      const hash = window.location.hash
+      if (hash && hash.includes('access_token')) {
+        console.log('OAuth callback detected on app load:', hash)
+        
+        try {
+          // Extract token from hash
+          const params = new URLSearchParams(hash.substring(1))
+          const accessToken = params.get('access_token')
+          
+          if (accessToken) {
+            console.log('Processing OAuth token from main page...')
+            
+            try {
+              // Call backend to convert Supabase token to JWT
+              const response = await api.post('/auth/google-callback', {
+                access_token: accessToken
+              })
+              
+              if (response.data.success) {
+                localStorage.setItem('token', response.data.token)
+                setUser(response.data.user)
+                // Clear the hash from URL
+                window.history.replaceState({}, document.title, '/')
+                return
+              }
+            } catch (error) {
+              console.error('OAuth backend failed, trying fallback:', error)
+              
+              // Fallback: decode token and create user
+              try {
+                const payload = JSON.parse(atob(accessToken.split('.')[1]))
+                const mockUser = {
+                  email: payload.email,
+                  fullName: payload.user_metadata?.full_name || payload.email?.split('@')[0] || 'Google User'
+                }
+                
+                const jwtResponse = await api.post('/auth/register', {
+                  email: mockUser.email,
+                  password: 'google_oauth_user_' + Date.now(),
+                  fullName: mockUser.fullName
+                })
+                
+                if (jwtResponse.data.success) {
+                  localStorage.setItem('token', jwtResponse.data.token)
+                  setUser(jwtResponse.data.user)
+                  // Clear the hash from URL
+                  window.history.replaceState({}, document.title, '/')
+                  return
+                }
+              } catch (fallbackError) {
+                console.error('OAuth fallback failed:', fallbackError)
+              }
+            }
+          }
+          
+          // Clear the hash from URL even if processing failed
+          window.history.replaceState({}, document.title, '/')
+        } catch (error) {
+          console.error('OAuth callback handling error:', error)
+          window.history.replaceState({}, document.title, '/')
+        }
+      }
     }
+    
+    // Handle OAuth callback first
+    handleOAuthCallback().then(() => {
+      // Then check for existing token
+      const token = localStorage.getItem('token')
+      
+      if (token) {
+        getUserProfileFromToken()
+      } else {
+        setLoading(false)
+      }
+    })
   }, [])
 
 
