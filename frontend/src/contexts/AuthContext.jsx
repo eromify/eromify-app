@@ -222,9 +222,15 @@ export const AuthProvider = ({ children }) => {
             access_type: 'offline',
             prompt: 'consent',
           },
-          skipBrowserRedirect: false
+          skipBrowserRedirect: true
         }
       })
+      
+      if (data?.url) {
+        console.log('Redirecting to:', data.url)
+        window.location.href = data.url
+        return { data, error: null }
+      }
       
       if (error) {
         console.error('Google OAuth error:', error)
