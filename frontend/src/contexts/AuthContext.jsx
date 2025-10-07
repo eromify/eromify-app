@@ -20,12 +20,15 @@ export const AuthProvider = ({ children }) => {
     // Check for OAuth callback first
     const handleOAuthCallback = async () => {
       const hash = window.location.hash
-      if (hash && hash.includes('access_token')) {
-        console.log('OAuth callback detected on app load:', hash)
+      const search = window.location.search
+      
+      // Check both hash and query parameters for OAuth tokens
+      if ((hash && hash.includes('access_token')) || (search && search.includes('access_token'))) {
+        console.log('OAuth callback detected on app load:', { hash, search })
         
         try {
-          // Extract token from hash
-          const params = new URLSearchParams(hash.substring(1))
+          // Extract token from hash or query parameters
+          const params = new URLSearchParams(hash ? hash.substring(1) : search.substring(1))
           const accessToken = params.get('access_token')
           
           if (accessToken) {
@@ -207,7 +210,7 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     try {
       // Use the correct OAuth callback URL for production
-      const redirectUrl = 'https://www.eromify.com/oauth-callback'
+      const redirectUrl = 'https://www.eromify.com/'
       
       console.log('Starting Google OAuth with redirect:', redirectUrl);
       
