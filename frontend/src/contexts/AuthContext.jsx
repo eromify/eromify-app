@@ -106,6 +106,7 @@ export const AuthProvider = ({ children }) => {
       if (response.data.success) {
         localStorage.setItem('token', response.data.token)
         setUser(response.data.user)
+        console.log('User set in AuthContext after registration:', response.data.user)
       }
       
       return { data: response.data, error: null }

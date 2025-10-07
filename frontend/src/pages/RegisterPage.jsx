@@ -50,8 +50,12 @@ const RegisterPage = () => {
         setLoading(false)
       } else if (data && data.success) {
         console.log('Registration successful, redirecting to dashboard')
-        // Don't set loading to false here, let the redirect happen
-        navigate('/dashboard')
+        console.log('Registration data:', data)
+        // Small delay to ensure user state is updated
+        setTimeout(() => {
+          console.log('Navigating to dashboard...')
+          navigate('/dashboard')
+        }, 100)
       } else {
         setError('Registration failed')
         setLoading(false)
