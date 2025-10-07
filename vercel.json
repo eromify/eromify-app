@@ -1,6 +1,13 @@
 {
-  "buildCommand": "cd frontend && npm install && npm run build && cd .. && cp -r frontend/dist/* dist/",
-  "outputDirectory": "dist",
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!api/).*)",
