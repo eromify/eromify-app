@@ -14,30 +14,30 @@ const UpscalePage = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex min-h-full">
-        {/* Main Content Area */}
-        <div className="flex-1 p-8">
-          <div className="flex-1 flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-                      {/* Large Icon */}
-                      <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                        <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center">
-                          <ArrowUp className="h-10 w-10 text-purple-400" />
+      <div className="p-4 lg:p-8 bg-black text-white min-h-screen">
+        <div className="flex flex-col lg:flex-row lg:gap-8">
+          {/* Main Content Area */}
+          <div className="flex-1">
+            <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+              <div className="text-center">
+                        {/* Large Icon */}
+                        <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                          <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center">
+                            <ArrowUp className="h-10 w-10 text-purple-400" />
+                          </div>
                         </div>
-                      </div>
-              
-              {/* Main Message */}
-              <h2 className="text-2xl font-bold text-white mb-4">No upscaled images found</h2>
-              <p className="text-gray-400 mb-8">
-                Your upscaled images will appear here.
-              </p>
+                
+                {/* Main Message */}
+                <h2 className="text-2xl font-bold text-white mb-4">No upscaled images found</h2>
+                <p className="text-gray-400 mb-8">
+                  Your upscaled images will appear here.
+                </p>
+              </div>
             </div>
           </div>
-          
-        </div>
 
-        {/* Right Sidebar - Settings */}
-        <div className="w-80 bg-black border-l border-gray-900 p-6">
+          {/* Right Sidebar - Settings */}
+          <div className="w-full lg:w-80 bg-black border border-gray-900 lg:border-l rounded-lg lg:rounded-none p-6 mt-6 lg:mt-0">
           <h3 className="text-lg font-semibold text-white mb-6">Upscale Settings</h3>
           
           {/* Image Upload */}
@@ -113,16 +113,17 @@ const UpscalePage = () => {
           </div>
         </div>
 
-        {/* Bottom Button */}
-        <div className="fixed bottom-0 left-56 right-80 bg-black border-t border-gray-900 p-4">
-          <div className="flex justify-center">
-            <button 
-              onClick={() => setShowUpscaleLimitModal(true)}
-              className="bg-black border border-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center"
-            >
-              <ArrowUp className="h-5 w-5 mr-2" />
-              Upscale Image (10 gems)
-            </button>
+          {/* Bottom Button */}
+          <div className="mt-6 lg:mt-0">
+            <div className="flex justify-center">
+              <button 
+                onClick={() => setShowUpscaleLimitModal(true)}
+                className="bg-black border border-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 flex items-center w-full lg:w-auto"
+              >
+                <ArrowUp className="h-5 w-5 mr-2" />
+                Upscale Image (10 gems)
+              </button>
+            </div>
           </div>
         </div>
       </div>
