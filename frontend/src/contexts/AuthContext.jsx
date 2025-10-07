@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for existing token
+    // Check for existing token on app load
     const token = localStorage.getItem('token')
     
     if (token) {
@@ -134,11 +134,9 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      // Force redirect to OAuth callback route
-      const redirectUrl = window.location.hostname === 'localhost' 
-        ? `${window.location.origin}/oauth-callback` 
-        : `${window.location.origin}/oauth-callback`;
-        
+      // Use the correct OAuth callback URL for production
+      const redirectUrl = 'https://www.eromify.com/auth/callback'
+      
       console.log('Starting Google OAuth with redirect:', redirectUrl);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -158,7 +156,6 @@ export const AuthProvider = ({ children }) => {
       }
       
       console.log('Google OAuth initiated, data:', data);
-      // OAuth redirect will happen automatically
       return { data, error: null }
     } catch (error) {
       console.error('Google OAuth catch error:', error)

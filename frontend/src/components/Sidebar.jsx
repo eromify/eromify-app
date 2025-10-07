@@ -19,10 +19,11 @@ import {
   Clock,
   User,
   HelpCircle,
-  LogOut
+  LogOut,
+  X
 } from 'lucide-react'
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [showSignOut, setShowSignOut] = useState(false)
   const [expandedSections, setExpandedSections] = useState({
@@ -90,7 +91,11 @@ const Sidebar = () => {
 
   const NavItem = ({ item, isCollapsed }) => (
     <button
-      onClick={() => navigate(item.path)}
+      onClick={() => {
+        navigate(item.path)
+        // Close sidebar on mobile after navigation
+        onClose()
+      }}
               className={`w-full flex items-center px-3 py-2 text-left transition-all duration-200 rounded-lg mb-1 ${
         item.active 
           ? 'bg-gradient-to-l from-purple-900 to-[#601a2f] text-white' 
@@ -129,8 +134,11 @@ const Sidebar = () => {
   )
 
           return (
-            <div className={`bg-black border-r border-gray-900 flex flex-col transition-all duration-300 fixed h-screen ${
+            <div className={`bg-black border-r border-gray-900 flex flex-col transition-all duration-300 h-screen ${
               isCollapsed ? 'w-16' : 'w-56'
+            } ${
+              // Mobile: show/hide based on isOpen prop, desktop: always fixed
+              isOpen ? 'fixed inset-y-0 left-0 z-50' : 'hidden lg:flex lg:fixed lg:inset-y-0 lg:left-0'
             }`}>
       {/* Header */}
       <div className="h-14 flex items-center px-4 border-b border-gray-900 flex-shrink-0">
@@ -145,8 +153,18 @@ const Sidebar = () => {
             </div>
           </button>
         )}
+        
+        {/* Mobile close button */}
+        <button
+          onClick={onClose}
+          className="ml-auto p-1 text-gray-400 hover:text-white transition-colors lg:hidden"
+        >
+          <X className="h-6 w-6" />
+        </button>
+        
+        {/* Desktop collapse button */}
         {!isCollapsed && (
-          <div className="flex-1 flex justify-end">
+          <div className="hidden lg:flex flex-1 justify-end">
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-1 text-gray-400 hover:text-white transition-colors"

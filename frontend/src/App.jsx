@@ -87,7 +87,7 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/support" element={<SupportPage />} />
-        <Route path="/oauth-callback" element={<OAuthCallbackHandler />} />
+        <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
       </Routes>
     </AuthProvider>
   )

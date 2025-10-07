@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react'
 
@@ -15,6 +15,7 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { signUp, signInWithGoogle } = useAuth()
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -50,7 +51,7 @@ const RegisterPage = () => {
       } else if (data && data.success) {
         console.log('Registration successful, redirecting to dashboard')
         // Don't set loading to false here, let the redirect happen
-        window.location.href = '/dashboard'
+        navigate('/dashboard')
       } else {
         setError('Registration failed')
         setLoading(false)

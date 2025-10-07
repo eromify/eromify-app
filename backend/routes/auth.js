@@ -37,22 +37,6 @@ router.post('/register', async (req, res) => {
 
     const { email, password, fullName } = value;
 
-    // Check if Supabase is properly configured
-    const isSupabaseConfigured = process.env.SUPABASE_URL && 
-                                 process.env.SUPABASE_URL !== 'https://your-project.supabase.co' &&
-                                 process.env.SUPABASE_URL !== 'your_supabase_project_url' &&
-                                 process.env.SUPABASE_ANON_KEY && 
-                                 process.env.SUPABASE_ANON_KEY !== 'your-anon-key' &&
-                                 process.env.SUPABASE_ANON_KEY !== 'your_supabase_anon_key';
-
-    if (!isSupabaseConfigured) {
-      console.log('Supabase not configured properly');
-      return res.status(500).json({
-        success: false,
-        error: 'Authentication service not configured. Please contact support.'
-      });
-    }
-
     try {
       // Create user in Supabase
       const { data, error: supabaseError } = await supabase.auth.signUp({
@@ -69,7 +53,8 @@ router.post('/register', async (req, res) => {
         console.error('Supabase registration error:', supabaseError);
         
         // Handle specific registration errors
-        if (supabaseError.message.includes('User already registered')) {
+        if (supabaseError.message.includes('User already registered') || 
+            supabaseError.message.includes('already been registered')) {
           return res.status(400).json({
             success: false,
             error: 'An account with this email already exists'
@@ -140,22 +125,6 @@ router.post('/login', async (req, res) => {
     }
 
     const { email, password } = value;
-
-    // Check if Supabase is properly configured
-    const isSupabaseConfigured = process.env.SUPABASE_URL && 
-                                 process.env.SUPABASE_URL !== 'https://your-project.supabase.co' &&
-                                 process.env.SUPABASE_URL !== 'your_supabase_project_url' &&
-                                 process.env.SUPABASE_ANON_KEY && 
-                                 process.env.SUPABASE_ANON_KEY !== 'your-anon-key' &&
-                                 process.env.SUPABASE_ANON_KEY !== 'your_supabase_anon_key';
-
-    if (!isSupabaseConfigured) {
-      console.log('Supabase not configured properly');
-      return res.status(500).json({
-        success: false,
-        error: 'Authentication service not configured. Please contact support.'
-      });
-    }
 
     try {
       // Sign in with Supabase - this will validate the email/password combination
