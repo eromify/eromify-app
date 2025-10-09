@@ -249,6 +249,78 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <p className="text-gray-500 uppercase tracking-widest text-sm font-bold mb-4">How It Works</p>
+            <h2 className="text-5xl md:text-6xl font-semibold mb-4">
+              Start Earning in <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">3 Simple Steps</span>
+            </h2>
+            <p className="text-lg text-gray-400">
+              From selection to monetization in minutes.
+            </p>
+          </div>
+
+          <div className="space-y-16 md:space-y-20">
+            {/* Step 1 - Text Left, Image Right */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="md:pl-12 text-center md:text-left">
+                <div className="w-16 h-16 bg-[#1a1a1a] rounded-xl flex items-center justify-center text-3xl mb-6 mx-auto md:mx-0">🛍️</div>
+                <h3 className="text-2xl md:text-3xl font-bold mb-4">Choose Your Model</h3>
+                <p className="text-gray-400 text-base md:text-lg">
+                  Select from 70+ pre-trained AI models or create your own custom influencer persona.
+                </p>
+              </div>
+              <div>
+                <img 
+                  src="/marketplace.webp" 
+                  alt="Step 1" 
+                  className="w-full h-auto rounded-2xl"
+                />
+              </div>
+            </div>
+
+            {/* Step 2 - Image Left, Text Right */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="order-2 md:order-1">
+                <img 
+                  src="/step2-create-content.webp" 
+                  alt="Step 2" 
+                  className="w-full h-auto rounded-2xl"
+                />
+              </div>
+              <div className="order-1 md:order-2 md:pl-12 text-center md:text-left">
+                <div className="w-16 h-16 bg-[#1a1a1a] rounded-xl flex items-center justify-center text-3xl mb-6 mx-auto md:mx-0">✨</div>
+                <h3 className="text-2xl md:text-3xl font-bold mb-4">Generate Content</h3>
+                <p className="text-gray-400 text-base md:text-lg">
+                  Create premium-quality images and videos with our advanced AI technology.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 3 - Text Left, Image Right */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="md:pl-12 text-center md:text-left">
+                <div className="w-16 h-16 bg-[#1a1a1a] rounded-xl flex items-center justify-center text-3xl mb-6 mx-auto md:mx-0">💰</div>
+                <h3 className="text-2xl md:text-3xl font-bold mb-4">Monetize & Profit</h3>
+                <p className="text-gray-400 text-base md:text-lg">
+                  Sell your content for $50+ per PPV and start earning immediately.
+                </p>
+              </div>
+              <div>
+                <img 
+                  src="/step3-export-monetize.webp" 
+                  alt="Step 3" 
+                  className="w-full h-auto rounded-2xl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
