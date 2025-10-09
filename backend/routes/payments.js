@@ -317,3 +317,4 @@ router.get('/pricing-plans', (req, res) => {
 
 module.exports = router;
 
+# Force deployment Fri Oct 10 00:31:08 CEST 2025
