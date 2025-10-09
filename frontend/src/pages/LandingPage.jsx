@@ -190,130 +190,61 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8">
+      {/* Showcase Section */}
+      <section id="showcase" className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
-              Simple Process
-            </div>
-            <h2 className="text-4xl md:text-5xl font-semibold mb-4">
-              How{' '}
-              <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                Eromify Works
-              </span>
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <p className="text-gray-500 uppercase tracking-widest text-sm font-bold mb-4">Showcase</p>
+            <h2 className="text-5xl md:text-6xl font-semibold mb-4">
+              Quality That <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">Sells</span>
             </h2>
-            <p className="text-xl text-gray-300">
-              Build your AI influencer empire with our intuitive platform
+            <p className="text-lg text-gray-400">
+              The same quality your subscribers pay $50+ for.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Step 1 */}
-            <div className="space-y-6">
-              <div className="w-16 h-16 bg-black border border-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">01</span>
-              </div>
-              <h3 className="text-xl font-semibold">Create Your AI Persona</h3>
-              <p className="text-gray-400">
-                Design your AI influencer with custom appearance, voice, and personality traits that match your brand.
-              </p>
-              <div className="relative">
-                <div className="w-full h-80 bg-gradient-to-br from-pink-950 to-purple-900 rounded-3xl flex items-center justify-center relative">
-                  <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <div className="absolute bottom-4 left-4">
-                    <button className="bg-black text-white px-3 py-1 rounded-lg text-sm font-medium">
-                      Step 01
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Step 2 */}
-            <div className="space-y-6">
-              <div className="w-16 h-16 bg-black border border-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">02</span>
-              </div>
-              <h3 className="text-xl font-semibold">Generate Content</h3>
-              <p className="text-gray-400">
-                Create engaging posts, videos, and UGC ads using our AI-powered content generation tools.
-              </p>
-              <div className="relative">
-                <div className="w-full h-80 bg-gradient-to-br from-pink-950 to-purple-900 rounded-3xl flex items-center justify-center relative">
-                  <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div className="absolute bottom-4 left-4">
-                    <button className="bg-black text-white px-3 py-1 rounded-lg text-sm font-medium">
-                      Step 02
-                    </button>
-                  </div>
-                </div>
-              </div>
+          {/* Showcase Images */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="rounded-2xl overflow-hidden">
+              <img 
+                src="/showcase1.webp" 
+                alt="Quality Showcase 1" 
+                className="w-full h-auto"
+              />
             </div>
-
-            {/* Step 3 */}
-            <div className="space-y-6">
-              <div className="w-16 h-16 bg-black border border-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">03</span>
-              </div>
-              <h3 className="text-xl font-semibold">Scale Your Reach</h3>
-              <p className="text-gray-400">
-                Deploy your AI influencer across multiple platforms and reach thousands of potential customers.
-              </p>
-              <div className="relative">
-                <div className="w-full h-80 bg-gradient-to-br from-pink-950 to-purple-900 rounded-3xl flex items-center justify-center relative">
-                  <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <div className="absolute bottom-4 left-4">
-                    <button className="bg-black text-white px-3 py-1 rounded-lg text-sm font-medium">
-                      Step 03
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div className="rounded-2xl overflow-hidden">
+              <img 
+                src="/showcase2.webp" 
+                alt="Quality Showcase 2" 
+                className="w-full h-auto"
+              />
             </div>
-
-            {/* Step 4 */}
-            <div className="space-y-6">
-              <div className="w-16 h-16 bg-black border border-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">04</span>
-              </div>
-              <h3 className="text-xl font-semibold">Monetize & Grow</h3>
-              <p className="text-gray-400">
-                Turn your AI influencer into a revenue stream with brand deals, affiliate marketing, and more.
-              </p>
-              <div className="relative">
-                <div className="w-full h-80 bg-gradient-to-br from-pink-950 to-purple-900 rounded-3xl flex items-center justify-center relative">
-                  <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                  </div>
-                  <div className="absolute bottom-4 left-4">
-                    <button className="bg-black text-white px-3 py-1 rounded-lg text-sm font-medium">
-                      Step 04
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div className="rounded-2xl overflow-hidden">
+              <img 
+                src="/showcase3.webp" 
+                alt="Quality Showcase 3" 
+                className="w-full h-auto"
+              />
             </div>
           </div>
-          
-          <div className="text-center mt-20">
-            <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-              Get Started Today
-            </Link>
+
+          {/* CTA Buttons */}
+          <div className="text-center">
+            <p className="text-lg text-gray-300 mb-6">
+              Ready to create content that sells for $50+ per PPV?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/register" className="bg-black border border-gray-600 text-white px-8 py-3 rounded-full font-medium hover:bg-gray-900 transition-all">
+                View All Models
+              </Link>
+              <Link to="/register" className="bg-transparent border border-purple-500 text-white px-8 py-3 rounded-full font-medium hover:bg-purple-900/20 transition-all flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Get Started
+              </Link>
+            </div>
           </div>
         </div>
       </section>
