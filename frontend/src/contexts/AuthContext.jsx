@@ -46,11 +46,11 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('token', response.data.token)
                 setUser(response.data.user)
                 console.log('OAuth success, user set:', response.data.user)
-                // Clear the hash from URL and redirect to dashboard
+                // Clear the hash from URL and redirect to onboarding
                 window.history.replaceState({}, document.title, '/')
                 // Use setTimeout to ensure state is updated before redirect
                 setTimeout(() => {
-                  navigate('/dashboard', { replace: true })
+                  navigate('/onboarding', { replace: true })
                 }, 100)
                 return
               }
@@ -75,11 +75,11 @@ export const AuthProvider = ({ children }) => {
                   localStorage.setItem('token', jwtResponse.data.token)
                   setUser(jwtResponse.data.user)
                   console.log('OAuth fallback success, user set:', jwtResponse.data.user)
-                  // Clear the hash from URL and redirect to dashboard
+                  // Clear the hash from URL and redirect to onboarding
                   window.history.replaceState({}, document.title, '/')
                   // Use setTimeout to ensure state is updated before redirect
                   setTimeout(() => {
-                    navigate('/dashboard', { replace: true })
+                    navigate('/onboarding', { replace: true })
                   }, 100)
                   return
                 }

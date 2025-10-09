@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import api from '../utils/api'
 
@@ -15,16 +16,99 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    // Check for existing token
-    const token = localStorage.getItem('token')
-    
-    if (token) {
-      getUserProfileFromToken()
-    } else {
-      setLoading(false)
+    // Check for OAuth callback first
+    const handleOAuthCallback = async () => {
+      const hash = window.location.hash
+      const search = window.location.search
+      
+      // Check both hash and query parameters for OAuth tokens
+      if ((hash && hash.includes('access_token')) || (search && search.includes('access_token'))) {
+        console.log('OAuth callback detected on app load:', { hash, search })
+        
+        try {
+          // Extract token from hash or query parameters
+          const params = new URLSearchParams(hash ? hash.substring(1) : search.substring(1))
+          const accessToken = params.get('access_token')
+          
+          if (accessToken) {
+            console.log('Processing OAuth token from main page...')
+            
+            try {
+              // Call backend to convert Supabase token to JWT
+              const response = await api.post('/auth/google-callback', {
+                access_token: accessToken
+              })
+              
+              if (response.data.success) {
+                localStorage.setItem('token', response.data.token)
+                setUser(response.data.user)
+                console.log('OAuth success, user set:', response.data.user)
+                // Clear the hash from URL and redirect to onboarding
+                window.history.replaceState({}, document.title, '/')
+                // Use setTimeout to ensure state is updated before redirect
+                setTimeout(() => {
+                  navigate('/onboarding', { replace: true })
+                }, 100)
+                return
+              }
+            } catch (error) {
+              console.error('OAuth backend failed, trying fallback:', error)
+              
+              // Fallback: decode token and create user
+              try {
+                const payload = JSON.parse(atob(accessToken.split('.')[1]))
+                const mockUser = {
+                  email: payload.email,
+                  fullName: payload.user_metadata?.full_name || payload.email?.split('@')[0] || 'Google User'
+                }
+                
+                const jwtResponse = await api.post('/auth/register', {
+                  email: mockUser.email,
+                  password: 'google_oauth_user_' + Date.now(),
+                  fullName: mockUser.fullName
+                })
+                
+                if (jwtResponse.data.success) {
+                  localStorage.setItem('token', jwtResponse.data.token)
+                  setUser(jwtResponse.data.user)
+                  console.log('OAuth fallback success, user set:', jwtResponse.data.user)
+                  // Clear the hash from URL and redirect to onboarding
+                  window.history.replaceState({}, document.title, '/')
+                  // Use setTimeout to ensure state is updated before redirect
+                  setTimeout(() => {
+                    navigate('/onboarding', { replace: true })
+                  }, 100)
+                  return
+                }
+              } catch (fallbackError) {
+                console.error('OAuth fallback failed:', fallbackError)
+              }
+            }
+          }
+          
+          // Clear the hash from URL even if processing failed
+          window.history.replaceState({}, document.title, '/')
+        } catch (error) {
+          console.error('OAuth callback handling error:', error)
+          window.history.replaceState({}, document.title, '/')
+        }
+      }
     }
+    
+    // Handle OAuth callback first
+    handleOAuthCallback().then(() => {
+      // Then check for existing token
+      const token = localStorage.getItem('token')
+      
+      if (token) {
+        getUserProfileFromToken()
+      } else {
+        setLoading(false)
+      }
+    })
   }, [])
 
 
@@ -106,6 +190,7 @@ export const AuthProvider = ({ children }) => {
       if (response.data.success) {
         localStorage.setItem('token', response.data.token)
         setUser(response.data.user)
+        console.log('User set in AuthContext after registration:', response.data.user)
       }
       
       return { data: response.data, error: null }
@@ -134,11 +219,9 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      // Force redirect to OAuth callback route
-      const redirectUrl = window.location.hostname === 'localhost' 
-        ? `${window.location.origin}/oauth-callback` 
-        : `${window.location.origin}/oauth-callback`;
-        
+      // Use the correct OAuth callback URL for production
+      const redirectUrl = 'https://www.eromify.com/'
+      
       console.log('Starting Google OAuth with redirect:', redirectUrl);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -148,9 +231,16 @@ export const AuthProvider = ({ children }) => {
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
-          }
+          },
+          skipBrowserRedirect: true
         }
       })
+      
+      if (data?.url) {
+        console.log('Redirecting to:', data.url)
+        window.location.href = data.url
+        return { data, error: null }
+      }
       
       if (error) {
         console.error('Google OAuth error:', error)
@@ -158,7 +248,6 @@ export const AuthProvider = ({ children }) => {
       }
       
       console.log('Google OAuth initiated, data:', data);
-      // OAuth redirect will happen automatically
       return { data, error: null }
     } catch (error) {
       console.error('Google OAuth catch error:', error)
