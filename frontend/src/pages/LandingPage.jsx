@@ -92,6 +92,23 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Video Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
+            <video 
+              className="w-full h-auto"
+              controls
+              playsInline
+              poster="/logo.png"
+            >
+              <source src="/Hero-Landing-Video.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
