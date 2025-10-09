@@ -25,9 +25,9 @@ const LoginPage = () => {
         setError(error)
         setLoading(false)
       } else if (data && data.success) {
-        console.log('Login successful, redirecting to dashboard')
+        console.log('Login successful, redirecting to onboarding')
         // Don't set loading to false here, let the redirect happen
-        navigate('/dashboard')
+        navigate('/onboarding')
       } else {
         setError('Login failed')
         setLoading(false)

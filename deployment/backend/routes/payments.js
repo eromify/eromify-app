@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+require('dotenv').config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY?.trim());
 const { createClient } = require('@supabase/supabase-js');
-const auth = require('../middleware/auth');
+const { authenticateToken } = require('../middleware/auth');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -50,21 +51,25 @@ const PRICING_PLANS = {
 };
 
 // Create Stripe checkout session
-router.post('/create-checkout-session', auth, async (req, res) => {
+router.post('/create-checkout-session', authenticateToken, async (req, res) => {
   try {
-    const { plan, billing } = req.body;
+    console.log('💳 Creating checkout session for user:', req.user.id);
+    console.log('💳 Request body:', req.body);
+    
+    const { plan, billing, promoCode } = req.body;
     const userId = req.user.id;
 
     // Validate plan and billing
     if (!PRICING_PLANS[plan] || !PRICING_PLANS[plan][billing]) {
+      console.error('❌ Invalid plan or billing:', { plan, billing });
       return res.status(400).json({ error: 'Invalid plan or billing period' });
     }
 
     const planConfig = PRICING_PLANS[plan][billing];
     const isYearly = billing === 'yearly';
 
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    // Prepare checkout session options
+    const sessionOptions = {
       payment_method_types: ['card'],
       line_items: [
         {
@@ -85,9 +90,15 @@ router.post('/create-checkout-session', auth, async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.FRONTEND_URL}/dashboard?payment=success`,
-      cancel_url: `${process.env.FRONTEND_URL}/get-credits?payment=cancelled`,
+      allow_promotion_codes: true,
+      success_url: process.env.NODE_ENV === 'production' 
+        ? `https://www.eromify.com/dashboard?payment=success`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success`,
+      cancel_url: process.env.NODE_ENV === 'production'
+        ? `https://www.eromify.com/credits?payment=cancelled`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/onboarding?payment=cancelled`,
       customer_email: req.user.email,
+      ...(promoCode && { discounts: [{ promotion_code: promoCode }] }),
       metadata: {
         userId: userId,
         plan: plan,
@@ -95,12 +106,27 @@ router.post('/create-checkout-session', auth, async (req, res) => {
         credits: planConfig.credits,
         influencerTrainings: planConfig.influencerTrainings
       }
-    });
+    };
 
-    res.json({ sessionId: session.id, url: session.url });
+
+    // Create Stripe checkout session
+    console.log('💳 Creating Stripe session with options:', JSON.stringify(sessionOptions, null, 2));
+    console.log('🎫 Promotion codes enabled:', sessionOptions.allow_promotion_codes);
+    
+    try {
+      const session = await stripe.checkout.sessions.create(sessionOptions);
+      console.log('✅ Stripe session created:', session.id, 'URL:', session.url);
+      console.log('🎫 Session allows promotion codes:', session.allow_promotion_codes);
+      res.json({ sessionId: session.id, url: session.url });
+    } catch (stripeError) {
+      console.error('❌ Stripe checkout error:', stripeError);
+      console.error('❌ Error details:', stripeError.message);
+      res.status(500).json({ error: 'Failed to create checkout session: ' + stripeError.message });
+    }
   } catch (error) {
-    console.error('Stripe checkout error:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('❌ Stripe checkout error:', error);
+    console.error('❌ Error details:', error.message);
+    res.status(500).json({ error: 'Failed to create checkout session: ' + error.message });
   }
 });
 
@@ -230,7 +256,7 @@ async function handleSubscriptionCancellation(subscription) {
 }
 
 // Get user subscription status
-router.get('/subscription', auth, async (req, res) => {
+router.get('/subscription', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -259,7 +285,7 @@ router.get('/subscription', auth, async (req, res) => {
 });
 
 // Cancel subscription
-router.post('/cancel-subscription', auth, async (req, res) => {
+router.post('/cancel-subscription', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
 

@@ -25,9 +25,9 @@ const LoginPage = () => {
         setError(error)
         setLoading(false)
       } else if (data && data.success) {
-        console.log('Login successful, redirecting to dashboard')
+        console.log('Login successful, redirecting to onboarding')
         // Don't set loading to false here, let the redirect happen
-        navigate('/dashboard')
+        navigate('/onboarding')
       } else {
         setError('Login failed')
         setLoading(false)
@@ -103,7 +103,7 @@ const LoginPage = () => {
             onClick={() => {
               // Temporary bypass for development
               localStorage.setItem('token', 'dev-token-123');
-              navigate('/dashboard');
+              navigate('/onboarding');
             }}
             className="w-full mb-6 bg-gradient-to-r from-green-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-purple-600 transition-all duration-200 flex items-center justify-center space-x-3"
           >

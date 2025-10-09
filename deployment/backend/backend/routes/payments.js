@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY?.trim());
 const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -53,11 +53,15 @@ const PRICING_PLANS = {
 // Create Stripe checkout session
 router.post('/create-checkout-session', authenticateToken, async (req, res) => {
   try {
-    const { plan, billing } = req.body;
+    console.log('💳 Creating checkout session for user:', req.user.id);
+    console.log('💳 Request body:', req.body);
+    
+    const { plan, billing, promoCode } = req.body;
     const userId = req.user.id;
 
     // Validate plan and billing
     if (!PRICING_PLANS[plan] || !PRICING_PLANS[plan][billing]) {
+      console.error('❌ Invalid plan or billing:', { plan, billing });
       return res.status(400).json({ error: 'Invalid plan or billing period' });
     }
 
@@ -86,9 +90,15 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `https://www.eromify.com/dashboard?payment=success`,
-      cancel_url: `https://www.eromify.com/credits?payment=cancelled`,
+      allow_promotion_codes: true,
+      success_url: process.env.NODE_ENV === 'production' 
+        ? `https://www.eromify.com/dashboard?payment=success`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success`,
+      cancel_url: process.env.NODE_ENV === 'production'
+        ? `https://www.eromify.com/credits?payment=cancelled`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/onboarding?payment=cancelled`,
       customer_email: req.user.email,
+      ...(promoCode && { discounts: [{ promotion_code: promoCode }] }),
       metadata: {
         userId: userId,
         plan: plan,
@@ -100,12 +110,23 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
 
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create(sessionOptions);
-
-    res.json({ sessionId: session.id, url: session.url });
+    console.log('💳 Creating Stripe session with options:', JSON.stringify(sessionOptions, null, 2));
+    console.log('🎫 Promotion codes enabled:', sessionOptions.allow_promotion_codes);
+    
+    try {
+      const session = await stripe.checkout.sessions.create(sessionOptions);
+      console.log('✅ Stripe session created:', session.id, 'URL:', session.url);
+      console.log('🎫 Session allows promotion codes:', session.allow_promotion_codes);
+      res.json({ sessionId: session.id, url: session.url });
+    } catch (stripeError) {
+      console.error('❌ Stripe checkout error:', stripeError);
+      console.error('❌ Error details:', stripeError.message);
+      res.status(500).json({ error: 'Failed to create checkout session: ' + stripeError.message });
+    }
   } catch (error) {
-    console.error('Stripe checkout error:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('❌ Stripe checkout error:', error);
+    console.error('❌ Error details:', error.message);
+    res.status(500).json({ error: 'Failed to create checkout session: ' + error.message });
   }
 });
 
