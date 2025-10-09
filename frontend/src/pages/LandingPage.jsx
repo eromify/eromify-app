@@ -111,55 +111,80 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="features" className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
-              Powerful Features
-            </div>
-            <h2 className="text-4xl md:text-5xl font-semibold mb-4">
-              Everything You Need to<br />
-              <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                Succeed
-              </span>
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <p className="text-gray-500 uppercase tracking-widest text-sm font-bold mb-4">Features</p>
+            <h2 className="text-5xl md:text-6xl font-semibold mb-4">
+              Built for <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">PPV Money</span>
             </h2>
+            <p className="text-lg text-gray-400">
+              Every feature designed to maximize your content earnings.
+            </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-black border border-gray-600 rounded-2xl p-8 py-12 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* AI Model Marketplace */}
+            <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
+              <div className="h-[18.5rem] overflow-hidden">
+                <img 
+                  src="/marketplace.webp" 
+                  alt="AI Model Marketplace" 
+                  className="w-full h-full object-cover object-top"
+                />
               </div>
-              <h3 className="text-xl font-semibold mb-4">AI Persona Creation</h3>
-              <p className="text-gray-400">
-                Build stunning AI influencers with custom appearances, voices, and personalities that resonate with your audience.
-              </p>
+              <div className="p-6 pt-10">
+                <h3 className="text-xl font-semibold mb-2">70+ Marketplace Models</h3>
+                <p className="text-gray-400 text-sm">
+                  Pre-trained models ready to use. No training, no waiting. Start earning immediately.
+                </p>
+              </div>
             </div>
-            
-            <div className="bg-black border border-gray-600 rounded-2xl p-8 py-12 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v18a1 1 0 01-1 1H4a1 1 0 01-1-1V1a1 1 0 011-1h2a1 1 0 011 1v3m0 0h8m-8 0v16h8V4" />
-                </svg>
+
+            {/* SDXL + Flux + Latest Models */}
+            <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
+              <img 
+                src="/generation-screenshot.webp" 
+                alt="SDXL + Flux + Latest Models" 
+                className="w-full h-auto"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">SDXL + Flux + Latest Models</h3>
+                <p className="text-gray-400 text-sm">
+                  Premium AI models with custom workflows built-in. No ComfyUI complexity, just click and create with the industry's best technology.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-4">Content Generation</h3>
-              <p className="text-gray-400">
-                Generate engaging posts, videos, and UGC ads that drive conversions and build authentic connections.
-              </p>
             </div>
-            
-            <div className="bg-black border border-gray-600 rounded-2xl p-8 py-12 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
+
+            {/* Skin Upscale */}
+            <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
+              <img 
+                src="/skin-upscale.webp" 
+                alt="Skin Upscale" 
+                className="w-full h-auto"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Skin Upscale</h3>
+                <p className="text-gray-400 text-sm">
+                  Generate crystal-clear images with perfect skin details. Every image comes out premium-quality and subscription-ready.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-4">Monetization</h3>
-              <p className="text-gray-400">
-                Turn your AI influencers into revenue streams with brand partnerships, affiliate marketing, and digital products.
-              </p>
+            </div>
+
+            {/* Advanced Video Generation */}
+            <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
+              <img 
+                src="/video-generation.webp" 
+                alt="Advanced Video Generation" 
+                className="w-full h-auto"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Advanced Video Generation</h3>
+                <p className="text-gray-400 text-sm">
+                  Turn static images into engaging videos with Kling, Wan, and the latest models. Create content that converts viewers to subscribers.
+                </p>
+              </div>
             </div>
           </div>
         </div>
