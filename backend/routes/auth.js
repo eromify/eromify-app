@@ -92,7 +92,8 @@ router.post('/register', async (req, res) => {
           id: data.user.id,
           email: data.user.email,
           fullName: fullName,
-          emailConfirmed: data.user.email_confirmed_at ? true : false
+          emailConfirmed: data.user.email_confirmed_at ? true : false,
+          onboardingCompleted: false
         }
       });
 
@@ -168,6 +169,13 @@ router.post('/login', async (req, res) => {
         { expiresIn: '7d' }
       );
 
+      // Fetch user data from database to get onboarding status
+      const { data: userData } = await supabase
+        .from('users')
+        .select('onboarding_completed')
+        .eq('id', data.user.id)
+        .single();
+
       res.json({
         success: true,
         message: 'Login successful',
@@ -178,7 +186,8 @@ router.post('/login', async (req, res) => {
           fullName: data.user.user_metadata?.full_name || email.split('@')[0],
           avatar: data.user.user_metadata?.avatar_url || null,
           bio: data.user.user_metadata?.bio || null,
-          emailConfirmed: data.user.email_confirmed_at ? true : false
+          emailConfirmed: data.user.email_confirmed_at ? true : false,
+          onboardingCompleted: userData?.onboarding_completed || false
         }
       });
 
@@ -297,12 +306,35 @@ router.get('/me', async (req, res) => {
     // Verify JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');
 
+    // Fetch user data from Supabase to get the latest profile info including onboarding status
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', decoded.userId)
+      .single();
+
+    if (userError || !userData) {
+      // If no user data in users table, return basic info from token
+      return res.json({
+        success: true,
+        user: {
+          id: decoded.userId,
+          email: decoded.email,
+          fullName: decoded.email.split('@')[0],
+          onboardingCompleted: false
+        }
+      });
+    }
+
     res.json({
       success: true,
       user: {
-        id: decoded.userId,
-        email: decoded.email,
-        fullName: decoded.email.split('@')[0] // Use email prefix as fullName
+        id: userData.id,
+        email: userData.email,
+        fullName: userData.full_name || decoded.email.split('@')[0],
+        avatar: userData.avatar_url,
+        bio: userData.bio,
+        onboardingCompleted: userData.onboarding_completed || false
       }
     });
 

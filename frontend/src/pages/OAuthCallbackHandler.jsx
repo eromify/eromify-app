@@ -37,10 +37,7 @@ const OAuthCallbackHandler = () => {
                 
                 // Clear the hash from URL and redirect to onboarding
                 window.history.replaceState({}, document.title, '/')
-                // Use setTimeout to ensure state is updated before redirect
-                setTimeout(() => {
-                  navigate('/onboarding', { replace: true })
-                }, 100)
+                navigate('/onboarding', { replace: true })
                 return
               }
             } catch (error) {
@@ -67,10 +64,7 @@ const OAuthCallbackHandler = () => {
                   
                   // Clear the hash from URL and redirect to onboarding
                   window.history.replaceState({}, document.title, '/')
-                  // Use setTimeout to ensure state is updated before redirect
-                  setTimeout(() => {
-                    navigate('/onboarding', { replace: true })
-                  }, 100)
+                  navigate('/onboarding', { replace: true })
                   return
                 }
               } catch (fallbackError) {

@@ -58,3 +58,6 @@ echo "   - SUPABASE_SERVICE_ROLE_KEY"
 echo "   - JWT_SECRET"
 
 
+
+
+

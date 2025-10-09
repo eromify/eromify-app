@@ -11,6 +11,7 @@ CREATE TABLE public.users (
     full_name TEXT NOT NULL,
     avatar_url TEXT,
     bio TEXT,
+    onboarding_completed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
