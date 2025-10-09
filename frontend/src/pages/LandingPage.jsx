@@ -237,7 +237,7 @@ const LandingPage = () => {
               Ready to create content that sells for $50+ per PPV?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register" className="bg-black border border-gray-600 text-white px-8 py-3 rounded-full font-medium hover:bg-gray-900 transition-all">
+              <Link to="/marketplace" className="bg-black border border-gray-600 text-white px-8 py-3 rounded-full font-medium hover:bg-gray-900 transition-all">
                 View All Models
               </Link>
               <Link to="/register" className="bg-transparent border border-purple-500 text-white px-8 py-3 rounded-full font-medium hover:bg-purple-900/20 transition-all flex items-center justify-center gap-2">
