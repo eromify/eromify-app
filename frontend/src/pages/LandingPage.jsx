@@ -413,16 +413,14 @@ const LandingPage = () => {
       <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
-              Pricing
-            </div>
-            <h2 className="text-4xl md:text-5xl font-semibold mb-4">
-              Choose Your{' '}
+            <p className="text-gray-500 uppercase tracking-widest text-sm font-bold mb-4">Pricing</p>
+            <h2 className="text-5xl md:text-6xl font-semibold mb-4">
+              Pay as you{' '}
               <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                Plan
+                grow
               </span>
             </h2>
-            <p className="text-xl text-gray-300 mb-8">Start building your AI influencer empire today</p>
+            <p className="text-lg text-gray-400 mb-12">Credits that scale with your business. No hidden fees.</p>
             
             <div className="flex items-center justify-center">
               <div className="bg-gray-900 w-60 p-1 rounded-xl">
