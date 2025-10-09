@@ -321,6 +321,94 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* The Numbers Work Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="mb-16 text-center">
+            <p className="text-gray-500 uppercase tracking-widest text-sm font-bold mb-4">The Math</p>
+            <h2 className="text-5xl md:text-6xl font-semibold mb-4">
+              The <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">Numbers</span> Work
+            </h2>
+            <p className="text-lg text-gray-400">
+              Quick breakeven math with conservative assumptions.
+            </p>
+          </div>
+
+          {/* Two Blocks */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Your Investment */}
+            <div className="bg-black border border-gray-800 rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-8">Your Investment</h3>
+              
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Creator plan</span>
+                  <span className="text-white font-medium">$25/mo</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Time to first content</span>
+                  <span className="text-white font-medium">~5 minutes</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Learning curve</span>
+                  <span className="text-white font-medium">Minimal</span>
+                </div>
+                
+                <div className="border-t border-gray-800 pt-6 mt-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-white font-semibold">Total monthly cost</span>
+                    <span className="text-white font-bold text-xl">$25</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Your Returns */}
+            <div className="bg-black border border-gray-800 rounded-2xl p-8">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-bold">Your Returns</h3>
+                <span className="text-green-500 text-sm flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  ~1 sale to break even
+                </span>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Average PPV price</span>
+                  <span className="text-white font-medium">$50</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">PPVs to break even</span>
+                  <span className="text-white font-medium">1 sale</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Typical monthly</span>
+                  <span className="text-white font-medium">60+ sales</span>
+                </div>
+                
+                <div className="border-t border-gray-800 pt-6 mt-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-white font-semibold">Potential monthly</span>
+                    <span className="text-white font-bold text-xl">$3,000+</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <p className="text-center text-gray-500 text-sm mt-8">
+            Based on average creator performance. Individual results vary and are not guaranteed.
+          </p>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
