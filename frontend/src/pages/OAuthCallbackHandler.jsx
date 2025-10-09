@@ -35,11 +35,11 @@ const OAuthCallbackHandler = () => {
                 localStorage.setItem('token', response.data.token)
                 setStatus('Authentication successful! Redirecting...')
                 
-                // Clear the hash from URL and redirect to dashboard
+                // Clear the hash from URL and redirect to onboarding
                 window.history.replaceState({}, document.title, '/')
                 // Use setTimeout to ensure state is updated before redirect
                 setTimeout(() => {
-                  navigate('/dashboard', { replace: true })
+                  navigate('/onboarding', { replace: true })
                 }, 100)
                 return
               }
@@ -65,11 +65,11 @@ const OAuthCallbackHandler = () => {
                   localStorage.setItem('token', jwtResponse.data.token)
                   setStatus('Account created! Redirecting...')
                   
-                  // Clear the hash from URL and redirect to dashboard
+                  // Clear the hash from URL and redirect to onboarding
                   window.history.replaceState({}, document.title, '/')
                   // Use setTimeout to ensure state is updated before redirect
                   setTimeout(() => {
-                    navigate('/dashboard', { replace: true })
+                    navigate('/onboarding', { replace: true })
                   }, 100)
                   return
                 }

@@ -49,12 +49,12 @@ const RegisterPage = () => {
         setError(error)
         setLoading(false)
       } else if (data && data.success) {
-        console.log('Registration successful, redirecting to dashboard')
+        console.log('Registration successful, redirecting to onboarding')
         console.log('Registration data:', data)
         // Small delay to ensure user state is updated
         setTimeout(() => {
-          console.log('Navigating to dashboard...')
-          navigate('/dashboard')
+          console.log('Navigating to onboarding...')
+          navigate('/onboarding')
         }, 100)
       } else {
         setError('Registration failed')
