@@ -14,7 +14,8 @@ const router = express.Router();
 const updateProfileSchema = Joi.object({
   fullName: Joi.string().min(2).max(100).optional(),
   avatar: Joi.string().uri().optional(),
-  bio: Joi.string().max(500).optional()
+  bio: Joi.string().max(500).optional(),
+  onboardingCompleted: Joi.boolean().optional()
 });
 
 // Get user profile
@@ -60,6 +61,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
         fullName: user.full_name,
         avatar: user.avatar_url,
         bio: user.bio,
+        onboardingCompleted: user.onboarding_completed,
         createdAt: user.created_at,
         subscription: subscription || null,
         stats: {
@@ -89,12 +91,13 @@ router.put('/profile', authenticateToken, async (req, res) => {
       });
     }
 
-    const { fullName, avatar, bio } = value;
+    const { fullName, avatar, bio, onboardingCompleted } = value;
     const updateData = {};
 
     if (fullName) updateData.full_name = fullName;
     if (avatar) updateData.avatar_url = avatar;
     if (bio) updateData.bio = bio;
+    if (onboardingCompleted !== undefined) updateData.onboarding_completed = onboardingCompleted;
 
     updateData.updated_at = new Date().toISOString();
 
@@ -120,7 +123,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
         email: user.email,
         fullName: user.full_name,
         avatar: user.avatar_url,
-        bio: user.bio
+        bio: user.bio,
+        onboardingCompleted: user.onboarding_completed
       }
     });
 

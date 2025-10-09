@@ -21,16 +21,7 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    // Handle dev token for development
-    if (token === 'dev-token-123') {
-      console.log('Auth middleware - using dev token');
-      req.user = {
-        id: 'dev-user-123',
-        email: 'dev@eromify.com'
-      };
-      next();
-      return;
-    }
+    // Dev token bypass removed for security
 
     // Try to verify as JWT token first (for normal login)
     try {
