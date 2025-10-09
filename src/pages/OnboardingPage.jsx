@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Sparkles, FileText, Palette, Users, Zap, Check, ChevronLeft, Upload, Shirt, Dumbbell, Plane, Gamepad2, UtensilsCrossed, Paintbrush, Briefcase, Instagram, Youtube, Twitter, Video, Camera, Film, Play } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ArrowRight, Sparkles, FileText, Palette, Users, Zap, Check, ChevronLeft, Upload, Shirt, Dumbbell, Plane, Gamepad2, UtensilsCrossed, Paintbrush, Briefcase, Instagram, Youtube, Twitter, Video, Camera, Film, Play, X } from 'lucide-react'
 import { paymentService } from '../services/paymentService'
 
 const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 7
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   
   // Step 2 state
   const [selectedGoal, setSelectedGoal] = useState(null)
@@ -33,6 +34,9 @@ const OnboardingPage = () => {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false)
+  
+  // Payment cancellation notification
+  const [showCancelledNotification, setShowCancelledNotification] = useState(false)
   
   // Marketplace models (filtered to show only available models, excluding fully claimed ones)
   const allMarketplaceModels = [
@@ -145,6 +149,23 @@ const OnboardingPage = () => {
   
   // Filter out fully claimed models and limit to 15 for 3x5 grid
   const marketplaceModels = allMarketplaceModels.filter(m => !m.fullyClaimed).slice(0, 15)
+
+  // Check for payment cancellation on mount
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment')
+    if (paymentStatus === 'cancelled') {
+      setShowCancelledNotification(true)
+      setCurrentStep(7) // Return to pricing step
+      // Clear the query parameter
+      searchParams.delete('payment')
+      setSearchParams(searchParams, { replace: true })
+      
+      // Auto-hide notification after 5 seconds
+      setTimeout(() => {
+        setShowCancelledNotification(false)
+      }, 5000)
+    }
+  }, [])
 
   // Countdown timer effect
   useEffect(() => {
@@ -1554,6 +1575,29 @@ const OnboardingPage = () => {
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20">
         {renderStep()}
       </div>
+
+      {/* Payment Cancelled Notification */}
+      {showCancelledNotification && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4">
+          <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 shadow-xl flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                <X className="w-5 h-5 text-gray-400" />
+              </div>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-white font-semibold mb-1">Payment Cancelled</h3>
+              <p className="text-gray-400 text-sm">No worries! You can choose a plan whenever you're ready.</p>
+            </div>
+            <button
+              onClick={() => setShowCancelledNotification(false)}
+              className="flex-shrink-0 text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Checkout Modal */}
       {showCheckoutModal && selectedPlan && (
