@@ -179,6 +179,44 @@ export const initializePixel = () => {
 };
 
 /**
+ * Track AddToCart event - when user adds a product/plan to cart
+ * @param {Object} cartData - Cart information
+ * @param {string} cartData.contentName - Name of the item added to cart
+ * @param {string} cartData.contentCategory - Category of the item
+ * @param {Array<string>} cartData.contentIds - Array of content IDs
+ * @param {number} cartData.value - Value of the item
+ * @param {string} cartData.currency - Currency (e.g., USD)
+ * @param {number} cartData.numItems - Number of items added
+ * @param {string} cartData.userEmail - User's email
+ */
+export const trackAddToCart = (cartData) => {
+  console.log('🎯 trackAddToCart called with:', cartData);
+
+  // Skip tracking on localhost for development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('Meta Pixel: AddToCart event tracked (localhost mode)', cartData);
+    return;
+  }
+
+  if (typeof window !== 'undefined' && window.fbq) {
+    console.log('🎯 Calling fbq("track", "AddToCart", ...)');
+    window.fbq('track', 'AddToCart', {
+      content_name: cartData.contentName,
+      content_category: cartData.contentCategory,
+      content_ids: cartData.contentIds,
+      content_type: 'product',
+      value: cartData.value,
+      currency: cartData.currency,
+      num_items: cartData.numItems,
+      // User data for better matching
+      em: hashEmail(cartData.userEmail),
+      timestamp: new Date().toISOString()
+    });
+    console.log('Meta Pixel: AddToCart event tracked', cartData);
+  }
+};
+
+/**
  * Test Meta Pixel with a simple event
  */
 export const testPixel = () => {
