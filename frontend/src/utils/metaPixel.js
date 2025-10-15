@@ -217,6 +217,43 @@ export const trackAddToCart = (cartData) => {
 };
 
 /**
+ * Track Purchase event - when user completes a successful payment
+ * @param {Object} purchaseData - Purchase information
+ * @param {number} purchaseData.value - Purchase value in cents
+ * @param {string} purchaseData.currency - Currency code
+ * @param {string} purchaseData.plan - Plan name
+ * @param {string} purchaseData.sessionId - Payment session ID
+ * @param {string} purchaseData.userEmail - User's email
+ */
+export const trackPurchase = (purchaseData) => {
+  console.log('🎯 trackPurchase called with:', purchaseData);
+
+  // Skip tracking on localhost for development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('Meta Pixel: Purchase event tracked (localhost mode)', purchaseData);
+    return;
+  }
+
+  if (typeof window !== 'undefined' && window.fbq) {
+    console.log('🎯 Calling fbq("track", "Purchase", ...)');
+    window.fbq('track', 'Purchase', {
+      content_name: purchaseData.plan || 'Subscription Plan',
+      content_category: 'Subscription',
+      value: purchaseData.value || 0,
+      currency: purchaseData.currency || 'USD',
+      num_items: 1,
+      // User data for better matching
+      em: hashEmail(purchaseData.userEmail),
+      // Custom parameters
+      plan_type: purchaseData.plan || 'unknown',
+      session_id: purchaseData.sessionId,
+      timestamp: new Date().toISOString()
+    });
+    console.log('Meta Pixel: Purchase event tracked', purchaseData);
+  }
+};
+
+/**
  * Test Meta Pixel with a simple event
  */
 export const testPixel = () => {

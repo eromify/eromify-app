@@ -22,6 +22,7 @@ import TermsOfServicePage from './pages/TermsOfServicePage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import OAuthCallbackHandler from './pages/OAuthCallbackHandler'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import LandingPageSuccess from './pages/LandingPageSuccess'
 import './App.css'
 
 function App() {
@@ -102,6 +103,7 @@ function App() {
         <Route path="/terms" element={<TermsOfServicePage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/oauth-callback" element={<OAuthCallbackHandler />} />
+        <Route path="/landing-page" element={<LandingPageSuccess />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
