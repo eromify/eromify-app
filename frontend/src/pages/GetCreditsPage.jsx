@@ -4,7 +4,6 @@ import DashboardLayout from '../components/DashboardLayout'
 import { paymentService } from '../services/paymentService'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
-import { trackInitiateCheckout } from '../utils/metaPixel'
 
 const GetCreditsPage = () => {
   console.log('🚀 GetCreditsPage component loaded!')
@@ -89,21 +88,6 @@ const GetCreditsPage = () => {
       
       console.log('✅ Got checkout URL:', response.url)
       console.log('🔄 Redirecting to Stripe checkout...')
-      
-      // Track InitiateCheckout event
-      const planData = getPlanData(plan, billingToggle)
-      console.log('🎯 About to track InitiateCheckout:', {
-        plan: plan,
-        value: planData.value,
-        currency: 'USD',
-        userEmail: user?.email
-      })
-      trackInitiateCheckout({
-        plan: plan,
-        value: planData.value,
-        currency: 'USD',
-        userEmail: user?.email
-      })
       
       // Try to redirect
       try {

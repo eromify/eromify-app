@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Sparkles, FileText, Palette, Users, Zap, Check, ChevronLeft, Upload, Shirt, Dumbbell, Plane, Gamepad2, UtensilsCrossed, Paintbrush, Briefcase, Instagram, Youtube, Twitter, Video, Camera, Film, Play } from 'lucide-react'
 import { paymentService } from '../services/paymentService'
+import { trackAddToCart, trackInitiateCheckout } from '../utils/metaPixel'
+import { useAuth } from '../contexts/AuthContext'
 
 const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 7
   const navigate = useNavigate()
+  const { user } = useAuth()
   
   // Step 2 state
   const [selectedGoal, setSelectedGoal] = useState(null)
@@ -181,6 +184,17 @@ const OnboardingPage = () => {
   const handleSelectPlan = (plan) => {
     setSelectedPlan(plan)
     setShowCheckoutModal(true)
+    
+    // Track AddToCart event when user selects a plan
+    trackAddToCart({
+      contentName: plan.name,
+      contentCategory: 'Subscription Plan',
+      contentIds: [plan.name.toLowerCase().replace(' ', '_')],
+      value: plan.price * 100, // Convert to cents
+      currency: 'USD',
+      numItems: 1,
+      userEmail: user?.email
+    })
   }
 
   const handleCheckout = async () => {
@@ -205,6 +219,14 @@ const OnboardingPage = () => {
         'monthly', // Default to monthly billing
         null // No promo code
       )
+      
+      // Track InitiateCheckout event before redirecting to Stripe
+      trackInitiateCheckout({
+        plan: backendPlan,
+        value: selectedPlan.price * 100, // Convert to cents
+        currency: 'USD',
+        userEmail: user?.email
+      })
       
       // Redirect to Stripe checkout
       if (response.url) {
