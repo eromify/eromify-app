@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { trackViewContent } from '../utils/metaPixel';
+import { useAuth } from '../contexts/AuthContext';
 
 const MarketplacePage = () => {
   const [selectedModel, setSelectedModel] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { user } = useAuth();
+
+  // Track ViewContent when marketplace page loads
+  useEffect(() => {
+    trackViewContent({
+      contentName: 'AI Influencer Marketplace',
+      contentCategory: 'Marketplace',
+      value: 0,
+      currency: 'USD',
+      userEmail: user?.email
+    });
+  }, [user?.email]);
 
   // Mock model data
   const models = [

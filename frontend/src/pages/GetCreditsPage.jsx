@@ -4,6 +4,7 @@ import DashboardLayout from '../components/DashboardLayout'
 import { paymentService } from '../services/paymentService'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
+import { trackInitiateCheckout } from '../utils/metaPixel'
 
 const GetCreditsPage = () => {
   console.log('🚀 GetCreditsPage component loaded!')
@@ -11,6 +12,26 @@ const GetCreditsPage = () => {
   const [loading, setLoading] = useState(false)
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
+  
+  // Helper function to get plan pricing data
+  const getPlanData = (plan, billing) => {
+    const pricing = {
+      builder: {
+        monthly: { value: 1200 }, // $12.00 in cents
+        yearly: { value: 10800 }  // $108.00 in cents
+      },
+      launch: {
+        monthly: { value: 2500 }, // $25.00 in cents
+        yearly: { value: 22800 }  // $228.00 in cents
+      },
+      growth: {
+        monthly: { value: 7900 }, // $79.00 in cents
+        yearly: { value: 78000 }  // $780.00 in cents
+      }
+    }
+    
+    return pricing[plan]?.[billing] || { value: 0 }
+  }
   
   // Test if component is rendering
   console.log('🎯 GetCreditsPage render - user:', user)
@@ -68,6 +89,15 @@ const GetCreditsPage = () => {
       
       console.log('✅ Got checkout URL:', response.url)
       console.log('🔄 Redirecting to Stripe checkout...')
+      
+      // Track InitiateCheckout event
+      const planData = getPlanData(plan, billingToggle)
+      trackInitiateCheckout({
+        plan: plan,
+        value: planData.value,
+        currency: 'USD',
+        userEmail: user?.email
+      })
       
       // Try to redirect
       try {

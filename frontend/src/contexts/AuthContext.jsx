@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import api from '../utils/api'
+import { trackLead } from '../utils/metaPixel'
 
 const AuthContext = createContext({})
 
@@ -46,12 +47,17 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('token', response.data.token)
                 setUser(response.data.user)
                 console.log('OAuth success, user set:', response.data.user)
-                // Clear the hash from URL and redirect to dashboard
+                
+                // Track Lead event for Google OAuth registration
+                trackLead({
+                  email: response.data.user.email,
+                  fullName: response.data.user.fullName || response.data.user.email?.split('@')[0],
+                  source: 'google'
+                })
+                
+                // Clear the hash from URL and redirect to onboarding
                 window.history.replaceState({}, document.title, '/')
-                // Use setTimeout to ensure state is updated before redirect
-                setTimeout(() => {
-                  navigate('/dashboard', { replace: true })
-                }, 100)
+                navigate('/onboarding', { replace: true })
                 return
               }
             } catch (error) {
@@ -75,12 +81,17 @@ export const AuthProvider = ({ children }) => {
                   localStorage.setItem('token', jwtResponse.data.token)
                   setUser(jwtResponse.data.user)
                   console.log('OAuth fallback success, user set:', jwtResponse.data.user)
-                  // Clear the hash from URL and redirect to dashboard
+                  
+                  // Track Lead event for Google OAuth fallback registration
+                  trackLead({
+                    email: mockUser.email,
+                    fullName: mockUser.fullName,
+                    source: 'google_fallback'
+                  })
+                  
+                  // Clear the hash from URL and redirect to onboarding
                   window.history.replaceState({}, document.title, '/')
-                  // Use setTimeout to ensure state is updated before redirect
-                  setTimeout(() => {
-                    navigate('/dashboard', { replace: true })
-                  }, 100)
+                  navigate('/onboarding', { replace: true })
                   return
                 }
               } catch (fallbackError) {

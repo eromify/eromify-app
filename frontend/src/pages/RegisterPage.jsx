@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react'
+import { trackLead } from '../utils/metaPixel'
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -51,6 +52,14 @@ const RegisterPage = () => {
       } else if (data && data.success) {
         console.log('Registration successful, redirecting to onboarding')
         console.log('Registration data:', data)
+        
+        // Track Lead event for successful registration
+        trackLead({
+          email: formData.email,
+          fullName: formData.fullName,
+          source: 'email'
+        })
+        
         // Small delay to ensure user state is updated
         setTimeout(() => {
           console.log('Navigating to onboarding...')
