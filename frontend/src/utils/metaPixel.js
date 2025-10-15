@@ -9,6 +9,8 @@
  * @param {string} userData.source - Registration source (email, google, etc.)
  */
 export const trackLead = (userData) => {
+  console.log('🎯 trackLead called with:', userData);
+  
   // Skip tracking on localhost for development
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     console.log('Meta Pixel: Lead event tracked (localhost mode)', userData);
@@ -16,6 +18,7 @@ export const trackLead = (userData) => {
   }
   
   if (typeof window !== 'undefined' && window.fbq) {
+    console.log('🎯 Calling fbq("track", "Lead", ...)');
     window.fbq('track', 'Lead', {
       content_name: 'User Registration',
       content_category: 'Sign Up',
@@ -42,6 +45,8 @@ export const trackLead = (userData) => {
  * @param {string} checkoutData.userEmail - User's email
  */
 export const trackInitiateCheckout = (checkoutData) => {
+  console.log('🎯 trackInitiateCheckout called with:', checkoutData);
+  
   // Skip tracking on localhost for development
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     console.log('Meta Pixel: InitiateCheckout event tracked (localhost mode)', checkoutData);
@@ -49,6 +54,7 @@ export const trackInitiateCheckout = (checkoutData) => {
   }
   
   if (typeof window !== 'undefined' && window.fbq) {
+    console.log('🎯 Calling fbq("track", "InitiateCheckout", ...)');
     window.fbq('track', 'InitiateCheckout', {
       content_name: checkoutData.plan || 'Subscription Plan',
       content_category: 'Subscription',
@@ -74,6 +80,8 @@ export const trackInitiateCheckout = (checkoutData) => {
  * @param {string} contentData.userEmail - User's email (optional)
  */
 export const trackViewContent = (contentData) => {
+  console.log('🎯 trackViewContent called with:', contentData);
+  
   // Skip tracking on localhost for development
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     console.log('Meta Pixel: ViewContent event tracked (localhost mode)', contentData);
@@ -81,6 +89,7 @@ export const trackViewContent = (contentData) => {
   }
   
   if (typeof window !== 'undefined' && window.fbq) {
+    console.log('🎯 Calling fbq("track", "ViewContent", ...)');
     const eventData = {
       content_name: contentData.contentName,
       content_category: contentData.contentCategory || 'General',
@@ -166,5 +175,22 @@ export const initializePixel = () => {
   } else {
     console.warn('Meta Pixel not loaded yet');
     return false;
+  }
+};
+
+/**
+ * Test Meta Pixel with a simple event
+ */
+export const testPixel = () => {
+  console.log('🧪 Testing Meta Pixel...');
+  
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq('trackCustom', 'TestEvent', {
+      test: true,
+      timestamp: new Date().toISOString()
+    });
+    console.log('🧪 Test event sent to Meta Pixel');
+  } else {
+    console.error('🧪 Meta Pixel not available');
   }
 };

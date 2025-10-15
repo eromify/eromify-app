@@ -92,6 +92,12 @@ const GetCreditsPage = () => {
       
       // Track InitiateCheckout event
       const planData = getPlanData(plan, billingToggle)
+      console.log('🎯 About to track InitiateCheckout:', {
+        plan: plan,
+        value: planData.value,
+        currency: 'USD',
+        userEmail: user?.email
+      })
       trackInitiateCheckout({
         plan: plan,
         value: planData.value,
