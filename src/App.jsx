@@ -98,6 +98,15 @@ function GlobalMetaTracking() {
       newSearchParams.set('payment', 'success')
       setSearchParams(newSearchParams, { replace: true })
     }
+    
+    // Test if GlobalMetaTracking is working
+    window.testGlobalTracking = () => {
+      console.log('🧪 Testing GlobalMetaTracking component...')
+      console.log('Current URL:', window.location.href)
+      console.log('Search params:', Object.fromEntries(searchParams.entries()))
+      console.log('Meta Pixel available:', !!window.fbq)
+      return 'GlobalMetaTracking is working!'
+    }
   }, [searchParams, setSearchParams])
   
   return null
@@ -105,9 +114,10 @@ function GlobalMetaTracking() {
 
 function App() {
   return (
-    <AuthProvider>
+    <>
       <GlobalMetaTracking />
-      <Routes>
+      <AuthProvider>
+        <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -179,8 +189,9 @@ function App() {
         <Route path="/support" element={<SupportPage />} />
         <Route path="/oauth-callback" element={<OAuthCallbackHandler />} />
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+        </Routes>
+      </AuthProvider>
+    </>
   )
 }
 
