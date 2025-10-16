@@ -96,7 +96,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success`,
       cancel_url: process.env.NODE_ENV === 'production'
         ? `https://www.eromify.com/credits?payment=cancelled`
-        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/onboarding?payment=cancelled`,
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/credits?payment=cancelled`,
       customer_email: req.user.email,
       ...(promoCode && { discounts: [{ promotion_code: promoCode }] }),
       metadata: {
