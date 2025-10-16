@@ -20,20 +20,27 @@ const DashboardPage = () => {
     // Check if user just completed a payment
     const paymentStatus = searchParams.get('payment')
     if (paymentStatus === 'success') {
-      // Fire Meta Purchase event
-      if (window.fbq) {
-        window.fbq('track', 'Purchase', {
-          value: 25.00,
-          currency: 'USD'
-        })
-        console.log('✅ Meta Purchase event tracked from Dashboard')
-      }
+      // Track Meta Purchase Event
+      trackMetaPurchase()
       
-      // Clean up URL
+      // Clean up the URL
       searchParams.delete('payment')
       setSearchParams(searchParams, { replace: true })
     }
-  }, [])
+  }, [searchParams, setSearchParams])
+
+  const trackMetaPurchase = () => {
+    // Fire Meta Purchase event
+    if (window.fbq) {
+      window.fbq('track', 'Purchase', {
+        value: 25.00,
+        currency: 'USD'
+      })
+      console.log('✅ Meta Purchase event tracked from Dashboard Page')
+    } else {
+      console.warn('⚠️ Meta Pixel (fbq) not found')
+    }
+  }
 
   const fetchDashboardData = async () => {
     try {
