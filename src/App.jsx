@@ -29,26 +29,6 @@ function GlobalMetaTracking() {
     console.log('🔍 Current URL:', window.location.href)
     console.log('🔍 Search params:', Object.fromEntries(searchParams.entries()))
     
-    const paymentStatus = searchParams.get('payment')
-    if (paymentStatus === 'success') {
-      console.log('🎉 Payment success detected! Firing Meta Purchase event...')
-      
-      // Fire Meta Purchase event globally
-      if (window.fbq) {
-        window.fbq('track', 'Purchase', {
-          value: 25.00,
-          currency: 'USD'
-        })
-        console.log('✅ Meta Purchase event tracked globally from App.jsx')
-      } else {
-        console.error('❌ Meta Pixel (fbq) not found!')
-      }
-      
-      // Clean up URL
-      searchParams.delete('payment')
-      setSearchParams(searchParams, { replace: true })
-    }
-    
     // Test function for debugging - call this in console: window.testMetaPurchase()
     window.testMetaPurchase = () => {
       console.log('🧪 Testing Meta Purchase event...')
