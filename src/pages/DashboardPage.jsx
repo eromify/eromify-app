@@ -19,44 +19,31 @@ const DashboardPage = () => {
   }, [])
 
   useEffect(() => {
-    // Debug: Log current URL and search params
-    console.log('🔍 DashboardPage - Current URL:', window.location.href)
-    console.log('🔍 DashboardPage - Search params:', Object.fromEntries(searchParams.entries()))
-    console.log('🔍 DashboardPage - Meta Pixel available:', !!window.fbq)
+    // SIMPLE: Just fire Purchase event every time DashboardPage loads
+    console.log('🔍 DashboardPage loaded - firing Purchase event')
     
-    // Check if user just completed a payment
-    const paymentStatus = searchParams.get('payment')
-    console.log('🔍 DashboardPage - Payment status:', paymentStatus)
-    
-    if (paymentStatus === 'success') {
-      console.log('🎉 DashboardPage - Payment success detected!')
-      // Track Meta Purchase Event
-      trackMetaPurchase()
-      
-      // Clean up the URL
-      searchParams.delete('payment')
-      setSearchParams(searchParams, { replace: true })
-    }
-  }, [searchParams, setSearchParams])
-
-  const trackMetaPurchase = () => {
-    // Fire Meta Purchase event
     if (window.fbq) {
       window.fbq('track', 'Purchase', {
         value: 25.00,
         currency: 'USD'
       })
-      console.log('✅ Meta Purchase event tracked from Dashboard Page')
+      console.log('✅ Meta Purchase event fired from Dashboard Page')
     } else {
       console.warn('⚠️ Meta Pixel (fbq) not found')
     }
-  }
+  }, [])
 
-  // Add test function to window for debugging
+  // Test function
   useEffect(() => {
     window.testDashboardMetaPurchase = () => {
       console.log('🧪 Testing Meta Purchase from Dashboard...')
-      trackMetaPurchase()
+      if (window.fbq) {
+        window.fbq('track', 'Purchase', {
+          value: 25.00,
+          currency: 'USD'
+        })
+        console.log('✅ Test Purchase event fired')
+      }
     }
   }, [])
 
