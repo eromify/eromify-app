@@ -26,18 +26,66 @@ function GlobalMetaTracking() {
   
   useEffect(() => {
     // Debug: Log current URL and all search params
-    console.log('🔍 Current URL:', window.location.href)
-    console.log('🔍 Search params:', Object.fromEntries(searchParams.entries()))
+    console.log('🔍 GlobalMetaTracking - Current URL:', window.location.href)
+    console.log('🔍 GlobalMetaTracking - Search params:', Object.fromEntries(searchParams.entries()))
+    console.log('🔍 GlobalMetaTracking - Meta Pixel available:', !!window.fbq)
+    
+    // Check if user just completed a payment
+    const paymentStatus = searchParams.get('payment')
+    const plan = searchParams.get('plan') || 'launch' // default to launch
+    const billing = searchParams.get('billing') || 'monthly'
+    
+    console.log('🔍 GlobalMetaTracking - Payment status:', paymentStatus)
+    console.log('🔍 GlobalMetaTracking - Plan:', plan, 'Billing:', billing)
+    
+    if (paymentStatus === 'success') {
+      console.log('🎉 GlobalMetaTracking - Payment success detected!')
+      
+      // Calculate purchase value based on plan and billing
+      const purchaseValues = {
+        builder: { monthly: 12.00, yearly: 108.00 },
+        launch: { monthly: 25.00, yearly: 228.00 },
+        growth: { monthly: 79.00, yearly: 780.00 }
+      }
+      
+      const value = purchaseValues[plan]?.[billing] || 25.00
+      
+      // Track Meta Purchase Event with actual value
+      if (window.fbq) {
+        // Use setTimeout to ensure this fires after the automatic PageView
+        setTimeout(() => {
+          window.fbq('track', 'Purchase', {
+            value: value,
+            currency: 'USD',
+            content_name: `${plan} - ${billing}`,
+            content_type: 'subscription'
+          })
+          console.log(`✅ GlobalMetaTracking - Purchase event tracked: $${value} (${plan} - ${billing})`)
+        }, 100) // Small delay to ensure PageView has completed
+      } else {
+        console.warn('⚠️ GlobalMetaTracking - Meta Pixel (fbq) not found')
+      }
+      
+      // Clean up the URL after tracking
+      setTimeout(() => {
+        searchParams.delete('payment')
+        searchParams.delete('plan')
+        searchParams.delete('billing')
+        setSearchParams(searchParams, { replace: true })
+      }, 500)
+    }
     
     // Test function for debugging - call this in console: window.testMetaPurchase()
-    window.testMetaPurchase = () => {
+    window.testMetaPurchase = (testValue = 25.00) => {
       console.log('🧪 Testing Meta Purchase event...')
       if (window.fbq) {
         window.fbq('track', 'Purchase', {
-          value: 25.00,
-          currency: 'USD'
+          value: testValue,
+          currency: 'USD',
+          content_name: 'Test Purchase',
+          content_type: 'subscription'
         })
-        console.log('✅ Test Purchase event fired!')
+        console.log('✅ Test Purchase event fired with value:', testValue)
       } else {
         console.error('❌ Meta Pixel (fbq) not found!')
       }

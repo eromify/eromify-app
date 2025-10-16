@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import LimitReachedModal from '../components/LimitReachedModal'
 import { Star, Users, Plus, Edit3, Image, ArrowUp, Video, Package, Sparkles } from 'lucide-react'
@@ -9,7 +9,6 @@ import { useAuth } from '../contexts/AuthContext'
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [searchParams, setSearchParams] = useSearchParams()
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
@@ -17,55 +16,6 @@ const DashboardPage = () => {
   useEffect(() => {
     fetchDashboardData()
   }, [])
-
-  useEffect(() => {
-    // Debug: Log current URL and search params
-    console.log('🔍 DashboardPage - Current URL:', window.location.href)
-    console.log('🔍 DashboardPage - Search params:', Object.fromEntries(searchParams.entries()))
-    console.log('🔍 DashboardPage - Meta Pixel available:', !!window.fbq)
-    
-    // Check if user just completed a payment
-    const paymentStatus = searchParams.get('payment')
-    console.log('🔍 DashboardPage - Payment status:', paymentStatus)
-    
-    if (paymentStatus === 'success') {
-      console.log('🎉 DashboardPage - Payment success detected!')
-      // Track Meta Purchase Event
-      trackMetaPurchase()
-      
-      // Clean up the URL
-      searchParams.delete('payment')
-      setSearchParams(searchParams, { replace: true })
-    }
-  }, [searchParams, setSearchParams])
-
-  const trackMetaPurchase = () => {
-    // Fire Meta Purchase event
-    if (window.fbq) {
-      window.fbq('track', 'Purchase', {
-        value: 25.00,
-        currency: 'USD'
-      })
-      console.log('✅ Meta Purchase event tracked from Dashboard Page')
-    } else {
-      console.warn('⚠️ Meta Pixel (fbq) not found')
-    }
-  }
-
-  // Add test functions to window for debugging
-  useEffect(() => {
-    window.testDashboardMetaPurchase = () => {
-      console.log('🧪 Testing Meta Purchase from Dashboard...')
-      trackMetaPurchase()
-    }
-    
-    window.simulatePaymentSuccess = () => {
-      console.log('🧪 Simulating payment success URL...')
-      const newSearchParams = new URLSearchParams(searchParams)
-      newSearchParams.set('payment', 'success')
-      setSearchParams(newSearchParams, { replace: true })
-    }
-  }, [searchParams, setSearchParams])
 
   const fetchDashboardData = async () => {
     try {

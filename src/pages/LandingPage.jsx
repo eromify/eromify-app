@@ -1,52 +1,9 @@
-import { useState, useEffect } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const LandingPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [openFAQ, setOpenFAQ] = useState(null)
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  useEffect(() => {
-    // Debug: Log current URL and search params
-    console.log('🔍 LandingPage - Current URL:', window.location.href)
-    console.log('🔍 LandingPage - Search params:', Object.fromEntries(searchParams.entries()))
-    console.log('🔍 LandingPage - Meta Pixel available:', !!window.fbq)
-    
-    // Check if user just completed a payment
-    const paymentStatus = searchParams.get('payment')
-    console.log('🔍 LandingPage - Payment status:', paymentStatus)
-    
-    if (paymentStatus === 'success') {
-      console.log('🎉 LandingPage - Payment success detected!')
-      // Track Meta Purchase Event
-      trackMetaPurchase()
-      
-      // Clean up the URL
-      searchParams.delete('payment')
-      setSearchParams(searchParams, { replace: true })
-    }
-  }, [searchParams, setSearchParams])
-
-  const trackMetaPurchase = () => {
-    // Fire Meta Purchase event
-    if (window.fbq) {
-      window.fbq('track', 'Purchase', {
-        value: 25.00,
-        currency: 'USD'
-      })
-      console.log('✅ Meta Purchase event tracked from Landing Page')
-    } else {
-      console.warn('⚠️ Meta Pixel (fbq) not found')
-    }
-  }
-
-  // Add test function to window for debugging
-  useEffect(() => {
-    window.testLandingMetaPurchase = () => {
-      console.log('🧪 Testing Meta Purchase from Landing Page...')
-      trackMetaPurchase()
-    }
-  }, [])
 
   return (
     <div className="min-h-screen bg-black text-white">
