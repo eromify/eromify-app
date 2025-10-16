@@ -19,9 +19,17 @@ const DashboardPage = () => {
   }, [])
 
   useEffect(() => {
+    // Debug: Log current URL and search params
+    console.log('🔍 DashboardPage - Current URL:', window.location.href)
+    console.log('🔍 DashboardPage - Search params:', Object.fromEntries(searchParams.entries()))
+    console.log('🔍 DashboardPage - Meta Pixel available:', !!window.fbq)
+    
     // Check if user just completed a payment
     const paymentStatus = searchParams.get('payment')
+    console.log('🔍 DashboardPage - Payment status:', paymentStatus)
+    
     if (paymentStatus === 'success') {
+      console.log('🎉 DashboardPage - Payment success detected!')
       // Track Meta Purchase Event
       trackMetaPurchase()
       
@@ -43,6 +51,21 @@ const DashboardPage = () => {
       console.warn('⚠️ Meta Pixel (fbq) not found')
     }
   }
+
+  // Add test functions to window for debugging
+  useEffect(() => {
+    window.testDashboardMetaPurchase = () => {
+      console.log('🧪 Testing Meta Purchase from Dashboard...')
+      trackMetaPurchase()
+    }
+    
+    window.simulatePaymentSuccess = () => {
+      console.log('🧪 Simulating payment success URL...')
+      const newSearchParams = new URLSearchParams(searchParams)
+      newSearchParams.set('payment', 'success')
+      setSearchParams(newSearchParams, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
 
   const fetchDashboardData = async () => {
     try {
