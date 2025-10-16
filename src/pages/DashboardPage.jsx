@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import LimitReachedModal from '../components/LimitReachedModal'
 import { Star, Users, Plus, Edit3, Image, ArrowUp, Video, Package, Sparkles } from 'lucide-react'
@@ -9,12 +9,30 @@ import { useAuth } from '../contexts/AuthContext'
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
 
   useEffect(() => {
     fetchDashboardData()
+    
+    // Check if user just completed a payment
+    const paymentStatus = searchParams.get('payment')
+    if (paymentStatus === 'success') {
+      // Fire Meta Purchase event
+      if (window.fbq) {
+        window.fbq('track', 'Purchase', {
+          value: 25.00,
+          currency: 'USD'
+        })
+        console.log('✅ Meta Purchase event tracked from Dashboard')
+      }
+      
+      // Clean up URL
+      searchParams.delete('payment')
+      setSearchParams(searchParams, { replace: true })
+    }
   }, [])
 
   const fetchDashboardData = async () => {

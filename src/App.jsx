@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import LandingPage from './pages/LandingPage'
@@ -20,9 +21,34 @@ import SupportPage from './pages/SupportPage'
 import OAuthCallbackHandler from './pages/OAuthCallbackHandler'
 import './App.css'
 
+function GlobalMetaTracking() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment')
+    if (paymentStatus === 'success') {
+      // Fire Meta Purchase event globally
+      if (window.fbq) {
+        window.fbq('track', 'Purchase', {
+          value: 25.00,
+          currency: 'USD'
+        })
+        console.log('✅ Meta Purchase event tracked globally from App.jsx')
+      }
+      
+      // Clean up URL
+      searchParams.delete('payment')
+      setSearchParams(searchParams, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
+  
+  return null
+}
+
 function App() {
   return (
     <AuthProvider>
+      <GlobalMetaTracking />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
