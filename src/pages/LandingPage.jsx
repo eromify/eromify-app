@@ -7,9 +7,17 @@ const LandingPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
+    // Debug: Log current URL and search params
+    console.log('🔍 LandingPage - Current URL:', window.location.href)
+    console.log('🔍 LandingPage - Search params:', Object.fromEntries(searchParams.entries()))
+    console.log('🔍 LandingPage - Meta Pixel available:', !!window.fbq)
+    
     // Check if user just completed a payment
     const paymentStatus = searchParams.get('payment')
+    console.log('🔍 LandingPage - Payment status:', paymentStatus)
+    
     if (paymentStatus === 'success') {
+      console.log('🎉 LandingPage - Payment success detected!')
       // Track Meta Purchase Event
       trackMetaPurchase()
       
@@ -31,6 +39,14 @@ const LandingPage = () => {
       console.warn('⚠️ Meta Pixel (fbq) not found')
     }
   }
+
+  // Add test function to window for debugging
+  useEffect(() => {
+    window.testLandingMetaPurchase = () => {
+      console.log('🧪 Testing Meta Purchase from Landing Page...')
+      trackMetaPurchase()
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-black text-white">
