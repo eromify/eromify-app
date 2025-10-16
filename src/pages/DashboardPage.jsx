@@ -19,17 +19,20 @@ const DashboardPage = () => {
   }, [])
 
   useEffect(() => {
-    // SIMPLE: Just fire Purchase event every time DashboardPage loads
+    // Fire Purchase event with delay to avoid PageView conflict
     console.log('🔍 DashboardPage loaded - firing Purchase event')
     console.log('🔍 User:', user)
     console.log('🔍 Meta Pixel available:', !!window.fbq)
     
     if (window.fbq) {
-      window.fbq('track', 'Purchase', {
-        value: 25.00,
-        currency: 'USD'
-      })
-      console.log('✅ Meta Purchase event fired from Dashboard Page')
+      // Use setTimeout to fire after PageView
+      setTimeout(() => {
+        window.fbq('track', 'Purchase', {
+          value: 25.00,
+          currency: 'USD'
+        })
+        console.log('✅ Meta Purchase event fired from Dashboard Page')
+      }, 500) // 500ms delay
     } else {
       console.warn('⚠️ Meta Pixel (fbq) not found')
     }

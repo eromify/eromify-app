@@ -6,16 +6,19 @@ const LandingPage = () => {
   const [openFAQ, setOpenFAQ] = useState(null)
 
   useEffect(() => {
-    // Test: Fire Purchase event on landing page too
+    // Fire Purchase event with delay to avoid PageView conflict
     console.log('🔍 LandingPage loaded - firing Purchase event')
     console.log('🔍 Meta Pixel available:', !!window.fbq)
     
     if (window.fbq) {
-      window.fbq('track', 'Purchase', {
-        value: 25.00,
-        currency: 'USD'
-      })
-      console.log('✅ Meta Purchase event fired from Landing Page')
+      // Use setTimeout to fire after PageView
+      setTimeout(() => {
+        window.fbq('track', 'Purchase', {
+          value: 25.00,
+          currency: 'USD'
+        })
+        console.log('✅ Meta Purchase event fired from Landing Page')
+      }, 500) // 500ms delay
     } else {
       console.warn('⚠️ Meta Pixel (fbq) not found')
     }
