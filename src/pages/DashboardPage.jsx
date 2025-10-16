@@ -16,15 +16,12 @@ const DashboardPage = () => {
 
   useEffect(() => {
     fetchDashboardData()
-    
-    // Debug: Log current URL and search params
-    console.log('🔍 DashboardPage - Current URL:', window.location.href)
-    console.log('🔍 DashboardPage - Search params:', Object.fromEntries(searchParams.entries()))
-    
+  }, [])
+
+  useEffect(() => {
     // Check if user just completed a payment
     const paymentStatus = searchParams.get('payment')
     if (paymentStatus === 'success') {
-      console.log('🎉 DashboardPage - Payment success detected!')
       // Track Meta Purchase Event
       trackMetaPurchase()
       
