@@ -1,9 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 const LandingPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [openFAQ, setOpenFAQ] = useState(null)
+
+  useEffect(() => {
+    // Test: Fire Purchase event on landing page too
+    console.log('🔍 LandingPage loaded - firing Purchase event')
+    console.log('🔍 Meta Pixel available:', !!window.fbq)
+    
+    if (window.fbq) {
+      window.fbq('track', 'Purchase', {
+        value: 25.00,
+        currency: 'USD'
+      })
+      console.log('✅ Meta Purchase event fired from Landing Page')
+    } else {
+      console.warn('⚠️ Meta Pixel (fbq) not found')
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-black text-white">

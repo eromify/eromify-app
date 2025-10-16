@@ -21,6 +21,8 @@ const DashboardPage = () => {
   useEffect(() => {
     // SIMPLE: Just fire Purchase event every time DashboardPage loads
     console.log('🔍 DashboardPage loaded - firing Purchase event')
+    console.log('🔍 User:', user)
+    console.log('🔍 Meta Pixel available:', !!window.fbq)
     
     if (window.fbq) {
       window.fbq('track', 'Purchase', {
@@ -31,7 +33,7 @@ const DashboardPage = () => {
     } else {
       console.warn('⚠️ Meta Pixel (fbq) not found')
     }
-  }, [])
+  }, [user])
 
   // Test function
   useEffect(() => {
