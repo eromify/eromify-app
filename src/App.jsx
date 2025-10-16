@@ -90,6 +90,14 @@ function GlobalMetaTracking() {
         console.error('❌ Meta Pixel (fbq) not found!')
       }
     }
+    
+    // Force test the payment success detection
+    window.forcePaymentSuccess = () => {
+      console.log('🧪 Forcing payment success detection...')
+      const newSearchParams = new URLSearchParams(searchParams)
+      newSearchParams.set('payment', 'success')
+      setSearchParams(newSearchParams, { replace: true })
+    }
   }, [searchParams, setSearchParams])
   
   return null
