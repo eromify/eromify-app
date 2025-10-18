@@ -92,8 +92,8 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
       mode: 'subscription',
       allow_promotion_codes: true,
       success_url: process.env.NODE_ENV === 'production' 
-        ? `https://www.eromify.com/dashboard?payment=success`
-        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success`,
+        ? `https://www.eromify.com/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}&plan=${plan}&amount=${planConfig.price / 100}`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}&plan=${plan}&amount=${planConfig.price / 100}`,
       cancel_url: process.env.NODE_ENV === 'production'
         ? `https://www.eromify.com/credits?payment=cancelled`
         : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/credits?payment=cancelled`,

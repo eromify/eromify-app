@@ -22,25 +22,30 @@ const DashboardPage = () => {
   // Track successful payment with Meta Pixel
   useEffect(() => {
     const paymentStatus = searchParams.get('payment')
+    const sessionId = searchParams.get('session_id')
+    const plan = searchParams.get('plan') || 'subscription'
+    const amount = searchParams.get('amount') || '25'
     
-    if (paymentStatus === 'success' && user) {
+    if (paymentStatus === 'success') {
       console.log('🎉 Payment successful! Tracking purchase event...')
       
       // Track purchase event
       trackPurchase({
-        value: dashboardData?.subscription?.amount || 0,
+        value: parseInt(amount) * 100, // Convert to cents
         currency: 'USD',
-        plan: dashboardData?.subscription?.plan || 'subscription',
-        userEmail: user.email,
-        sessionId: searchParams.get('session_id') || 'unknown'
+        plan: plan,
+        sessionId: sessionId,
+        userEmail: user?.email
       })
       
       // Clean up URL by removing query parameters
       searchParams.delete('payment')
       searchParams.delete('session_id')
+      searchParams.delete('plan')
+      searchParams.delete('amount')
       setSearchParams(searchParams, { replace: true })
     }
-  }, [searchParams, user, dashboardData])
+  }, [searchParams, user?.email, setSearchParams])
 
   const fetchDashboardData = async () => {
     try {
