@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import LimitReachedModal from '../components/LimitReachedModal'
 import { Star, Users, Plus, Edit3, Image, ArrowUp, Video, Package, Sparkles } from 'lucide-react'
 import userService from '../services/userService'
 import { useAuth } from '../contexts/AuthContext'
+import { trackPurchase } from '../utils/metaPixel'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
@@ -16,6 +18,29 @@ const DashboardPage = () => {
   useEffect(() => {
     fetchDashboardData()
   }, [])
+
+  // Track successful payment with Meta Pixel
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment')
+    
+    if (paymentStatus === 'success' && user) {
+      console.log('🎉 Payment successful! Tracking purchase event...')
+      
+      // Track purchase event
+      trackPurchase({
+        value: dashboardData?.subscription?.amount || 0,
+        currency: 'USD',
+        plan: dashboardData?.subscription?.plan || 'subscription',
+        userEmail: user.email,
+        sessionId: searchParams.get('session_id') || 'unknown'
+      })
+      
+      // Clean up URL by removing query parameters
+      searchParams.delete('payment')
+      searchParams.delete('session_id')
+      setSearchParams(searchParams, { replace: true })
+    }
+  }, [searchParams, user, dashboardData])
 
   const fetchDashboardData = async () => {
     try {
