@@ -39,13 +39,13 @@ const PRICING_PLANS = {
   growth: {
     monthly: {
       price: 7900, // $79.00 in cents
-      credits: 8000,
-      influencerTrainings: 5
+      credits: null, // Unlimited
+      influencerTrainings: null // Unlimited
     },
     yearly: {
       price: 78000, // $780.00 in cents (65 * 12)
-      credits: 8000,
-      influencerTrainings: 5
+      credits: null,
+      influencerTrainings: null
     }
   }
 };
@@ -77,7 +77,9 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
             currency: 'usd',
             product_data: {
               name: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
-              description: `${planConfig.credits} credits, ${planConfig.influencerTrainings} influencer training${planConfig.influencerTrainings > 1 ? 's' : ''}`,
+              description: plan === 'growth'
+                ? `Unlimited credits, Unlimited models`
+                : `${planConfig.credits} credits, ${planConfig.influencerTrainings} influencer training${planConfig.influencerTrainings > 1 ? 's' : ''}`,
             },
             unit_amount: planConfig.price,
             recurring: isYearly ? {
@@ -103,8 +105,8 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         userId: userId,
         plan: plan,
         billing: billing,
-        credits: planConfig.credits,
-        influencerTrainings: planConfig.influencerTrainings
+        credits: plan === 'growth' ? 'unlimited' : planConfig.credits,
+        influencerTrainings: plan === 'growth' ? 'unlimited' : planConfig.influencerTrainings
       }
     };
 
@@ -174,8 +176,8 @@ async function handleSuccessfulPayment(session) {
       .update({
         subscription_plan: plan,
         subscription_billing: billing,
-        credits: credits,
-        influencer_trainings: influencerTrainings,
+        credits: credits === 'unlimited' ? null : credits,
+        influencer_trainings: influencerTrainings === 'unlimited' ? null : influencerTrainings,
         subscription_status: 'active',
         stripe_customer_id: session.customer,
         subscription_id: session.subscription
@@ -216,8 +218,8 @@ async function handleSubscriptionRenewal(invoice) {
     const { error: updateError } = await supabase
       .from('users')
       .update({
-        credits: planConfig.credits,
-        influencer_trainings: planConfig.influencerTrainings
+        credits: planConfig.credits === null ? null : planConfig.credits,
+        influencer_trainings: planConfig.influencerTrainings === null ? null : planConfig.influencerTrainings
       })
       .eq('id', user.id);
 

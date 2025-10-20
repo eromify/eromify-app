@@ -7,18 +7,28 @@ const multer = require('multer');
 const path = require('path');
 require('dotenv').config();
 
-// Set default Supabase configuration if not in environment
-if (!process.env.SUPABASE_URL) {
-  process.env.SUPABASE_URL = 'https://eyteuevblxvhjhyeivqh.supabase.co';
+// Enforce required env in production to avoid silent fallbacks
+if (process.env.NODE_ENV === 'production') {
+  const required = ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'JWT_SECRET', 'FRONTEND_URL'];
+  const missing = required.filter((k) => !process.env[k]);
+  if (missing.length) {
+    throw new Error(`Missing required environment variables in production: ${missing.join(', ')}`);
+  }
 }
-if (!process.env.SUPABASE_ANON_KEY) {
-  process.env.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
-}
-if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = 'your_jwt_secret_key_dev';
-}
-if (!process.env.FRONTEND_URL) {
-  process.env.FRONTEND_URL = 'https://eromify.com';
+// Reasonable defaults for local development only
+if (process.env.NODE_ENV !== 'production') {
+  if (!process.env.SUPABASE_URL) {
+    process.env.SUPABASE_URL = 'https://eyteuevblxvhjhyeivqh.supabase.co';
+  }
+  if (!process.env.SUPABASE_ANON_KEY) {
+    process.env.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
+  }
+  if (!process.env.JWT_SECRET) {
+    process.env.JWT_SECRET = 'your_jwt_secret_key_dev';
+  }
+  if (!process.env.FRONTEND_URL) {
+    process.env.FRONTEND_URL = 'http://localhost:5173';
+  }
 }
 
 const authRoutes = require('./routes/auth');
@@ -77,7 +87,11 @@ app.use(cors({
 // Logging
 app.use(morgan('combined'));
 
-// Body parsing middleware
+// Stripe webhook must be mounted BEFORE body parsers to preserve the raw body
+const stripeWebhook = require('./stripeWebhook');
+app.use('/api/payments/webhook', stripeWebhook);
+
+// Body parsing middleware (runs after webhook route)
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -109,8 +123,7 @@ const upload = multer({
 // Make uploads directory accessible
 app.use('/uploads', express.static('uploads'));
 
-// Global upload middleware
-app.use(upload.single('avatar'));
+// Scope upload middleware only where needed (no global multer)
 
 // Health check endpoint
 app.get('/health', (req, res) => {
