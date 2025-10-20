@@ -1450,7 +1450,7 @@ const OnboardingPage = () => {
                 {/* Other Plans */}
                 <div className="grid grid-cols-2 gap-3">
                   {/* Basic Plan */}
-                  <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3">
+                  <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex flex-col h-full">
                     <h4 className="text-white text-lg font-bold mb-2">Basic Plan</h4>
                     <div className="mb-3">
                       <span className="text-white text-2xl font-bold">$12</span>
@@ -1462,26 +1462,26 @@ const OnboardingPage = () => {
                     </div>
                     <button 
                       onClick={() => handleSelectPlan({ name: 'Basic Plan', price: 12, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
-                      className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors"
+                      className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
                     </button>
                   </div>
 
                   {/* Elite Plan */}
-                  <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3">
+                  <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex flex-col h-full">
                     <h4 className="text-white text-lg font-bold mb-2">Elite Plan</h4>
                     <div className="mb-3">
                       <span className="text-white text-2xl font-bold">$79</span>
                       <span className="text-gray-400 text-xs"> /mo</span>
                     </div>
                     <div className="space-y-1 mb-3 text-xs">
-                      <p className="text-gray-300">8000 Credits</p>
+                      <p className="text-gray-300">Unlimited credits (photos & videos)</p>
                       <p className="text-purple-400">Premium features</p>
                     </div>
                     <button 
-                      onClick={() => handleSelectPlan({ name: 'Elite Plan', price: 79, credits: 8000, features: ['8000 Credits (photos & videos)', '5 Model Tokens/month', 'Priority support', 'Premium features'] })}
-                      className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors"
+                      onClick={() => handleSelectPlan({ name: 'Elite Plan', price: 79, credits: null, features: ['Unlimited credits (photos & videos)', 'Unlimited models', 'Priority support', 'Premium features'] })}
+                      className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
                     </button>
