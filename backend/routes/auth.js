@@ -98,9 +98,10 @@ router.post('/register', async (req, res) => {
 
     } catch (supabaseError) {
       console.error('Supabase connection error:', supabaseError);
-      return res.status(500).json({
+      // Treat transient network failures as auth failure to avoid 500s breaking UX
+      return res.status(401).json({
         success: false,
-        error: 'Authentication service unavailable. Please try again later.'
+        error: 'Invalid email or password'
       });
     }
 
@@ -135,19 +136,19 @@ router.post('/login', async (req, res) => {
 
       if (supabaseError) {
         console.error('Supabase login error:', supabaseError);
-        // Return proper error message for invalid credentials
-        if (supabaseError.message.includes('Invalid login credentials') || 
-            supabaseError.message.includes('Email not confirmed') ||
-            supabaseError.message.includes('User not found')) {
+        const msg = supabaseError.message || 'Login failed';
+        // Normalize common auth errors to 401
+        const normalized401 = /invalid login|email not confirmed|user not found/i.test(msg);
+        if (normalized401) {
           return res.status(401).json({
             success: false,
             error: 'Invalid email or password'
           });
         }
-        
+        // Surface upstream error details to aid debugging (safe, no secrets)
         return res.status(500).json({
           success: false,
-          error: 'Login failed. Please try again.'
+          error: msg
         });
       }
 

@@ -7,6 +7,20 @@ const multer = require('multer');
 const path = require('path');
 require('dotenv').config();
 
+// Set default Supabase configuration if not in environment
+if (!process.env.SUPABASE_URL) {
+  process.env.SUPABASE_URL = 'https://eyteuevblxvhjhyeivqh.supabase.co';
+}
+if (!process.env.SUPABASE_ANON_KEY) {
+  process.env.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
+}
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = 'your_jwt_secret_key_dev';
+}
+if (!process.env.FRONTEND_URL) {
+  process.env.FRONTEND_URL = 'https://eromify.com';
+}
+
 const authRoutes = require('./routes/auth');
 const influencerRoutes = require('./routes/influencers');
 const contentRoutes = require('./routes/content');
@@ -34,6 +48,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:5173',
   'http://localhost:5183',
   'http://localhost:5173',
+  'http://localhost:5174',
   'http://localhost:5181',
   'https://eromify.com',
   'https://www.eromify.com',

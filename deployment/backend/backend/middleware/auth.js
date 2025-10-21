@@ -21,6 +21,8 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
+    // Dev token bypass removed for security
+
     // Try to verify as JWT token first (for normal login)
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_jwt_secret');

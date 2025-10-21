@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 
 const LandingPage = () => {
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [openFAQ, setOpenFAQ] = useState(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -24,17 +26,45 @@ const LandingPage = () => {
                 <Link to="/marketplace" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Marketplace</Link>
                 <a href="#features" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Features</a>
                 <a href="#pricing" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Pricing</a>
+                <Link to="/affiliate" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Affiliate</Link>
                 <a href="#faq" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">FAQ</a>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-4">
               <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
               <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
+            {/* Mobile buttons and menu */}
+            <div className="md:hidden flex items-center space-x-2">
+              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                Get Started
+              </Link>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-white p-2"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </div>
+        
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-800">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link to="/" className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Home</Link>
+              <Link to="/marketplace" className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Marketplace</Link>
+              <a href="#features" className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Features</a>
+              <a href="#pricing" className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Pricing</a>
+              <Link to="/affiliate" className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Affiliate</Link>
+              <a href="#faq" className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
