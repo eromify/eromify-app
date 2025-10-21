@@ -224,7 +224,7 @@ const AffiliatePage = () => {
                   </span>
                 </h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Get your content assets and open Canva to create the image as shown above. Use CapCut to edit videos: add a black fade and keep the clip around 6–8 seconds.
+                  Get your content assets and open Canva to create the image as shown above. Use CapCut to edit videos: add a black fade and keep the clip around 6–8 seconds. Logo must be clearly visible in reels.
                 </p>
               </div>
             </div>
@@ -243,7 +243,7 @@ const AffiliatePage = () => {
                   </span>
                 </h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Post your videos on the account. Recommended frequency: 1–3 posts per day.
+                  Post your videos on the account. Recommended frequency: 1–3 posts per day. Post caption: link in bio or comment 'print' for the full guide. You must send out guide in DMs.
                 </p>
               </div>
             </div>
