@@ -90,7 +90,7 @@ const AffiliatePage = () => {
           </p>
           
                   <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                    <a href="https://form.typeform.com/to/eghTBYAs" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-500 transition-all text-center">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScqXJfz92MHylHLX6sVW-1mTTABzflYugzUHMFDcpzKYpuGyg/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-500 transition-all text-center">
                       Join Now
                     </a>
                   </div>
@@ -270,7 +270,7 @@ const AffiliatePage = () => {
 
           {/* CTA Section */}
           <div className="max-w-4xl mx-auto mt-16 text-center">
-            <a href="https://form.typeform.com/to/eghTBYAs" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-12 py-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-500 transition-all text-xl">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScqXJfz92MHylHLX6sVW-1mTTABzflYugzUHMFDcpzKYpuGyg/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-12 py-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-500 transition-all text-xl">
               Join Now
             </a>
           </div>
