@@ -262,7 +262,7 @@ const AffiliatePage = () => {
                   </span>
                 </h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Once your content hits a minimum of 50k views in 30 days, you automatically earn $200/month via PayPal. Each additional 1 million views earns $100 in bonuses. No maximum earnings limit.
+                  Once your content hits a minimum of 100k views in 30 days, you automatically earn $200/month via PayPal. Each additional 1 million views earns $100 in bonuses. No maximum earnings limit.
                 </p>
               </div>
             </div>
