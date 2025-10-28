@@ -155,13 +155,18 @@ app.use('*', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
+// Configure server timeouts for Render
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔧 CORS enabled for: ${allowedOrigins.join(', ')}`);
 });
+
+// Set timeouts to prevent 502 errors on Render
+server.keepAliveTimeout = 120000; // 120 seconds
+server.headersTimeout = 120000;   // 120 seconds
+server.timeout = 120000;          // 120 seconds
 
 module.exports = app;
 
