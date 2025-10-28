@@ -14,10 +14,37 @@ const DashboardPage = () => {
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
+  const [hasPaid, setHasPaid] = useState(false)
+  const [checkingPayment, setCheckingPayment] = useState(true)
 
   useEffect(() => {
     fetchDashboardData()
   }, [])
+
+  // Check if user has paid - redirect to onboarding if not
+  useEffect(() => {
+    const checkPaymentStatus = async () => {
+      try {
+        // Check if user has a valid subscription or has paid
+        const hasValidPayment = localStorage.getItem('hasPaid') === 'true' || 
+                               searchParams.get('payment') === 'success'
+        
+        if (!hasValidPayment) {
+          console.log('❌ User has not paid, redirecting to onboarding')
+          navigate('/onboarding')
+          return
+        }
+        
+        setHasPaid(true)
+        setCheckingPayment(false)
+      } catch (error) {
+        console.error('Error checking payment status:', error)
+        navigate('/onboarding')
+      }
+    }
+
+    checkPaymentStatus()
+  }, [navigate, searchParams])
 
   // Track successful payment with Meta Pixel
   useEffect(() => {
@@ -28,6 +55,10 @@ const DashboardPage = () => {
     
     if (paymentStatus === 'success') {
       console.log('🎉 Payment successful! Tracking purchase event...')
+      
+      // Set payment flag in localStorage
+      localStorage.setItem('hasPaid', 'true')
+      setHasPaid(true)
       
       // Track purchase event
       trackPurchase({
@@ -78,6 +109,25 @@ const DashboardPage = () => {
         </div>
       </DashboardLayout>
     )
+  }
+
+  // Show loading while checking payment status
+  if (checkingPayment) {
+    return (
+      <DashboardLayout>
+        <div className="p-4 lg:p-8 bg-black text-white min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+            <p className="text-gray-400">Checking payment status...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  // Only show dashboard if user has paid
+  if (!hasPaid) {
+    return null // This should not happen due to redirect, but just in case
   }
 
   return (

@@ -38,7 +38,38 @@ router.post('/register', async (req, res) => {
 
     const { email, password, fullName } = value;
 
-    // Always try Supabase first, fallback to mock mode on any error
+    // Check if Supabase is properly configured
+    const isSupabaseConfigured = process.env.SUPABASE_URL && 
+                                 process.env.SUPABASE_URL !== 'https://your-project.supabase.co' &&
+                                 process.env.SUPABASE_ANON_KEY && 
+                                 process.env.SUPABASE_ANON_KEY !== 'your-anon-key';
+
+    if (!isSupabaseConfigured) {
+      console.log('Supabase not configured, using mock mode');
+      // Use mock mode
+      const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      const token = jwt.sign(
+        { 
+          userId: mockUserId,
+          email: email
+        },
+        process.env.JWT_SECRET || 'fallback_jwt_secret',
+        { expiresIn: '7d' }
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'User registered successfully (mock mode).',
+        token,
+        user: {
+          id: mockUserId,
+          email: email,
+          fullName: fullName
+        }
+      });
+      return;
+    }
 
     try {
       // Create user in Supabase

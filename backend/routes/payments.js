@@ -97,8 +97,8 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         ? `https://www.eromify.com/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}&plan=${plan}&amount=${planConfig.price / 100}`
         : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}&plan=${plan}&amount=${planConfig.price / 100}`,
       cancel_url: process.env.NODE_ENV === 'production'
-        ? `https://www.eromify.com/credits?payment=cancelled`
-        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/credits?payment=cancelled`,
+        ? `https://www.eromify.com/onboarding?payment=cancelled`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/onboarding?payment=cancelled`,
       customer_email: req.user.email,
       ...(promoCode && { discounts: [{ promotion_code: promoCode }] }),
       metadata: {
@@ -132,130 +132,9 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
   }
 });
 
-// Handle successful payment (webhook)
-router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
+// Webhook endpoint removed - handled by stripeWebhook.js to avoid conflicts
 
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  // Handle the event
-  switch (event.type) {
-    case 'checkout.session.completed':
-      const session = event.data.object;
-      await handleSuccessfulPayment(session);
-      break;
-    case 'invoice.payment_succeeded':
-      const invoice = event.data.object;
-      await handleSubscriptionRenewal(invoice);
-      break;
-    case 'customer.subscription.deleted':
-      const subscription = event.data.object;
-      await handleSubscriptionCancellation(subscription);
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
-
-  res.json({ received: true });
-});
-
-// Handle successful payment
-async function handleSuccessfulPayment(session) {
-  try {
-    const { userId, plan, billing, credits, influencerTrainings } = session.metadata;
-
-    // Update user subscription in database
-    const { error } = await supabase
-      .from('users')
-      .update({
-        subscription_plan: plan,
-        subscription_billing: billing,
-        credits: credits === 'unlimited' ? null : credits,
-        influencer_trainings: influencerTrainings === 'unlimited' ? null : influencerTrainings,
-        subscription_status: 'active',
-        stripe_customer_id: session.customer,
-        subscription_id: session.subscription
-      })
-      .eq('id', userId);
-
-    if (error) {
-      console.error('Database update error:', error);
-      return;
-    }
-
-    console.log(`Payment successful for user ${userId}, plan: ${plan}, billing: ${billing}`);
-  } catch (error) {
-    console.error('Error handling successful payment:', error);
-  }
-}
-
-// Handle subscription renewal
-async function handleSubscriptionRenewal(invoice) {
-  try {
-    const customerId = invoice.customer;
-    
-    // Get user by Stripe customer ID
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('stripe_customer_id', customerId)
-      .single();
-
-    if (error || !user) {
-      console.error('User not found for customer ID:', customerId);
-      return;
-    }
-
-    // Renew credits based on plan
-    const planConfig = PRICING_PLANS[user.subscription_plan][user.subscription_billing];
-    
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({
-        credits: planConfig.credits === null ? null : planConfig.credits,
-        influencer_trainings: planConfig.influencerTrainings === null ? null : planConfig.influencerTrainings
-      })
-      .eq('id', user.id);
-
-    if (updateError) {
-      console.error('Credit renewal error:', updateError);
-      return;
-    }
-
-    console.log(`Credits renewed for user ${user.id}`);
-  } catch (error) {
-    console.error('Error handling subscription renewal:', error);
-  }
-}
-
-// Handle subscription cancellation
-async function handleSubscriptionCancellation(subscription) {
-  try {
-    const { error } = await supabase
-      .from('users')
-      .update({
-        subscription_status: 'cancelled',
-        subscription_plan: null,
-        subscription_billing: null
-      })
-      .eq('subscription_id', subscription.id);
-
-    if (error) {
-      console.error('Subscription cancellation error:', error);
-      return;
-    }
-
-    console.log(`Subscription cancelled for subscription ${subscription.id}`);
-  } catch (error) {
-    console.error('Error handling subscription cancellation:', error);
-  }
-}
+// Webhook handler functions moved to stripeWebhook.js to avoid conflicts
 
 // Get user subscription status
 router.get('/subscription', authenticateToken, async (req, res) => {
