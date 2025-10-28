@@ -5,10 +5,11 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 require('dotenv').config();
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+// Use fallback values for development if env vars are not set
+const supabaseUrl = process.env.SUPABASE_URL || 'https://eyteuevblxvhjhyeivqh.supabase.co';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const router = express.Router();
 
@@ -37,39 +38,7 @@ router.post('/register', async (req, res) => {
 
     const { email, password, fullName } = value;
 
-    // Check if Supabase is properly configured
-    const isSupabaseConfigured = process.env.SUPABASE_URL && 
-                                 process.env.SUPABASE_URL !== 'https://your-project.supabase.co' &&
-                                 process.env.SUPABASE_ANON_KEY && 
-                                 process.env.SUPABASE_ANON_KEY !== 'your-anon-key';
-
-    if (!isSupabaseConfigured) {
-      console.log('Supabase not configured, using mock mode');
-      // Use mock mode
-      const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      const token = jwt.sign(
-        { 
-          userId: mockUserId,
-          email: email
-        },
-        process.env.JWT_SECRET || 'fallback_jwt_secret',
-        { expiresIn: '7d' }
-      );
-
-      res.status(201).json({
-        success: true,
-        message: 'User registered successfully (mock mode).',
-        token,
-        user: {
-          id: mockUserId,
-          email: email,
-          fullName: fullName || email.split('@')[0],
-          emailConfirmed: true
-        }
-      });
-      return;
-    }
+    // Always try Supabase first, fallback to mock mode on any error
 
     try {
       // Create user in Supabase
