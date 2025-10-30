@@ -5,33 +5,34 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY?.trim());
 const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken } = require('../middleware/auth');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+// Use fallback values for development if env vars are not set
+const supabaseUrl = process.env.SUPABASE_URL || 'https://eyteuevblxvhjhyeivqh.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Pricing plans configuration
 const PRICING_PLANS = {
   builder: {
     monthly: {
-      price: 1200, // $12.00 in cents
+      price: 1500, // $15.00 in cents
       credits: 500,
       influencerTrainings: 1
     },
     yearly: {
-      price: 10800, // $108.00 in cents (9 * 12)
+      price: 14400, // $144.00 in cents
       credits: 500,
       influencerTrainings: 1
     }
   },
   launch: {
     monthly: {
-      price: 2500, // $25.00 in cents
+      price: 2900, // $29.00 in cents
       credits: 2000,
       influencerTrainings: 2
     },
     yearly: {
-      price: 22800, // $228.00 in cents (19 * 12)
+      price: 27600, // $276.00 in cents
       credits: 2000,
       influencerTrainings: 2
     }
@@ -43,7 +44,7 @@ const PRICING_PLANS = {
       influencerTrainings: null // Unlimited
     },
     yearly: {
-      price: 78000, // $780.00 in cents (65 * 12)
+      price: 78000, // $780.00 in cents
       credits: null,
       influencerTrainings: null
     }
@@ -140,6 +141,12 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
 router.get('/subscription', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log('Fetching subscription for user ID:', userId);
+    // Prevent caching so clients don't see stale 304 responses
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    res.set('Surrogate-Control', 'no-store');
 
     const { data: user, error } = await supabase
       .from('users')
@@ -148,16 +155,102 @@ router.get('/subscription', authenticateToken, async (req, res) => {
       .single();
 
     if (error) {
+      console.error('Supabase error:', error);
+      
+      // If user not found in public.users table, return empty subscription
+      if (error.code === 'PGRST116') {
+        console.log('User not found in public.users table, returning empty subscription');
+        // Try to create a minimal users row so subsequent checks work
+        try {
+          const { error: insertErr } = await supabase
+            .from('users')
+            .insert({ id: userId, email: req.user.email });
+          if (insertErr) {
+            console.log('Attempted to create missing user row failed:', insertErr);
+          } else {
+            console.log('Created missing user row for', req.user.email);
+          }
+        } catch (e) {
+          console.log('Create missing user row exception:', e);
+        }
+
+        // Fallback: also try subscriptions table by user_id
+        try {
+          const { data: subFallback } = await supabase
+            .from('subscriptions')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('status', 'active')
+            .single();
+
+          if (subFallback) {
+            return res.status(200).json({
+              plan: subFallback.plan ?? null,
+              billing: subFallback.billing ?? null,
+              status: 'active',
+              credits: subFallback.credits ?? null,
+              influencerTrainings: subFallback.influencer_trainings ?? null,
+              hasActiveSubscription: true
+            });
+          }
+        } catch (_) {}
+
+        return res.status(200).json({
+          plan: null,
+          billing: null,
+          status: null,
+          credits: null,
+          influencerTrainings: null,
+          hasActiveSubscription: false
+        });
+      }
+      
       return res.status(500).json({ error: 'Failed to fetch subscription' });
     }
 
-    res.json({
-      plan: user.subscription_plan,
-      billing: user.subscription_billing,
-      status: user.subscription_status,
-      credits: user.credits,
-      influencerTrainings: user.influencer_trainings,
-      hasActiveSubscription: user.subscription_status === 'active'
+    console.log('Subscription data found:', user);
+
+    // If users table indicates active, return immediately
+    if (user && user.subscription_status === 'active') {
+      return res.status(200).json({
+        plan: user.subscription_plan,
+        billing: user.subscription_billing,
+        status: user.subscription_status,
+        credits: user.credits,
+        influencerTrainings: user.influencer_trainings,
+        hasActiveSubscription: true
+      });
+    }
+
+    // Fallback: also check subscriptions table for an active record
+    try {
+      const { data: sub } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .single();
+
+      if (sub) {
+        return res.status(200).json({
+          plan: sub.plan ?? user?.subscription_plan ?? null,
+          billing: sub.billing ?? user?.subscription_billing ?? null,
+          status: 'active',
+          credits: sub.credits ?? user?.credits ?? null,
+          influencerTrainings: sub.influencer_trainings ?? user?.influencer_trainings ?? null,
+          hasActiveSubscription: true
+        });
+      }
+    } catch (_) {}
+
+    // Default: no active subscription
+    res.status(200).json({
+      plan: user?.subscription_plan ?? null,
+      billing: user?.subscription_billing ?? null,
+      status: user?.subscription_status ?? null,
+      credits: user?.credits ?? null,
+      influencerTrainings: user?.influencer_trainings ?? null,
+      hasActiveSubscription: false
     });
   } catch (error) {
     console.error('Subscription fetch error:', error);

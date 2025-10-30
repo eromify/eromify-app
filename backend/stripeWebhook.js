@@ -1,35 +1,37 @@
 const express = require('express');
 const router = express.Router();
+require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY?.trim());
 const { createClient } = require('@supabase/supabase-js');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+// Use fallback values for development if env vars are not set
+const supabaseUrl = process.env.SUPABASE_URL || 'https://eyteuevblxvhjhyeivqh.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Pricing plans configuration (copied from payments.js)
 const PRICING_PLANS = {
   builder: {
     monthly: {
-      price: 1200, // $12.00 in cents
+      price: 1500, // $15.00 in cents
       credits: 500,
       influencerTrainings: 1
     },
     yearly: {
-      price: 10800, // $108.00 in cents (9 * 12)
+      price: 14400, // $144.00 in cents
       credits: 500,
       influencerTrainings: 1
     }
   },
   launch: {
     monthly: {
-      price: 2500, // $25.00 in cents
+      price: 2900, // $29.00 in cents
       credits: 2000,
       influencerTrainings: 2
     },
     yearly: {
-      price: 22800, // $228.00 in cents (19 * 12)
+      price: 27600, // $276.00 in cents
       credits: 2000,
       influencerTrainings: 2
     }
@@ -41,7 +43,7 @@ const PRICING_PLANS = {
       influencerTrainings: null // Unlimited
     },
     yearly: {
-      price: 78000, // $780.00 in cents (65 * 12)
+      price: 78000, // $780.00 in cents
       credits: null,
       influencerTrainings: null
     }
