@@ -376,7 +376,7 @@ const LandingPage = () => {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Creator plan</span>
-                  <span className="text-white font-medium">$25/mo</span>
+                  <span className="text-white font-medium">$29/mo</span>
                 </div>
                 
                 <div className="flex justify-between items-center">
@@ -392,7 +392,7 @@ const LandingPage = () => {
                 <div className="border-t border-gray-800 pt-6 mt-6">
                   <div className="flex justify-between items-center">
                     <span className="text-white font-semibold">Total monthly cost</span>
-                    <span className="text-white font-bold text-xl">$25</span>
+                    <span className="text-white font-bold text-xl">$29</span>
                   </div>
                 </div>
               </div>
@@ -488,12 +488,12 @@ const LandingPage = () => {
                 <p className="text-gray-400 text-sm mb-6">For growing creators</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$12' : '$9'}
+                    {billingToggle === 'monthly' ? '$15' : '$12'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $108 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $144 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}
@@ -578,12 +578,12 @@ const LandingPage = () => {
                 <p className="text-gray-400 text-sm mb-6">Ready to scale</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$25' : '$19'}
+                    {billingToggle === 'monthly' ? '$29' : '$23'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $228 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $276 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}
