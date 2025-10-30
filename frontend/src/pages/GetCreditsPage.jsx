@@ -16,12 +16,12 @@ const GetCreditsPage = () => {
   const getPlanData = (plan, billing) => {
     const pricing = {
       builder: {
-        monthly: { value: 1200 }, // $12.00 in cents
-        yearly: { value: 10800 }  // $108.00 in cents
+        monthly: { value: 1500 }, // $15.00 in cents
+        yearly: { value: 14400 }  // $144.00 in cents
       },
       launch: {
-        monthly: { value: 2500 }, // $25.00 in cents
-        yearly: { value: 22800 }  // $228.00 in cents
+        monthly: { value: 2900 }, // $29.00 in cents
+        yearly: { value: 27600 }  // $276.00 in cents
       },
       growth: {
         monthly: { value: 7900 }, // $79.00 in cents
@@ -168,12 +168,12 @@ const GetCreditsPage = () => {
                 <p className="text-gray-400 text-sm mb-6">For growing creators</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$12' : '$9'}
+                    {billingToggle === 'monthly' ? '$15' : '$12'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $108 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $144 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}
@@ -265,12 +265,12 @@ const GetCreditsPage = () => {
                 <p className="text-gray-400 text-sm mb-6">Ready to scale</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$25' : '$19'}
+                    {billingToggle === 'monthly' ? '$29' : '$23'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $228 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $276 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowRight, Sparkles, FileText, Palette, Users, Zap, Check, ChevronLeft, Upload, Shirt, Dumbbell, Plane, Gamepad2, UtensilsCrossed, Paintbrush, Briefcase, Instagram, Youtube, Twitter, Video, Camera, Film, Play } from 'lucide-react'
 import { paymentService } from '../services/paymentService'
 import { trackAddToCart, trackInitiateCheckout } from '../utils/metaPixel'
@@ -9,6 +9,7 @@ const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 7
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { user } = useAuth()
   
   // Step 2 state
@@ -36,6 +37,29 @@ const OnboardingPage = () => {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false)
+
+  // If user already has an active subscription (or local flag/payment param), skip onboarding
+  useEffect(() => {
+    const maybeSkipOnboarding = async () => {
+      try {
+        const paymentParam = searchParams.get('payment')
+        
+        if (paymentParam === 'success') {
+          navigate('/dashboard')
+          return
+        }
+
+        const sub = await paymentService.getSubscription()
+        if (sub?.status === 'active' || sub?.hasActiveSubscription || sub?.plan) {
+          navigate('/dashboard')
+        }
+      } catch (_) {
+        // ignore and remain on onboarding
+      }
+    }
+
+    maybeSkipOnboarding()
+  }, [navigate, searchParams])
   
   // Marketplace models (filtered to show only available models, excluding fully claimed ones)
   const allMarketplaceModels = [
@@ -1413,7 +1437,7 @@ const OnboardingPage = () => {
                   </div>
                   <h3 className="text-white text-xl font-bold mb-1.5">Pro Plan</h3>
                   <div className="mb-2">
-                    <span className="text-white text-3xl font-bold">$25</span>
+                    <span className="text-white text-3xl font-bold">$29</span>
                     <span className="text-gray-400 text-base"> /month</span>
                   </div>
                   <div className="flex items-center space-x-2 mb-2">
@@ -1440,7 +1464,7 @@ const OnboardingPage = () => {
                   </div>
 
                   <button 
-                    onClick={() => handleSelectPlan({ name: 'Pro Plan', price: 25, originalPrice: 50, credits: 2000, features: ['2000 Credits (photos & videos)', '2 Model Tokens/month', '60 scheduled posts'] })}
+                    onClick={() => handleSelectPlan({ name: 'Pro Plan', price: 29, originalPrice: 50, credits: 2000, features: ['2000 Credits (photos & videos)', '2 Model Tokens/month', '60 scheduled posts'] })}
                     className="w-full bg-white text-black py-2.5 rounded-lg font-bold text-base hover:bg-gray-100 transition-colors"
                   >
                     Get Started
@@ -1453,7 +1477,7 @@ const OnboardingPage = () => {
                   <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex flex-col h-full">
                     <h4 className="text-white text-lg font-bold mb-2">Basic Plan</h4>
                     <div className="mb-3">
-                      <span className="text-white text-2xl font-bold">$12</span>
+                      <span className="text-white text-2xl font-bold">$15</span>
                       <span className="text-gray-400 text-xs"> /mo</span>
                     </div>
                     <div className="space-y-1 mb-3 text-xs">
@@ -1461,7 +1485,7 @@ const OnboardingPage = () => {
                       <p className="text-red-400">No video</p>
                     </div>
                     <button 
-                      onClick={() => handleSelectPlan({ name: 'Basic Plan', price: 12, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
+                      onClick={() => handleSelectPlan({ name: 'Basic Plan', price: 15, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
                       className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
