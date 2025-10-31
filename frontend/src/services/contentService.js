@@ -25,6 +25,18 @@ export const contentService = {
     return response.data
   },
 
+  // Generate AI video
+  generateVideo: async (videoData) => {
+    const response = await api.post('/content/generate-video', videoData)
+    return response.data
+  },
+
+  // Get video generation status
+  getVideoStatus: async (jobId) => {
+    const response = await api.get(`/content/video-status/${jobId}`)
+    return response.data
+  },
+
   // Upscale image
   upscaleImage: async (imageData) => {
     const response = await api.post('/content/upscale-image', imageData)

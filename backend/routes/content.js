@@ -192,6 +192,40 @@ Generate engaging, authentic content that matches this influencer's brand and re
   }
 });
 
+// Credit costs
+const IMAGE_COST = 10;
+const VIDEO_COST = 25;
+
+// Helper function to check and deduct credits
+async function checkAndDeductCredits(userId, cost) {
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('credits, subscription_plan')
+    .eq('id', userId)
+    .single();
+
+  if (error) throw new Error('Failed to fetch user credits');
+
+  // Growth plan has unlimited credits (null)
+  if (user.credits === null) {
+    return { success: true, remaining: null }; // Unlimited
+  }
+
+  if (user.credits < cost) {
+    return { success: false, remaining: user.credits, required: cost };
+  }
+
+  // Deduct credits
+  const { error: updateError } = await supabase
+    .from('users')
+    .update({ credits: user.credits - cost })
+    .eq('id', userId);
+
+  if (updateError) throw new Error('Failed to deduct credits');
+
+  return { success: true, remaining: user.credits - cost };
+}
+
 // Generate AI image
 router.post('/generate-image', authenticateToken, requireSubscription('free'), async (req, res) => {
   try {
@@ -201,6 +235,16 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
       return res.status(400).json({
         success: false,
         error: 'Influencer ID and prompt are required'
+      });
+    }
+
+    // Check and deduct credits
+    const creditCheck = await checkAndDeductCredits(req.user.id, IMAGE_COST);
+    if (!creditCheck.success) {
+      return res.status(402).json({
+        success: false,
+        error: `Insufficient credits. Required: ${creditCheck.required}, Available: ${creditCheck.remaining}`,
+        credits: creditCheck.remaining
       });
     }
 
@@ -232,11 +276,37 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
       { style: style || 'photorealistic' }
     );
 
+    // Store generated content in database
+    const { error: saveError } = await supabase
+      .from('generated_content')
+      .insert([
+        {
+          user_id: req.user.id,
+          influencer_id: influencerId,
+          content_type: 'image',
+          content: imageUrl,
+          metadata: {
+            influencer: influencer.name,
+            prompt: enhancedPrompt,
+            style,
+            size,
+            credits_used: IMAGE_COST
+          },
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+    if (saveError) {
+      console.error('Failed to save generated content:', saveError);
+    }
+
     res.json({
       success: true,
       message: 'Image generated successfully',
       image: {
         url: imageUrl,
+        creditsUsed: IMAGE_COST,
+        creditsRemaining: creditCheck.remaining,
         metadata: {
           influencer: influencer.name,
           prompt: enhancedPrompt,
@@ -259,7 +329,7 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
 // Generate AI video from image
 router.post('/generate-video', authenticateToken, requireSubscription('free'), async (req, res) => {
   try {
-    const { imageUrl, prompt, duration = 5 } = req.body;
+    const { imageUrl, prompt, duration = 5, influencerId } = req.body;
 
     if (!imageUrl || !prompt) {
       return res.status(400).json({
@@ -268,14 +338,51 @@ router.post('/generate-video', authenticateToken, requireSubscription('free'), a
       });
     }
 
+    // Check and deduct credits
+    const creditCheck = await checkAndDeductCredits(req.user.id, VIDEO_COST);
+    if (!creditCheck.success) {
+      return res.status(402).json({
+        success: false,
+        error: `Insufficient credits. Required: ${creditCheck.required}, Available: ${creditCheck.remaining}`,
+        credits: creditCheck.remaining
+      });
+    }
+
     // Generate video using Runway
     const job = await generateVideoFromImage(imageUrl, prompt, { duration });
+
+    // Store job in database (will update with video URL when complete)
+    const { error: saveError } = await supabase
+      .from('generated_content')
+      .insert([
+        {
+          user_id: req.user.id,
+          influencer_id: influencerId || null,
+          content_type: 'video',
+          content: null, // Will be updated when video is ready
+          metadata: {
+            job_id: job.jobId,
+            status: job.status,
+            prompt,
+            duration,
+            credits_used: VIDEO_COST,
+            image_url: imageUrl
+          },
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+    if (saveError) {
+      console.error('Failed to save video job:', saveError);
+    }
 
     res.json({
       success: true,
       message: 'Video generation started',
       jobId: job.jobId,
       status: job.status,
+      creditsUsed: VIDEO_COST,
+      creditsRemaining: creditCheck.remaining,
       checkStatusUrl: `/content/video-status/${job.jobId}`
     });
 
@@ -293,6 +400,26 @@ router.get('/video-status/:jobId', authenticateToken, async (req, res) => {
   try {
     const { jobId } = req.params;
     const status = await checkGenerationStatus(jobId);
+
+    // If video is complete, update database with video URL
+    if (status.status === 'completed' && status.videoUrl) {
+      const { error: updateError } = await supabase
+        .from('generated_content')
+        .update({
+          content: status.videoUrl,
+          metadata: {
+            ...status.metadata,
+            status: 'completed',
+            completed_at: status.completedAt
+          }
+        })
+        .eq('metadata->job_id', jobId)
+        .eq('user_id', req.user.id);
+
+      if (updateError) {
+        console.error('Failed to update video URL:', updateError);
+      }
+    }
 
     res.json({
       success: true,
