@@ -3,6 +3,8 @@ const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken, requireSubscription } = require('../middleware/auth');
 const OpenAI = require('openai');
 const Joi = require('joi');
+const { generateImageWithFaceConsistency } = require('../services/replicateService');
+const { generateVideoFromImage, checkGenerationStatus } = require('../services/runwayService');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -218,21 +220,17 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
     }
 
     // Enhanced prompt with influencer context
-    const enhancedPrompt = `Create an image for ${influencer.name}, a ${influencer.niche} influencer. 
-    Style: ${style || 'professional and engaging'}. 
-    Description: ${prompt}. 
-    Make it suitable for social media content that matches their brand and target audience: ${influencer.target_audience}`;
+    const enhancedPrompt = `${prompt}. Style: ${style || 'professional and engaging'}. For ${influencer.name}, a ${influencer.niche} influencer. Target audience: ${influencer.target_audience}`;
 
-    // Generate image using DALL-E
-    const response = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: enhancedPrompt,
-      size: size,
-      quality: "standard",
-      n: 1,
-    });
+    // Get face image URL if available (for consistency)
+    const faceImageUrl = influencer.face_image_url || influencer.image_url || null;
 
-    const imageUrl = response.data[0].url;
+    // Generate image using Replicate with face consistency
+    const imageUrl = await generateImageWithFaceConsistency(
+      enhancedPrompt,
+      faceImageUrl,
+      { style: style || 'photorealistic' }
+    );
 
     res.json({
       success: true,
@@ -251,17 +249,61 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
 
   } catch (error) {
     console.error('Image generation error:', error);
-    
-    if (error.code === 'insufficient_quota') {
-      return res.status(429).json({
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to generate image'
+    });
+  }
+});
+
+// Generate AI video from image
+router.post('/generate-video', authenticateToken, requireSubscription('free'), async (req, res) => {
+  try {
+    const { imageUrl, prompt, duration = 5 } = req.body;
+
+    if (!imageUrl || !prompt) {
+      return res.status(400).json({
         success: false,
-        error: 'AI service quota exceeded. Please try again later.'
+        error: 'Image URL and prompt are required'
       });
     }
 
+    // Generate video using Runway
+    const job = await generateVideoFromImage(imageUrl, prompt, { duration });
+
+    res.json({
+      success: true,
+      message: 'Video generation started',
+      jobId: job.jobId,
+      status: job.status,
+      checkStatusUrl: `/content/video-status/${job.jobId}`
+    });
+
+  } catch (error) {
+    console.error('Video generation error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to generate image'
+      error: error.message || 'Failed to generate video'
+    });
+  }
+});
+
+// Check video generation status
+router.get('/video-status/:jobId', authenticateToken, async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const status = await checkGenerationStatus(jobId);
+
+    res.json({
+      success: true,
+      ...status
+    });
+
+  } catch (error) {
+    console.error('Status check error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to check status'
     });
   }
 });
