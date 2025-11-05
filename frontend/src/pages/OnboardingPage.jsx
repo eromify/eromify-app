@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, FileText, Palette, Users, Zap, Check, ChevronLeft
 import { paymentService } from '../services/paymentService'
 import { trackAddToCart, trackInitiateCheckout } from '../utils/metaPixel'
 import { useAuth } from '../contexts/AuthContext'
+import { marketplaceModels } from '../data/marketplaceModels'
 
 const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(1)
@@ -61,117 +62,10 @@ const OnboardingPage = () => {
     maybeSkipOnboarding()
   }, [navigate, searchParams])
   
-  // Marketplace models (filtered to show only available models, excluding fully claimed ones)
-  const allMarketplaceModels = [
-    {
-      id: 1,
-      name: "Audrey Sinclair",
-      images: ["/preview_1.png", "/preview_2.png", "/preview_3.png", "/preview_4.png", "/preview_5.png"],
-      claimed: "2/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 2,
-      name: "Mackenzie Cole",
-      images: ["/model2 1.png", "/model2 2.png", "/model2 3.png", "/model2 4.png", "/model2 5.png"],
-      claimed: "2/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 3,
-      name: "Bailey Summers",
-      images: ["/model3 1.png", "/model3 2.png", "/model3 3.png", "/model3 4.png", "/model3 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 4,
-      name: "Briar Westbrook",
-      images: ["/model4 1.png", "/model4 2.png", "/model4 3.png", "/model4 4.png", "/model4 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 6,
-      name: "Chloe Morales",
-      images: ["/model6 1.png", "/model6 2.png", "/model6 3.png", "/model6 4.png", "/model6 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 7,
-      name: "Emma Reed",
-      images: ["/model7 1.png", "/model7 2.png", "/model7 3.png", "/model7 4.png", "/model7 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 8,
-      name: "Holly Arlington",
-      images: ["/model8 1.png", "/model8 2.png", "/model8 3.png", "/model8 4.png", "/model8 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 9,
-      name: "Sloane Bennett",
-      images: ["/model9 1.png", "/model9 2.png", "/model9 3.png", "/model9 4.png", "/model9 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 10,
-      name: "Aria Chen",
-      images: ["/model10 1.png", "/model10 2.png", "/model10 3.png", "/model10 4.png", "/model10 5.png"],
-      claimed: "2/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 13,
-      name: "Mia Rodriguez",
-      images: ["/model13 1.png", "/model13 2.png", "/model13 3.png", "/model13 4.png", "/model13 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 14,
-      name: "Nina Patel",
-      images: ["/model14 1.png", "/model14 2.png", "/model14 3.png", "/model14 4.png", "/model14 5.png"],
-      claimed: "2/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 15,
-      name: "Zara Hassan",
-      images: ["/model15 1.png", "/model15 2.png", "/model15 3.png", "/model15 4.png", "/model15 5.png"],
-      claimed: "1/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 16,
-      name: "Zoey Paige",
-      images: ["/model16 1.png", "/model16 2.png", "/model16 3.png", "/model16 4.png", "/model16 5.png"],
-      claimed: "2/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 17,
-      name: "Zara Vee",
-      images: ["/model17 1.png", "/model17 2.png", "/model17 3.png", "/model17 4.png", "/model17 5.png"],
-      claimed: "2/5",
-      fullyClaimed: false,
-    },
-    {
-      id: 18,
-      name: "Mila Dash",
-      images: ["/model18 1.png", "/model18 2.png", "/model18 3.png", "/model18 4.png", "/model18 5.png"],
-      claimed: "3/5",
-      fullyClaimed: false,
-    },
-  ]
-  
-  // Filter out fully claimed models and limit to 15 for 3x5 grid
-  const marketplaceModels = allMarketplaceModels.filter(m => !m.fullyClaimed).slice(0, 15)
+  // Use shared marketplace models data - order can be changed in /src/data/marketplaceModels.js
+  // Filter out fully claimed models - show all available models
+  const allMarketplaceModels = marketplaceModels;
+  const marketplaceModelsFiltered = allMarketplaceModels.filter(m => !m.fullyClaimed)
 
   // Countdown timer effect
   useEffect(() => {
@@ -510,9 +404,9 @@ const OnboardingPage = () => {
                   <p className="text-gray-400 text-base md:text-lg">Select from our top-performing models. No training, just instant results.</p>
                 </div>
 
-                {/* Models Grid - 3 columns x 5 rows */}
+                {/* Models Grid - 3 columns, dynamic rows */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 px-4 md:px-0">
-                  {marketplaceModels.map((model) => (
+                  {marketplaceModelsFiltered.map((model) => (
                     <button
                       key={model.id}
                       onClick={() => setSelectedMarketplaceModel(model.id)}
@@ -1234,7 +1128,7 @@ const OnboardingPage = () => {
       case 6:
         // Get the selected model name if marketplace was chosen
         const selectedModel = selectedMarketplaceModel 
-          ? marketplaceModels.find(m => m.id === selectedMarketplaceModel)
+          ? allMarketplaceModels.find(m => m.id === selectedMarketplaceModel)
           : null
         
         // Format the niche name
@@ -1375,7 +1269,7 @@ const OnboardingPage = () => {
       case 7:
         // Get the selected model name if marketplace was chosen
         const selectedModelPage7 = selectedMarketplaceModel 
-          ? marketplaceModels.find(m => m.id === selectedMarketplaceModel)
+          ? allMarketplaceModels.find(m => m.id === selectedMarketplaceModel)
           : null
         
         return (
