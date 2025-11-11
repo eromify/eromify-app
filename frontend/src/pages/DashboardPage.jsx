@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import LimitReachedModal from '../components/LimitReachedModal'
 import { Star, Users, Plus, Image, Video } from 'lucide-react'
 import userService from '../services/userService'
+import influencerService from '../services/influencerService'
 import { useAuth } from '../contexts/AuthContext'
 import { trackPurchase } from '../utils/metaPixel'
+
+const ONBOARDING_SELECTION_STORAGE_KEY = 'eromify/onboardingSelection'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
@@ -16,10 +19,11 @@ const DashboardPage = () => {
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
   const [hasPaid, setHasPaid] = useState(false)
   const [checkingPayment, setCheckingPayment] = useState(true)
+  const hasAttemptedMarketplaceClaim = useRef(false)
 
   useEffect(() => {
     fetchDashboardData()
-  }, [])
+  }, [fetchDashboardData])
 
   // Check if user has paid - redirect to onboarding if not
   useEffect(() => {
@@ -78,7 +82,53 @@ const DashboardPage = () => {
     }
   }, [searchParams, user?.email, setSearchParams])
 
-  const fetchDashboardData = async () => {
+  useEffect(() => {
+    const attemptClaim = async () => {
+      if (!hasPaid || hasAttemptedMarketplaceClaim.current) {
+        return
+      }
+
+      if (typeof window === 'undefined') {
+        return
+      }
+
+      const storedSelection = localStorage.getItem(ONBOARDING_SELECTION_STORAGE_KEY)
+      if (!storedSelection) {
+        return
+      }
+
+      let selectionPayload
+      try {
+        selectionPayload = JSON.parse(storedSelection)
+      } catch (error) {
+        console.error('Failed to parse stored onboarding selection:', error)
+        localStorage.removeItem(ONBOARDING_SELECTION_STORAGE_KEY)
+        return
+      }
+
+      if (!selectionPayload?.modelId) {
+        localStorage.removeItem(ONBOARDING_SELECTION_STORAGE_KEY)
+        return
+      }
+
+      hasAttemptedMarketplaceClaim.current = true
+
+      try {
+        const response = await influencerService.claimMarketplaceInfluencer(selectionPayload)
+        if (response.success) {
+          localStorage.removeItem(ONBOARDING_SELECTION_STORAGE_KEY)
+          fetchDashboardData()
+        }
+      } catch (error) {
+        console.error('Failed to claim marketplace influencer:', error)
+        hasAttemptedMarketplaceClaim.current = false
+      }
+    }
+
+    attemptClaim()
+  }, [hasPaid, fetchDashboardData])
+
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true)
       const response = await userService.getDashboard()
@@ -90,7 +140,7 @@ const DashboardPage = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const handleCreateInfluencer = () => {
     setShowInfluencerLimitModal(true)

@@ -74,6 +74,14 @@ const requireSubscription = (plan) => {
         });
       }
 
+      // Skip subscription check in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Development mode: skipping subscription check');
+        req.subscription = { plan: 'free', status: 'active' };
+        next();
+        return;
+      }
+
       // Get user subscription from database
       const { data: subscription, error } = await supabase
         .from('subscriptions')

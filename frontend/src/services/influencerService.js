@@ -25,6 +25,12 @@ export const influencerService = {
     return response.data
   },
 
+  // Claim marketplace influencer selected during onboarding
+  claimMarketplaceInfluencer: async (payload) => {
+    const response = await api.post('/influencers/claim-marketplace', payload)
+    return response.data
+  },
+
   // Delete influencer
   deleteInfluencer: async (id) => {
     const response = await api.delete(`/influencers/${id}`)

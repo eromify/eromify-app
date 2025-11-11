@@ -112,6 +112,44 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
     };
 
 
+    // Support mocked checkout flow for local testing when Stripe keys aren't set
+    const shouldMockCheckout =
+      process.env.STRIPE_MOCK_MODE === 'true' ||
+      (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production');
+
+    if (shouldMockCheckout) {
+      console.log('🧪 Mock Stripe checkout enabled - skipping real Stripe request');
+
+      const mockSessionId = `cs_test_local_${Date.now()}`;
+      const successUrl = sessionOptions.success_url?.replace('{CHECKOUT_SESSION_ID}', mockSessionId) || `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?payment=success&session_id=${mockSessionId}&plan=${plan}&amount=${planConfig.price / 100}`;
+
+      try {
+        // Mirror webhook logic so local testing marks the user as paid
+        const { error: userUpdateError } = await supabase
+          .from('users')
+          .update({
+            subscription_plan: plan,
+            subscription_billing: billing,
+            credits: planConfig.credits === null ? null : planConfig.credits,
+            influencer_trainings: planConfig.influencerTrainings === null ? null : planConfig.influencerTrainings,
+            subscription_status: 'active'
+          })
+          .eq('id', userId);
+
+        if (userUpdateError) {
+          console.error('❌ Mock checkout user update error:', userUpdateError);
+        }
+      } catch (mockUpdateError) {
+        console.error('❌ Mock checkout update exception:', mockUpdateError);
+      }
+
+      return res.json({
+        sessionId: mockSessionId,
+        url: successUrl,
+        mocked: true
+      });
+    }
+
     // Create Stripe checkout session
     console.log('💳 Creating Stripe session with options:', JSON.stringify(sessionOptions, null, 2));
     console.log('🎫 Promotion codes enabled:', sessionOptions.allow_promotion_codes);

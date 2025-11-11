@@ -45,30 +45,35 @@ router.post('/register', async (req, res) => {
                                  process.env.SUPABASE_ANON_KEY !== 'your-anon-key';
 
     if (!isSupabaseConfigured) {
-      console.log('Supabase not configured, using mock mode');
-      // Use mock mode
-      const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      const token = jwt.sign(
-        { 
-          userId: mockUserId,
-          email: email
-        },
-        process.env.JWT_SECRET || 'fallback_jwt_secret',
-        { expiresIn: '7d' }
-      );
+      if (process.env.ENABLE_SUPABASE_MOCK_AUTH === 'true') {
+        console.warn('Supabase not configured, mock auth enabled via ENABLE_SUPABASE_MOCK_AUTH.');
+        const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      res.status(201).json({
-        success: true,
-        message: 'User registered successfully (mock mode).',
-        token,
-        user: {
-          id: mockUserId,
-          email: email,
-          fullName: fullName
-        }
+        const token = jwt.sign(
+          {
+            userId: mockUserId,
+            email: email
+          },
+          process.env.JWT_SECRET || 'fallback_jwt_secret',
+          { expiresIn: '7d' }
+        );
+
+        return res.status(201).json({
+          success: true,
+          message: 'User registered successfully (mock mode).',
+          token,
+          user: {
+            id: mockUserId,
+            email: email,
+            fullName: fullName
+          }
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase environment variables are not configured. Registration is currently disabled.'
       });
-      return;
     }
 
     try {
@@ -85,30 +90,22 @@ router.post('/register', async (req, res) => {
 
       if (supabaseError) {
         console.error('Supabase registration error:', supabaseError);
-        // Fallback to mock mode on error
-        const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
-        const token = jwt.sign(
-          { 
-            userId: mockUserId,
-            email: email
-          },
-          process.env.JWT_SECRET || 'fallback_jwt_secret',
-          { expiresIn: '7d' }
-        );
 
-        res.status(201).json({
-          success: true,
-          message: 'User registered successfully (mock mode - Supabase error).',
-          token,
-          user: {
-            id: mockUserId,
-            email: email,
-            fullName: fullName || email.split('@')[0],
-            emailConfirmed: true
-          }
+        if (
+          supabaseError?.code === 'user_already_exists' ||
+          supabaseError?.status === 422 ||
+          supabaseError?.message?.toLowerCase().includes('already registered')
+        ) {
+          return res.status(409).json({
+            success: false,
+            error: 'An account with this email already exists. Please sign in instead.'
+          });
+        }
+
+        return res.status(500).json({
+          success: false,
+          error: supabaseError?.message || 'Failed to create user.'
         });
-        return;
       }
 
       if (!data.user) {
@@ -142,28 +139,9 @@ router.post('/register', async (req, res) => {
 
     } catch (supabaseError) {
       console.error('Supabase connection error:', supabaseError);
-      // Fallback to mock mode if Supabase is not configured
-      const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      const token = jwt.sign(
-        { 
-          userId: mockUserId,
-          email: email
-        },
-        process.env.JWT_SECRET || 'fallback_jwt_secret',
-        { expiresIn: '7d' }
-      );
-
-      res.status(201).json({
-        success: true,
-        message: 'User registered successfully (mock mode - Supabase connection error).',
-        token,
-        user: {
-          id: mockUserId,
-          email: email,
-          fullName: fullName || email.split('@')[0],
-          emailConfirmed: true
-        }
+      return res.status(503).json({
+        success: false,
+        error: 'Unable to reach authentication service. Please try again shortly.'
       });
     }
 
@@ -196,33 +174,38 @@ router.post('/login', async (req, res) => {
                                  process.env.SUPABASE_ANON_KEY !== 'your-anon-key';
 
     if (!isSupabaseConfigured) {
-      console.log('Supabase not configured, using mock mode for login');
-      // Use mock mode - accept any email/password
-      const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      const token = jwt.sign(
-        { 
-          userId: mockUserId,
-          email: email
-        },
-        process.env.JWT_SECRET || 'fallback_jwt_secret',
-        { expiresIn: '7d' }
-      );
+      if (process.env.ENABLE_SUPABASE_MOCK_AUTH === 'true') {
+        console.warn('Supabase not configured, mock auth enabled via ENABLE_SUPABASE_MOCK_AUTH.');
+        const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      res.json({
-        success: true,
-        message: 'Login successful (mock mode)',
-        token,
-        user: {
-          id: mockUserId,
-          email: email,
-          fullName: email.split('@')[0],
-          avatar: null,
-          bio: null,
-          emailConfirmed: true
-        }
+        const token = jwt.sign(
+          {
+            userId: mockUserId,
+            email: email
+          },
+          process.env.JWT_SECRET || 'fallback_jwt_secret',
+          { expiresIn: '7d' }
+        );
+
+        return res.json({
+          success: true,
+          message: 'Login successful (mock mode)',
+          token,
+          user: {
+            id: mockUserId,
+            email: email,
+            fullName: email.split('@')[0],
+            avatar: null,
+            bio: null,
+            emailConfirmed: true
+          }
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase environment variables are not configured. Login is currently disabled.'
       });
-      return;
     }
 
     try {
@@ -234,32 +217,10 @@ router.post('/login', async (req, res) => {
 
       if (supabaseError) {
         console.error('Supabase login error:', supabaseError);
-        // Fallback to mock mode on error
-        const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
-        const token = jwt.sign(
-          { 
-            userId: mockUserId,
-            email: email
-          },
-          process.env.JWT_SECRET || 'fallback_jwt_secret',
-          { expiresIn: '7d' }
-        );
-
-        res.json({
-          success: true,
-          message: 'Login successful (mock mode - Supabase error)',
-          token,
-          user: {
-            id: mockUserId,
-            email: email,
-            fullName: email.split('@')[0],
-            avatar: null,
-            bio: null,
-            emailConfirmed: true
-          }
+        return res.status(401).json({
+          success: false,
+          error: 'Invalid email or password'
         });
-        return;
       }
 
       if (!data.user) {
@@ -295,30 +256,9 @@ router.post('/login', async (req, res) => {
 
     } catch (supabaseError) {
       console.error('Supabase connection error:', supabaseError);
-      // Fallback to mock mode if Supabase is not configured
-      const mockUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      const token = jwt.sign(
-        { 
-          userId: mockUserId,
-          email: email
-        },
-        process.env.JWT_SECRET || 'fallback_jwt_secret',
-        { expiresIn: '7d' }
-      );
-
-      res.json({
-        success: true,
-        message: 'Login successful (mock mode - Supabase connection error)',
-        token,
-        user: {
-          id: mockUserId,
-          email: email,
-          fullName: email.split('@')[0],
-          avatar: null,
-          bio: null,
-          emailConfirmed: true
-        }
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase connection error.'
       });
     }
 

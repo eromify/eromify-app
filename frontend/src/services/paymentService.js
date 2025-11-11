@@ -2,15 +2,16 @@ import api from '../utils/api'
 
 export const paymentService = {
   // Create checkout session
-  createCheckoutSession: async (plan, billing, promoCode = null) => {
-    console.log('💳 paymentService.createCheckoutSession called with:', { plan, billing, promoCode })
+  createCheckoutSession: async (plan, billing, promoCode = null, additionalData = {}) => {
+    console.log('💳 paymentService.createCheckoutSession called with:', { plan, billing, promoCode, additionalData })
     console.log('🌐 Making API call to /payments/create-checkout-session')
     
     try {
       const response = await api.post('/payments/create-checkout-session', {
         plan,
         billing,
-        promoCode
+        promoCode,
+        ...additionalData
       })
       console.log('📨 API response received:', response.data)
       

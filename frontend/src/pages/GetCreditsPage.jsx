@@ -9,6 +9,8 @@ const GetCreditsPage = () => {
   console.log('🚀 GetCreditsPage component loaded!')
   const [billingToggle, setBillingToggle] = useState('monthly')
   const [loading, setLoading] = useState(false)
+  const [subscription, setSubscription] = useState(null)
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true)
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
   
@@ -31,6 +33,12 @@ const GetCreditsPage = () => {
     
     return pricing[plan]?.[billing] || { value: 0 }
   }
+
+  const planIsCurrent = (planKey) => {
+    if (!subscription) return false
+    const isActive = subscription.status === 'active' || subscription.hasActiveSubscription
+    return subscription.plan === planKey && isActive
+  }
   
   // Test if component is rendering
   console.log('🎯 GetCreditsPage render - user:', user)
@@ -51,6 +59,21 @@ const GetCreditsPage = () => {
     }
   }, [user])
 
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const data = await paymentService.getSubscription()
+        setSubscription(data)
+      } catch (error) {
+        console.error('Failed to fetch subscription info:', error)
+      } finally {
+        setSubscriptionLoading(false)
+      }
+    }
+
+    fetchSubscription()
+  }, [])
+
   // Handle payment success/cancel messages
   useEffect(() => {
     const paymentStatus = searchParams.get('payment')
@@ -66,6 +89,11 @@ const GetCreditsPage = () => {
     console.log('👤 Current user state:', user)
     console.log('🔑 Token in localStorage:', localStorage.getItem('token') ? localStorage.getItem('token').substring(0, 20) + '...' : 'no token')
     
+    if (planIsCurrent(plan)) {
+      toast.success('You are already on this plan')
+      return
+    }
+
     try {
       setLoading(true)
       console.log('📞 Calling paymentService.createCheckoutSession...')
@@ -116,6 +144,11 @@ const GetCreditsPage = () => {
       setLoading(false)
     }
   }
+
+  const builderIsCurrent = planIsCurrent('builder')
+  const launchIsCurrent = planIsCurrent('launch')
+  const growthIsCurrent = planIsCurrent('growth')
+  const disableButtons = loading || subscriptionLoading
 
   return (
     <DashboardLayout>
@@ -203,10 +236,14 @@ const GetCreditsPage = () => {
                   console.log('🔘 Builder button clicked!')
                   handleSubscribe('builder')
                 }}
-                disabled={loading}
-                className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={disableButtons || builderIsCurrent}
+                className={`w-full px-6 py-2 rounded-lg font-medium transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  builderIsCurrent
+                    ? 'bg-transparent border border-purple-500/60 text-purple-300 cursor-default'
+                    : 'bg-gray-800 text-white hover:bg-gray-700'
+                }`}
               >
-                Get Credits
+                {builderIsCurrent ? 'Current Plan' : 'Get Credits'}
               </button>
               
               {/* Separator Line */}
@@ -300,10 +337,14 @@ const GetCreditsPage = () => {
                   console.log('🔘 Launch button clicked!')
                   handleSubscribe('launch')
                 }}
-                disabled={loading}
-                className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={disableButtons || launchIsCurrent}
+                className={`w-full px-6 py-2 rounded-lg font-medium transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  launchIsCurrent
+                    ? 'bg-transparent border border-purple-500/60 text-purple-300 cursor-default'
+                    : 'bg-gray-800 text-white hover:bg-gray-700'
+                }`}
               >
-                Get Credits
+                {launchIsCurrent ? 'Current Plan' : 'Get Credits'}
               </button>
               
               {/* Separator Line */}
@@ -391,10 +432,14 @@ const GetCreditsPage = () => {
                   console.log('🔘 Growth button clicked!')
                   handleSubscribe('growth')
                 }}
-                disabled={loading}
-                className="w-full bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-700 transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={disableButtons || growthIsCurrent}
+                className={`w-full px-6 py-2 rounded-lg font-medium transition-all text-center block mb-8 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  growthIsCurrent
+                    ? 'bg-transparent border border-purple-500/60 text-purple-300 cursor-default'
+                    : 'bg-gray-800 text-white hover:bg-gray-700'
+                }`}
               >
-                Get Credits
+                {growthIsCurrent ? 'Current Plan' : 'Get Credits'}
               </button>
               
               {/* Separator Line */}

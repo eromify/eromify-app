@@ -20,6 +20,22 @@ const createInfluencerSchema = Joi.object({
   contentStyle: Joi.string().min(10).max(500).required()
 });
 
+const claimMarketplaceSchema = Joi.object({
+  modelId: Joi.number().integer().required(),
+  modelName: Joi.string().min(2).max(150).required(),
+  aiName: Joi.string().min(2).max(150).required(),
+  niche: Joi.string().allow(null, '').optional(),
+  visualStyle: Joi.string().allow(null, '').optional(),
+  goal: Joi.string().allow(null, '').optional(),
+  frequency: Joi.string().allow(null, '').optional(),
+  platforms: Joi.array().items(Joi.string()).optional(),
+  contentTypes: Joi.array().items(Joi.string()).optional(),
+  description: Joi.string().allow(null, '').optional(),
+  personality: Joi.string().allow(null, '').optional(),
+  targetAudience: Joi.string().allow(null, '').optional(),
+  contentStyle: Joi.string().allow(null, '').optional()
+});
+
 // Get all influencers for a user
 router.get('/', authenticateToken, async (req, res) => {
   try {
@@ -234,6 +250,132 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to delete influencer'
+    });
+  }
+});
+
+router.post('/claim-marketplace', authenticateToken, async (req, res) => {
+  try {
+    const { error: validationError, value } = claimMarketplaceSchema.validate(req.body, { abortEarly: false });
+    if (validationError) {
+      return res.status(400).json({
+        success: false,
+        error: validationError.details.map(detail => detail.message).join(', ')
+      });
+    }
+
+    const {
+      aiName,
+      modelName,
+      niche,
+      visualStyle,
+      goal,
+      frequency,
+      platforms = [],
+      contentTypes = [],
+      description,
+      personality,
+      targetAudience,
+      contentStyle
+    } = value;
+
+    const normalizeNiche = (rawNiche) => {
+      const allowed = ['fashion', 'fitness', 'lifestyle', 'tech', 'food', 'travel', 'beauty', 'gaming', 'business', 'other'];
+      if (!rawNiche) return 'lifestyle';
+      if (allowed.includes(rawNiche)) return rawNiche;
+      if (rawNiche === 'art') return 'lifestyle';
+      if (rawNiche === 'content-creation') return 'lifestyle';
+      if (rawNiche === 'agency-services') return 'business';
+      if (rawNiche === 'build-business') return 'business';
+      return 'other';
+    };
+
+    const resolvedNiche = normalizeNiche(niche);
+
+    // Prevent duplicate creation by checking existing influencer with the same AI name
+    const { data: existingInfluencer, error: existingError } = await supabase
+      .from('influencers')
+      .select('*')
+      .eq('user_id', req.user.id)
+      .eq('name', aiName)
+      .maybeSingle();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      console.error('Error checking existing influencer:', existingError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to verify existing influencers'
+      });
+    }
+
+    if (existingInfluencer) {
+      return res.json({
+        success: true,
+        message: 'Influencer already exists',
+        influencer: existingInfluencer,
+        alreadyExists: true
+      });
+    }
+
+    const defaultDescription = description && description.length >= 10
+      ? description
+      : `AI influencer inspired by marketplace model ${modelName}${goal ? `, designed to help you ${goal.replace(/-/g, ' ')}` : ''}.`;
+
+    const platformsText = platforms.length
+      ? `Focus platforms: ${platforms.join(', ')}.`
+      : 'Active across major social platforms.';
+
+    const contentTypesText = contentTypes.length
+      ? `Primary content types: ${contentTypes.join(', ')}.`
+      : 'Delivers engaging multimedia content.';
+
+    const defaultPersonality = personality && personality.length >= 10
+      ? personality
+      : `Confident, engaging, and aspirational persona with a ${visualStyle || 'signature'} visual style.`;
+
+    const defaultTargetAudience = targetAudience && targetAudience.length >= 10
+      ? targetAudience
+      : `Ideal for audiences interested in ${resolvedNiche} content. ${platformsText}`;
+
+    const defaultContentStyle = contentStyle && contentStyle.length >= 10
+      ? contentStyle
+      : `Combines ${visualStyle || 'premium'} visuals with ${contentTypesText} ${frequency ? `at a ${frequency} cadence.` : ''}`.trim();
+
+    const { data: influencer, error: createError } = await supabase
+      .from('influencers')
+      .insert([
+        {
+          user_id: req.user.id,
+          name: aiName,
+          description: defaultDescription,
+          niche: resolvedNiche,
+          personality: defaultPersonality,
+          target_audience: defaultTargetAudience,
+          content_style: defaultContentStyle,
+          created_at: new Date().toISOString()
+        }
+      ])
+      .select()
+      .single();
+
+    if (createError) {
+      console.error('Failed to create marketplace influencer:', createError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to claim marketplace influencer'
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Marketplace influencer claimed successfully',
+      influencer
+    });
+  } catch (error) {
+    console.error('Claim marketplace influencer error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to claim marketplace influencer'
     });
   }
 });

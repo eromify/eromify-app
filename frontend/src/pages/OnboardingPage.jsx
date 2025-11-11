@@ -6,6 +6,8 @@ import { trackAddToCart, trackInitiateCheckout } from '../utils/metaPixel'
 import { useAuth } from '../contexts/AuthContext'
 import { marketplaceModels } from '../data/marketplaceModels'
 
+const ONBOARDING_SELECTION_STORAGE_KEY = 'eromify/onboardingSelection'
+
 const OnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 7
@@ -121,6 +123,40 @@ const OnboardingPage = () => {
     setIsProcessingCheckout(true)
     
     try {
+      const selectedModel = selectedMarketplaceModel
+        ? allMarketplaceModels.find(m => m.id === selectedMarketplaceModel)
+        : null
+
+      if (selectedModel) {
+        const onboardingSelection = {
+          modelId: selectedModel.id,
+          modelName: selectedModel.name,
+          aiName,
+          niche: selectedNiche,
+          visualStyle: selectedVisualStyle,
+          goal: selectedGoal,
+          frequency: selectedFrequency,
+          platforms: selectedPlatforms,
+          contentTypes: selectedContentTypes,
+          description: selectedModel.about || null,
+          personality: null,
+          targetAudience: null,
+          contentStyle: null
+        }
+
+        try {
+          localStorage.setItem(ONBOARDING_SELECTION_STORAGE_KEY, JSON.stringify(onboardingSelection))
+        } catch (storageError) {
+          console.error('Failed to store onboarding selection:', storageError)
+        }
+      } else {
+        try {
+          localStorage.removeItem(ONBOARDING_SELECTION_STORAGE_KEY)
+        } catch (storageError) {
+          console.error('Failed to clear onboarding selection:', storageError)
+        }
+      }
+
       // Map the plan names to backend plan names
       let backendPlan
       if (selectedPlan.name === 'Pro Plan') {
@@ -135,7 +171,22 @@ const OnboardingPage = () => {
       const response = await paymentService.createCheckoutSession(
         backendPlan,
         'monthly', // Default to monthly billing
-        null // No promo code
+        null, // No promo code
+        selectedModel
+          ? {
+              onboardingSelection: {
+                modelId: selectedModel.id,
+                modelName: selectedModel.name,
+                aiName,
+                niche: selectedNiche,
+                visualStyle: selectedVisualStyle,
+                goal: selectedGoal,
+                frequency: selectedFrequency,
+                platforms: selectedPlatforms,
+                contentTypes: selectedContentTypes
+              }
+            }
+          : {}
       )
       
       // Track InitiateCheckout event before redirecting to Stripe
