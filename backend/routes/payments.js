@@ -51,6 +51,10 @@ const PRICING_PLANS = {
   }
 };
 
+const shouldUseMockSubscriptions =
+  process.env.ENABLE_LOCAL_SUBSCRIPTION_MOCK === 'true' ||
+  (process.env.NODE_ENV || 'development') !== 'production';
+
 // Create Stripe checkout session
 router.post('/create-checkout-session', authenticateToken, async (req, res) => {
   try {
@@ -194,55 +198,12 @@ router.get('/subscription', authenticateToken, async (req, res) => {
 
     if (error) {
       console.error('Supabase error:', error);
-      
-      // If user not found in public.users table, return empty subscription
-      if (error.code === 'PGRST116') {
-        console.log('User not found in public.users table, returning empty subscription');
-        // Try to create a minimal users row so subsequent checks work
-        try {
-          const { error: insertErr } = await supabase
-            .from('users')
-            .insert({ id: userId, email: req.user.email });
-          if (insertErr) {
-            console.log('Attempted to create missing user row failed:', insertErr);
-          } else {
-            console.log('Created missing user row for', req.user.email);
-          }
-        } catch (e) {
-          console.log('Create missing user row exception:', e);
-        }
 
-        // Fallback: also try subscriptions table by user_id
-        try {
-          const { data: subFallback } = await supabase
-            .from('subscriptions')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('status', 'active')
-            .single();
-
-          if (subFallback) {
-            return res.status(200).json({
-              plan: subFallback.plan ?? null,
-              billing: subFallback.billing ?? null,
-              status: 'active',
-              credits: subFallback.credits ?? null,
-              influencerTrainings: subFallback.influencer_trainings ?? null,
-              hasActiveSubscription: true
-            });
-          }
-        } catch (_) {}
-
-        return res.status(200).json({
-          plan: null,
-          billing: null,
-          status: null,
-          credits: null,
-          influencerTrainings: null,
-          hasActiveSubscription: false
-        });
+      if (shouldUseMockSubscriptions) {
+        console.log('Using local subscription mock fallback due to Supabase error:', error.code);
+        return res.status(200).json(buildMockSubscriptionResponse(req.query));
       }
-      
+
       return res.status(500).json({ error: 'Failed to fetch subscription' });
     }
 
@@ -281,6 +242,11 @@ router.get('/subscription', authenticateToken, async (req, res) => {
       }
     } catch (_) {}
 
+    if (shouldUseMockSubscriptions) {
+      console.log('Using local subscription mock fallback (no active subscription records).');
+      return res.status(200).json(buildMockSubscriptionResponse(req.query));
+    }
+
     // Default: no active subscription
     res.status(200).json({
       plan: user?.subscription_plan ?? null,
@@ -295,6 +261,41 @@ router.get('/subscription', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch subscription' });
   }
 });
+
+const MOCK_PLANS = {
+  builder: {
+    billing: process.env.LOCAL_SUBSCRIPTION_BILLING_BUILDER || 'monthly',
+    credits: Number(process.env.LOCAL_SUBSCRIPTION_CREDITS_BUILDER) || 500,
+    influencerTrainings: Number(process.env.LOCAL_SUBSCRIPTION_TRAININGS_BUILDER) || 1
+  },
+  launch: {
+    billing: process.env.LOCAL_SUBSCRIPTION_BILLING_LAUNCH || 'monthly',
+    credits: Number(process.env.LOCAL_SUBSCRIPTION_CREDITS_LAUNCH) || 2000,
+    influencerTrainings: Number(process.env.LOCAL_SUBSCRIPTION_TRAININGS_LAUNCH) || 2
+  },
+  growth: {
+    billing: process.env.LOCAL_SUBSCRIPTION_BILLING_GROWTH || 'monthly',
+    credits: Number(process.env.LOCAL_SUBSCRIPTION_CREDITS_GROWTH) || 5000,
+    influencerTrainings: Number(process.env.LOCAL_SUBSCRIPTION_TRAININGS_GROWTH) || 5
+  }
+};
+
+const buildMockSubscriptionResponse = (query = {}) => {
+  const requestedPlan = typeof query.plan === 'string' ? query.plan.toLowerCase() : null;
+  const defaultPlan = process.env.LOCAL_SUBSCRIPTION_PLAN || 'launch';
+  const planKey = MOCK_PLANS[requestedPlan] ? requestedPlan : defaultPlan;
+  const planConfig = MOCK_PLANS[planKey] || MOCK_PLANS.launch;
+
+  return {
+    plan: planKey,
+    billing: planConfig.billing,
+    status: 'active',
+    credits: planConfig.credits,
+    influencerTrainings: planConfig.influencerTrainings,
+    hasActiveSubscription: true,
+    mocked: true
+  };
+};
 
 // Cancel subscription
 router.post('/cancel-subscription', authenticateToken, async (req, res) => {

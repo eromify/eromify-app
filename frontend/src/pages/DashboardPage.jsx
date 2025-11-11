@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import LimitReachedModal from '../components/LimitReachedModal'
 import { Star, Users, Plus, Image, Video } from 'lucide-react'
 import userService from '../services/userService'
 import influencerService from '../services/influencerService'
+import paymentService from '../services/paymentService'
 import { useAuth } from '../contexts/AuthContext'
 import { trackPurchase } from '../utils/metaPixel'
 
@@ -19,36 +20,37 @@ const DashboardPage = () => {
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
   const [hasPaid, setHasPaid] = useState(false)
   const [checkingPayment, setCheckingPayment] = useState(true)
+  const [subscription, setSubscription] = useState(null)
+  const [refreshCounter, setRefreshCounter] = useState(0)
   const hasAttemptedMarketplaceClaim = useRef(false)
 
-  useEffect(() => {
-    fetchDashboardData()
-  }, [fetchDashboardData])
+  const refreshSubscription = useCallback(async () => {
+    setCheckingPayment(true)
+    try {
+      const response = await paymentService.getSubscription()
+      setSubscription(response)
+      const active =
+        response?.hasActiveSubscription ||
+        response?.status === 'active' ||
+        Boolean(response?.plan)
+      setHasPaid(active)
 
-  // Check if user has paid - redirect to onboarding if not
-  useEffect(() => {
-    const checkPaymentStatus = async () => {
-      try {
-        // Check if user has a valid subscription or has paid
-        const hasValidPayment = localStorage.getItem('hasPaid') === 'true' || 
-                               searchParams.get('payment') === 'success'
-        
-        if (!hasValidPayment) {
-          console.log('❌ User has not paid, redirecting to onboarding')
-          navigate('/onboarding')
-          return
-        }
-        
-        setHasPaid(true)
-        setCheckingPayment(false)
-      } catch (error) {
-        console.error('Error checking payment status:', error)
+      if (!active) {
+        console.log('❌ No active subscription detected for user, redirecting to onboarding')
         navigate('/onboarding')
       }
+    } catch (error) {
+      console.error('Error fetching subscription status:', error)
+      navigate('/onboarding')
+    } finally {
+      setCheckingPayment(false)
     }
+  }, [navigate])
 
-    checkPaymentStatus()
-  }, [navigate, searchParams])
+  // Check subscription status on load
+  useEffect(() => {
+    refreshSubscription()
+  }, [refreshSubscription])
 
   // Track successful payment with Meta Pixel
   useEffect(() => {
@@ -63,6 +65,7 @@ const DashboardPage = () => {
       // Set payment flag in localStorage
       localStorage.setItem('hasPaid', 'true')
       setHasPaid(true)
+      refreshSubscription()
       
       // Track purchase event
       trackPurchase({
@@ -80,7 +83,7 @@ const DashboardPage = () => {
       searchParams.delete('amount')
       setSearchParams(searchParams, { replace: true })
     }
-  }, [searchParams, user?.email, setSearchParams])
+  }, [searchParams, user?.email, setSearchParams, refreshSubscription])
 
   useEffect(() => {
     const attemptClaim = async () => {
@@ -117,7 +120,7 @@ const DashboardPage = () => {
         const response = await influencerService.claimMarketplaceInfluencer(selectionPayload)
         if (response.success) {
           localStorage.removeItem(ONBOARDING_SELECTION_STORAGE_KEY)
-          fetchDashboardData()
+          setRefreshCounter(prev => prev + 1)
         }
       } catch (error) {
         console.error('Failed to claim marketplace influencer:', error)
@@ -126,21 +129,33 @@ const DashboardPage = () => {
     }
 
     attemptClaim()
-  }, [hasPaid, fetchDashboardData])
+  }, [hasPaid])
 
-  const fetchDashboardData = useCallback(async () => {
-    try {
-      setLoading(true)
-      const response = await userService.getDashboard()
-      if (response.success) {
-        setDashboardData(response.dashboard)
+  useEffect(() => {
+    let isMounted = true
+
+    const loadDashboard = async () => {
+      try {
+        setLoading(true)
+        const response = await userService.getDashboard()
+        if (isMounted && response.success) {
+          setDashboardData(response.dashboard)
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error)
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
       }
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error)
-    } finally {
-      setLoading(false)
     }
-  }, [])
+
+    loadDashboard()
+
+    return () => {
+      isMounted = false
+    }
+  }, [refreshCounter])
 
   const handleCreateInfluencer = () => {
     setShowInfluencerLimitModal(true)
