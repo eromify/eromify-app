@@ -4,19 +4,12 @@ import { useAuth } from '../contexts/AuthContext'
 import { 
   Compass, 
   Users, 
-  Package, 
-  Wrench, 
   Sparkles, 
   Video, 
-  ArrowUp, 
-  Edit3, 
-  MessageSquare, 
-  ChevronRight,
   ChevronDown,
   ChevronUp,
   DollarSign,
   Settings,
-  Clock,
   User,
   HelpCircle,
   LogOut,
@@ -68,17 +61,11 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigationItems = {
     overview: [
       { path: '/dashboard', icon: Compass, label: 'Discover', active: isActive('/dashboard') },
-      { path: '/influencers', icon: Users, label: 'Influencers', active: isActive('/influencers') },
-      { path: '/products', icon: Package, label: 'Products', active: isActive('/products') },
-      { path: '/tools', icon: Wrench, label: 'Tools', active: isActive('/tools') }
+      { path: '/influencers', icon: Users, label: 'Influencers', active: isActive('/influencers') }
     ],
     tools: [
-      { path: '/generate', icon: Sparkles, label: 'Generate', active: isActive('/generate') },
-      { path: '/generate-video', icon: Video, label: 'Generate Video', active: isActive('/generate-video') },
-      { path: '/upscale', icon: ArrowUp, label: 'Upscale', active: isActive('/upscale') },
-      { path: '/edit-image', icon: Edit3, label: 'Edit Image', active: isActive('/edit-image') },
-      { path: '/generate-prompt', icon: MessageSquare, label: 'Generate Prompt', active: isActive('/generate-prompt') },
-      { path: '/tools', icon: ChevronRight, label: 'View All', active: false }
+      { path: '/generate', icon: Sparkles, label: 'Generate Images', active: isActive('/generate') },
+      { path: '/generate-video', icon: Video, label: 'Generate Video', active: isActive('/generate-video') }
     ],
     payments: [
       { path: '/credits', icon: DollarSign, label: 'Get Credits', active: isActive('/credits') },

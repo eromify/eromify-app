@@ -10,11 +10,8 @@ import OnboardingPage from './pages/OnboardingPage'
 import DashboardPage from './pages/DashboardPage'
 import InfluencersPage from './pages/InfluencersPage'
 import ProductsPage from './pages/ProductsPage'
-import ToolsPage from './pages/ToolsPage'
 import GeneratePage from './pages/GeneratePage'
 import GenerateVideoPage from './pages/GenerateVideoPage'
-import UpscalePage from './pages/UpscalePage'
-import EditImagePage from './pages/EditImagePage'
 import GeneratePromptPage from './pages/GeneratePromptPage'
 import GetCreditsPage from './pages/GetCreditsPage'
 import ManageSubscriptionPage from './pages/ManageSubscriptionPage'
@@ -57,11 +54,6 @@ function App() {
             <ProductsPage />
           </ProtectedRoute>
         } />
-        <Route path="/tools" element={
-          <ProtectedRoute>
-            <ToolsPage />
-          </ProtectedRoute>
-        } />
         <Route path="/generate" element={
           <ProtectedRoute>
             <GeneratePage />
@@ -72,24 +64,9 @@ function App() {
             <GenerateVideoPage />
           </ProtectedRoute>
         } />
-        <Route path="/upscale" element={
-          <ProtectedRoute>
-            <UpscalePage />
-          </ProtectedRoute>
-        } />
-        <Route path="/edit-image" element={
-          <ProtectedRoute>
-            <EditImagePage />
-          </ProtectedRoute>
-        } />
         <Route path="/generate-prompt" element={
           <ProtectedRoute>
             <GeneratePromptPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/view-all" element={
-          <ProtectedRoute>
-            <ToolsPage />
           </ProtectedRoute>
         } />
         <Route path="/credits" element={

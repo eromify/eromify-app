@@ -31,7 +31,7 @@ const SupportPage = () => {
               {/* Contact Info */}
               <div className="flex items-center justify-center text-purple-400">
                 <Mail className="h-5 w-5 mr-2" />
-                <span>admin@eromify.com</span>
+                <span>support@eromify.com</span>
               </div>
             </div>
             
