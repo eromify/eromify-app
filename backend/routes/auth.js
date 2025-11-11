@@ -7,7 +7,9 @@ require('dotenv').config();
 
 // Use fallback values for development if env vars are not set
 const supabaseUrl = process.env.SUPABASE_URL || 'https://eyteuevblxvhjhyeivqh.supabase.co';
-const supabaseKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY 
+  || process.env.SUPABASE_ANON_KEY 
+  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -41,8 +43,7 @@ router.post('/register', async (req, res) => {
     // Check if Supabase is properly configured
     const isSupabaseConfigured = process.env.SUPABASE_URL && 
                                  process.env.SUPABASE_URL !== 'https://your-project.supabase.co' &&
-                                 process.env.SUPABASE_ANON_KEY && 
-                                 process.env.SUPABASE_ANON_KEY !== 'your-anon-key';
+                                 supabaseKey;
 
     if (!isSupabaseConfigured) {
       if (process.env.ENABLE_SUPABASE_MOCK_AUTH === 'true') {
