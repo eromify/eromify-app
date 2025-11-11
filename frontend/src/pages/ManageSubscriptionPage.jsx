@@ -22,12 +22,26 @@ const PLAN_DETAILS = {
   }
 }
 
+const CANCEL_FLAG_KEY = 'eromify/mockSubscriptionCancelled'
+
 const ManageSubscriptionPage = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [subscription, setSubscription] = useState(null)
   const [showCancelNotice, setShowCancelNotice] = useState(false)
   const [cancelled, setCancelled] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const storedFlag = localStorage.getItem(CANCEL_FLAG_KEY)
+      if (storedFlag === 'true') {
+        setCancelled(true)
+      }
+    } catch (error) {
+      console.warn('Unable to read cancellation flag from storage', error)
+    }
+  }, [])
 
   useEffect(() => {
     const loadSubscription = async () => {
@@ -146,6 +160,11 @@ const ManageSubscriptionPage = () => {
                   >
                     {cancelled ? 'Subscription Canceled' : 'Cancel Subscription'}
                   </button>
+                  {cancelled && (
+                    <p className="text-xs text-gray-500 mt-3">
+                      This cancellation is simulated locally for testing purposes.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -185,6 +204,11 @@ const ManageSubscriptionPage = () => {
             <button
               onClick={() => {
                 setShowCancelNotice(false)
+                try {
+                  localStorage.setItem(CANCEL_FLAG_KEY, 'true')
+                } catch (error) {
+                  console.warn('Unable to store cancellation flag', error)
+                }
                 setCancelled(true)
               }}
               className="w-full px-6 py-3 rounded-lg font-semibold bg-gray-900 border border-gray-800 text-white hover:bg-gray-800 transition-colors"
