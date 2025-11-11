@@ -39,6 +39,23 @@ const GetCreditsPage = () => {
     const isActive = subscription.status === 'active' || subscription.hasActiveSubscription
     return subscription.plan === planKey && isActive
   }
+  const planOrder = ['builder', 'launch', 'growth']
+  const activePlanKey = subscription?.plan?.toLowerCase() || null
+  const getPlanRelationshipLabel = (planKey) => {
+    if (planIsCurrent(planKey)) return 'Current Plan'
+    if (
+      activePlanKey &&
+      planOrder.includes(activePlanKey) &&
+      planOrder.includes(planKey) &&
+      (subscription?.status === 'active' || subscription?.hasActiveSubscription)
+    ) {
+      const currentIndex = planOrder.indexOf(activePlanKey)
+      const targetIndex = planOrder.indexOf(planKey)
+      if (targetIndex < currentIndex) return 'Downgrade'
+      if (targetIndex > currentIndex) return 'Upgrade'
+    }
+    return 'Get Credits'
+  }
   
   // Test if component is rendering
   console.log('🎯 GetCreditsPage render - user:', user)
@@ -243,7 +260,7 @@ const GetCreditsPage = () => {
                     : 'bg-gray-800 text-white hover:bg-gray-700'
                 }`}
               >
-                {builderIsCurrent ? 'Current Plan' : 'Get Credits'}
+                {getPlanRelationshipLabel('builder')}
               </button>
               
               {/* Separator Line */}
@@ -344,7 +361,7 @@ const GetCreditsPage = () => {
                     : 'bg-gray-800 text-white hover:bg-gray-700'
                 }`}
               >
-                {launchIsCurrent ? 'Current Plan' : 'Get Credits'}
+                {getPlanRelationshipLabel('launch')}
               </button>
               
               {/* Separator Line */}
@@ -439,7 +456,7 @@ const GetCreditsPage = () => {
                     : 'bg-gray-800 text-white hover:bg-gray-700'
                 }`}
               >
-                {growthIsCurrent ? 'Current Plan' : 'Get Credits'}
+                {getPlanRelationshipLabel('growth')}
               </button>
               
               {/* Separator Line */}
