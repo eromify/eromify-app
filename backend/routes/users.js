@@ -1,14 +1,26 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken } = require('../middleware/auth');
 const Joi = require('joi');
+const { getSupabaseAdmin } = require('../lib/supabaseAdmin');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+let supabase;
+try {
+  supabase = getSupabaseAdmin();
+} catch (error) {
+  console.error('Failed to initialise Supabase admin client for users route:', error.message);
+}
 
 const router = express.Router();
+
+router.use((req, res, next) => {
+  if (!supabase) {
+    return res.status(500).json({
+      success: false,
+      error: 'Supabase service configuration is missing on the server.'
+    });
+  }
+  next();
+});
 
 // Validation schemas
 const updateProfileSchema = Joi.object({

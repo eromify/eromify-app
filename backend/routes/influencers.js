@@ -41,6 +41,8 @@ const claimMarketplaceSchema = Joi.object({
   modelId: Joi.number().integer().required(),
   modelName: Joi.string().min(2).max(150).required(),
   aiName: Joi.string().min(2).max(150).required(),
+  modelImage: Joi.string().allow(null, '').optional(),
+  modelImages: Joi.array().items(Joi.string()).optional(),
   niche: Joi.string().allow(null, '').optional(),
   visualStyle: Joi.string().allow(null, '').optional(),
   goal: Joi.string().allow(null, '').optional(),
@@ -249,18 +251,53 @@ router.put('/:id', authenticateToken, async (req, res) => {
 // Delete influencer
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
-    const { error } = await supabase
+    console.log('🗑️ Delete influencer request:', {
+      influencerId: req.params.id,
+      userId: req.user.id
+    });
+
+    // First check if the influencer exists and belongs to the user
+    const { data: existingInfluencer, error: checkError } = await supabase
+      .from('influencers')
+      .select('id, name, user_id')
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id)
+      .maybeSingle();
+
+    if (checkError) {
+      console.error('Error checking influencer:', checkError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to verify influencer'
+      });
+    }
+
+    if (!existingInfluencer) {
+      console.log('❌ Influencer not found or does not belong to user');
+      return res.status(404).json({
+        success: false,
+        error: 'Influencer not found'
+      });
+    }
+
+    console.log('✅ Influencer found, proceeding with deletion:', existingInfluencer.name);
+
+    // Delete the influencer
+    const { error: deleteError } = await supabase
       .from('influencers')
       .delete()
       .eq('id', req.params.id)
       .eq('user_id', req.user.id);
 
-    if (error) {
-      return res.status(404).json({
+    if (deleteError) {
+      console.error('Error deleting influencer:', deleteError);
+      return res.status(500).json({
         success: false,
-        error: 'Influencer not found or delete failed'
+        error: 'Failed to delete influencer'
       });
     }
+
+    console.log('✅ Influencer deleted successfully');
 
     res.json({
       success: true,
@@ -278,17 +315,86 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 
 router.post('/claim-marketplace', authenticateToken, async (req, res) => {
   try {
+    console.log('🎨 Claim marketplace request received:', {
+      userId: req.user?.id,
+      body: req.body
+    });
+
     const { error: validationError, value } = claimMarketplaceSchema.validate(req.body, { abortEarly: false });
     if (validationError) {
+      console.error('❌ Validation error:', validationError.details);
       return res.status(400).json({
         success: false,
         error: validationError.details.map(detail => detail.message).join(', ')
       });
     }
 
+    console.log('✅ Validation passed, proceeding with claim');
+
+    // Check user's subscription and influencer limits
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('subscription_status, subscription_plan, influencer_trainings')
+      .eq('id', req.user.id)
+      .single();
+
+    if (userError || !userData) {
+      console.error('Error fetching user subscription:', userError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to verify subscription status'
+      });
+    }
+
+    // Check if user has active subscription
+    if (userData.subscription_status !== 'active') {
+      console.log('❌ User does not have active subscription');
+      return res.status(403).json({
+        success: false,
+        error: 'Active subscription required to claim influencers'
+      });
+    }
+
+    // Check current influencer count
+    const { data: existingInfluencers, error: countError } = await supabase
+      .from('influencers')
+      .select('id')
+      .eq('user_id', req.user.id);
+
+    if (countError) {
+      console.error('Error counting influencers:', countError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to verify influencer count'
+      });
+    }
+
+    const currentInfluencerCount = existingInfluencers?.length || 0;
+    const maxInfluencers = userData.influencer_trainings || 0;
+
+    console.log('🔍 Influencer limit check:', {
+      currentCount: currentInfluencerCount,
+      maxAllowed: maxInfluencers,
+      plan: userData.subscription_plan
+    });
+
+    if (currentInfluencerCount >= maxInfluencers) {
+      console.log('❌ Influencer limit reached');
+      return res.status(403).json({
+        success: false,
+        error: 'Influencer limit reached for your plan',
+        currentCount: currentInfluencerCount,
+        maxAllowed: maxInfluencers
+      });
+    }
+
+    console.log('✅ User has available influencer slots, proceeding with claim');
+
     const {
       aiName,
       modelName,
+      modelImage,
+      modelImages = [],
       niche,
       visualStyle,
       goal,
@@ -374,6 +480,8 @@ router.post('/claim-marketplace', authenticateToken, async (req, res) => {
           personality: defaultPersonality,
           target_audience: defaultTargetAudience,
           content_style: defaultContentStyle,
+          avatar_url: modelImage || null,
+          images: modelImages && modelImages.length > 0 ? modelImages : null,
           created_at: new Date().toISOString()
         }
       ])

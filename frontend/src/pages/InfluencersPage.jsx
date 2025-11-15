@@ -19,6 +19,8 @@ const InfluencersPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState({})
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState({ show: false, influencer: null })
+  const [deleting, setDeleting] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -126,18 +128,48 @@ const InfluencersPage = () => {
     }
   }, [loading, influencers])
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this influencer?')) {
-      try {
-        const response = await influencerService.deleteInfluencer(id)
-        if (response.success) {
-          toast.success('Influencer deleted successfully')
-          fetchInfluencers()
-        }
-      } catch (error) {
-        console.error('Error deleting influencer:', error)
-        toast.error('Failed to delete influencer')
+  const handleDelete = (influencer) => {
+    setDeleteConfirmModal({ show: true, influencer })
+  }
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmModal.influencer) return
+
+    setDeleting(true)
+    try {
+      console.log('🗑️ Deleting influencer:', deleteConfirmModal.influencer.id)
+      const response = await influencerService.deleteInfluencer(deleteConfirmModal.influencer.id)
+      if (response.success) {
+        console.log('✅ Influencer deleted successfully')
+        toast.success('Influencer deleted successfully')
+        
+        // Refresh both influencers list and subscription to update the count
+        await Promise.all([
+          fetchInfluencers(),
+          fetchSubscription()
+        ])
+        
+        console.log('✅ Data refreshed after deletion')
+        setDeleteConfirmModal({ show: false, influencer: null })
       }
+    } catch (error) {
+      console.error('❌ Error deleting influencer:', error)
+      toast.error(error.response?.data?.error || 'Failed to delete influencer')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  const cancelDelete = () => {
+    setDeleteConfirmModal({ show: false, influencer: null })
+  }
+
+  const fetchSubscription = async () => {
+    try {
+      const subResponse = await paymentService.getSubscription()
+      setSubscription(subResponse)
+    } catch (error) {
+      console.error('Error fetching subscription:', error)
     }
   }
 
@@ -199,7 +231,7 @@ const InfluencersPage = () => {
                 className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto whitespace-nowrap"
               >
                 <Plus className="h-5 w-5 mr-2" />
-                Create New Influencer
+                Create Influencer
               </button>
             </div>
           </section>
@@ -283,19 +315,14 @@ const InfluencersPage = () => {
                         {influencer.niche || 'Niche Unspecified'}
                       </p>
                     </div>
-                    <div className="flex space-x-2">
-                      <button className="rounded-lg border border-gray-800/80 bg-black/30 px-3 py-1 text-xs text-gray-400 transition-colors duration-200 hover:border-purple-400/60 hover:text-white">
-                        View
+                    {!influencer._isLocal && (
+                      <button
+                        onClick={() => handleDelete(influencer)}
+                        className="rounded-lg border border-transparent px-3 py-1 text-xs text-red-400 transition-colors duration-200 hover:border-red-500/40 hover:bg-red-500/10"
+                      >
+                        Delete
                       </button>
-                      {!influencer._isLocal && (
-                        <button
-                          onClick={() => handleDelete(influencer.id)}
-                          className="rounded-lg border border-transparent px-3 py-1 text-xs text-red-400 transition-colors duration-200 hover:border-red-500/40 hover:bg-red-500/10"
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
+                    )}
                   </div>
 
                   <div className="relative mt-6 space-y-4 text-sm text-gray-300">
@@ -335,6 +362,22 @@ const InfluencersPage = () => {
                       </p>
                     </div>
                   </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => navigate('/generate')}
+                      className="flex-1 rounded-lg border border-gray-800/80 bg-black/30 px-3 py-2 text-xs text-gray-400 transition-colors duration-200 hover:border-purple-400/60 hover:text-white"
+                    >
+                      Generate Image
+                    </button>
+                    <button
+                      onClick={() => navigate('/generate-video')}
+                      className="flex-1 rounded-lg border border-gray-800/80 bg-black/30 px-3 py-2 text-xs text-gray-400 transition-colors duration-200 hover:border-purple-400/60 hover:text-white"
+                    >
+                      Generate Video
+                    </button>
+                  </div>
                 </div>
                 </div>
               </article>
@@ -364,6 +407,46 @@ const InfluencersPage = () => {
           onClose={() => setShowInfluencerLimitModal(false)}
           type="influencer"
         />
+
+        {/* Delete Confirmation Modal */}
+        {deleteConfirmModal.show && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="relative bg-gradient-to-b from-gray-900 to-black border border-purple-500/30 rounded-xl max-w-sm w-full p-5">
+              {/* Header */}
+              <div className="flex items-center justify-center mb-3">
+                <div className="p-2 bg-purple-500/10 rounded-full">
+                  <Trash2 className="h-6 w-6 text-purple-400" />
+                </div>
+              </div>
+
+              {/* Content */}
+              <h2 className="text-xl font-bold text-white text-center mb-2">
+                Delete Influencer?
+              </h2>
+              <p className="text-gray-400 text-center text-sm mb-5">
+                Are you sure you want to delete <span className="text-white font-semibold">{deleteConfirmModal.influencer?.name}</span>? This action cannot be undone.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={cancelDelete}
+                  disabled={deleting}
+                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  disabled={deleting}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {deleting ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   )

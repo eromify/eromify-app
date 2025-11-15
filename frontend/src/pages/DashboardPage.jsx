@@ -250,7 +250,7 @@ const DashboardPage = () => {
               className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto whitespace-nowrap"
             >
               <Plus className="h-5 w-5 mr-2" />
-              Create New Influencer
+              Create Influencer
             </button>
           </div>
         </div>
@@ -334,6 +334,17 @@ const DashboardPage = () => {
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">AI Video Generator</h3>
               <p className="text-gray-400 text-sm">Create videos with AI technology</p>
+            </div>
+
+            <div className="relative bg-black border border-gray-900 rounded-2xl p-6 opacity-60 blur-[0.5px] cursor-not-allowed">
+              <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                Coming Soon
+              </div>
+              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4">
+                <Users className="h-6 w-6 text-purple-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">AI Influencer Generator</h3>
+              <p className="text-gray-400 text-sm">Create custom AI influencers</p>
             </div>
 
           </div>

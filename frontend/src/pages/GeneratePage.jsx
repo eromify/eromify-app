@@ -4,17 +4,19 @@ import { contentService } from '../services/contentService'
 import influencerService from '../services/influencerService'
 import { useAuth } from '../contexts/AuthContext'
 import toast from 'react-hot-toast'
-import { Sparkles, Image as ImageIcon, Loader2 } from 'lucide-react'
+import { Sparkles, Image as ImageIcon, Loader2, ChevronDown, Zap } from 'lucide-react'
 
 const GeneratePage = () => {
   const { user } = useAuth()
   const [influencers, setInfluencers] = useState([])
+  const [selectedInfluencerType, setSelectedInfluencerType] = useState('new')
   const [selectedInfluencer, setSelectedInfluencer] = useState(null)
   const [prompt, setPrompt] = useState('')
   const [style, setStyle] = useState('photorealistic')
+  const [aspectRatio, setAspectRatio] = useState('2:3')
   const [loading, setLoading] = useState(false)
   const [generating, setGenerating] = useState(false)
-  const [generatedImage, setGeneratedImage] = useState(null)
+  const [generatedImages, setGeneratedImages] = useState([])
   const [creditsRemaining, setCreditsRemaining] = useState(null)
 
   useEffect(() => {
@@ -23,25 +25,16 @@ const GeneratePage = () => {
 
   const fetchInfluencers = async () => {
     try {
-      setLoading(true)
       const response = await influencerService.getInfluencers()
       if (response.success && response.influencers?.length > 0) {
         setInfluencers(response.influencers)
-        // Auto-select first influencer
-        setSelectedInfluencer(response.influencers[0])
       }
     } catch (error) {
       console.error('Error fetching influencers:', error)
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleGenerate = async () => {
-    if (!selectedInfluencer) {
-      toast.error('Please select an influencer')
-      return
-    }
     if (!prompt.trim()) {
       toast.error('Please enter a prompt')
       return
@@ -49,23 +42,37 @@ const GeneratePage = () => {
 
     setGenerating(true)
     try {
+      // For "new" influencer, we'll generate without influencer context
+      // For existing influencer, use their ID
+      const influencerId = selectedInfluencerType === 'new' ? null : selectedInfluencerType
+
+      console.log('📤 Generating image with params:', { influencerId, prompt: prompt.trim(), style, aspectRatio })
+
       const response = await contentService.generateImage({
-        influencerId: selectedInfluencer.id,
+        influencerId: influencerId,
         prompt: prompt.trim(),
-        style
+        style,
+        aspectRatio
       })
 
+      console.log('✅ Full response from API:', response)
+      console.log('🖼️ Image URL:', response.image?.url)
+
       if (response.success) {
-        setGeneratedImage(response.image.url)
+        setGeneratedImages(prev => {
+          const newImages = [response.image.url, ...prev]
+          console.log('📸 Updated generatedImages:', newImages)
+          return newImages
+        })
         setCreditsRemaining(response.image.creditsRemaining)
         toast.success(`Image generated! Credits remaining: ${response.image.creditsRemaining ?? 'Unlimited'}`)
       }
     } catch (error) {
-      console.error('Generation error:', error)
+      console.error('❌ Generation error:', error)
+      console.error('❌ Error response:', error.response?.data)
       const errorMsg = error.response?.data?.error || 'Failed to generate image'
       toast.error(errorMsg)
-      
-      // If insufficient credits, show credits
+
       if (error.response?.data?.credits !== undefined) {
         setCreditsRemaining(error.response.data.credits)
       }
@@ -74,158 +81,238 @@ const GeneratePage = () => {
     }
   }
 
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="p-8 flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-        </div>
-      </DashboardLayout>
-    )
-  }
-
-  if (influencers.length === 0) {
-    return (
-      <DashboardLayout>
-        <div className="p-8">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">No Influencers Available</h2>
-              <p className="text-gray-400 mb-8">
-                Create your first AI influencer to start generating content.
-              </p>
-              <button
-                onClick={() => window.location.href = '/influencers'}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all"
-              >
-                Create Influencer
-              </button>
-            </div>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
-  }
+  const aspectRatios = [
+    { value: '1:1', label: 'Square (1:1)', icon: '▢' },
+    { value: '2:3', label: 'Portrait (2:3)', icon: '▮' },
+    { value: '3:2', label: 'Landscape (3:2)', icon: '▬' },
+    { value: '4:5', label: 'Instagram Post (4:5)', icon: '▭' },
+    { value: '9:16', label: 'Story (9:16)', icon: '▯' },
+  ]
 
   return (
     <DashboardLayout>
       <div className="p-4 lg:p-8 bg-black text-white min-h-screen">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Generate AI Image</h1>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Side - Influencer Selection & Prompt */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Influencer Selection */}
-              <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Side - Generation Controls */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6">
+              {/* Select Influencer */}
+              <div>
                 <label className="block text-sm font-medium mb-3">Select Influencer</label>
+                <div className="relative">
+                  <select
+                    value={selectedInfluencerType}
+                    onChange={(e) => {
+                      setSelectedInfluencerType(e.target.value)
+                      if (e.target.value !== 'new') {
+                        setSelectedInfluencer(influencers.find(inf => inf.id === e.target.value) || null)
+                      } else {
+                        setSelectedInfluencer(null)
+                      }
+                    }}
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 appearance-none cursor-pointer"
+                  >
+                    <option value="new">New</option>
+                    {influencers.map((inf) => (
+                      <option key={inf.id} value={inf.id}>
+                        {inf.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Model Selection */}
+              <div>
+                <label className="block text-sm font-medium mb-3">Model</label>
                 <div className="grid grid-cols-2 gap-3">
-                  {influencers.map((inf) => (
+                  <button
+                    onClick={() => setStyle('photorealistic')}
+                    className={`p-3 rounded-lg border-2 transition-all ${
+                      style === 'photorealistic'
+                        ? 'border-pink-500 bg-pink-500/10'
+                        : 'border-gray-700 hover:border-gray-600'
+                    }`}
+                  >
+                    <span className="font-medium text-sm">Flux</span>
+                  </button>
+                  <button
+                    onClick={() => setStyle('photorealistic')}
+                    className="p-3 rounded-lg border-2 border-gray-700 hover:border-gray-600 transition-all opacity-50"
+                  >
+                    <span className="font-medium text-sm">SDXL</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Number of Images */}
+              <div>
+                <label className="block text-sm font-medium mb-3">Number of Images</label>
+                <div className="flex items-center justify-between bg-gray-800 border border-gray-700 rounded-lg p-3">
+                  <button className="text-gray-400 hover:text-white">−</button>
+                  <span className="font-medium">1 Image</span>
+                  <button className="text-gray-400 hover:text-white">+</button>
+                </div>
+              </div>
+
+              {/* Aspect Ratio */}
+              <div>
+                <label className="block text-sm font-medium mb-3">Aspect Ratio</label>
+                <div className="space-y-2">
+                  {aspectRatios.map((ratio) => (
                     <button
-                      key={inf.id}
-                      onClick={() => setSelectedInfluencer(inf)}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        selectedInfluencer?.id === inf.id
-                          ? 'border-purple-500 bg-purple-500/10'
+                      key={ratio.value}
+                      onClick={() => setAspectRatio(ratio.value)}
+                      className={`w-full p-3 rounded-lg border-2 transition-all text-left flex items-center gap-3 ${
+                        aspectRatio === ratio.value
+                          ? 'border-pink-500 bg-pink-500/10'
                           : 'border-gray-700 hover:border-gray-600'
                       }`}
                     >
-                      <div className="text-left">
-                        <h3 className="font-semibold text-white">{inf.name}</h3>
-                        <p className="text-xs text-gray-400 capitalize">{inf.niche}</p>
-                      </div>
+                      <span className="text-2xl">{ratio.icon}</span>
+                      <span className="text-sm">{ratio.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Prompt Input */}
-              <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-                <label className="block text-sm font-medium mb-3">Image Prompt</label>
-                <textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Describe the image you want to generate... (e.g., 'Beautiful woman in a red dress on a beach at sunset')"
-                  className="w-full h-32 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white resize-none focus:outline-none focus:border-purple-500"
-                />
-              </div>
+              {/* Generation Settings */}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-sm font-medium">Steps</label>
+                    <span className="text-sm text-gray-400">28</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="50"
+                    value="28"
+                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+                  />
+                </div>
 
-              {/* Style Selection */}
-              <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-                <label className="block text-sm font-medium mb-3">Style</label>
-                <select
-                  value={style}
-                  onChange={(e) => setStyle(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                >
-                  <option value="photorealistic">Photorealistic</option>
-                  <option value="cinematic">Cinematic</option>
-                  <option value="artistic">Artistic</option>
-                  <option value="professional">Professional</option>
-                </select>
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-sm font-medium">Guidance Scale</label>
+                    <span className="text-sm text-gray-400">3.5</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="10"
+                    step="0.1"
+                    value="3.5"
+                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+                  />
+                </div>
               </div>
+            </div>
+          </div>
 
-              {/* Generate Button */}
-              <button
-                onClick={handleGenerate}
-                disabled={generating || !selectedInfluencer || !prompt.trim()}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-4 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {generating ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    Generate Image (10 credits)
-                  </>
-                )}
-              </button>
+          {/* Center - Generated Images & Prompt */}
+          <div className="lg:col-span-5 space-y-6">
+            {/* Generated Images Grid */}
+            {generatedImages.length > 0 ? (
+              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold mb-4">Your Creations</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {generatedImages.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Generated ${index + 1}`}
+                        className="w-full rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div className="flex gap-2">
+                          <a
+                            href={image}
+                            download={`generated-${index + 1}.png`}
+                            className="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition-colors"
+                          >
+                            Download
+                          </a>
+                          <button
+                            onClick={() => setPrompt(prompt)}
+                            className="bg-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-600 transition-colors"
+                          >
+                            Reuse Prompt
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-12 flex flex-col items-center justify-center min-h-[400px]">
+                <ImageIcon className="w-20 h-20 mx-auto mb-4 text-gray-600" />
+                <p className="text-gray-400 text-center">
+                  No generation history found<br />
+                  Your creations will appear here once you generate them.
+                </p>
+              </div>
+            )}
+
+            {/* Prompt Input */}
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+              <label className="block text-sm font-medium mb-3">Describe the image you want to generate...</label>
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="e.g., beautiful woman with long blonde hair wearing a black dress, professional photography, golden hour lighting, city skyline background"
+                className="w-full h-32 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white resize-none focus:outline-none focus:border-pink-500"
+              />
             </div>
 
-            {/* Right Side - Preview/Result */}
-            <div className="lg:col-span-1">
-              <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 sticky top-6">
-                {generatedImage ? (
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
-                    <img
-                      src={generatedImage}
-                      alt="Generated"
-                      className="w-full rounded-lg mb-4"
-                    />
-                    <div className="space-y-2">
-                      <a
-                        href={generatedImage}
-                        download
-                        className="block w-full bg-purple-500 text-white text-center px-4 py-2 rounded-lg font-semibold hover:bg-purple-600 transition-colors"
-                      >
-                        Download
-                      </a>
-                      <button
-                        onClick={() => {
-                          setGeneratedImage(null)
-                          setPrompt('')
-                        }}
-                        className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
-                      >
-                        Generate Another
-                      </button>
-                    </div>
-                    {creditsRemaining !== null && (
-                      <p className="text-sm text-gray-400 mt-4 text-center">
-                        Credits: {creditsRemaining ?? 'Unlimited'}
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <ImageIcon className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-                    <p className="text-gray-400">Generated image will appear here</p>
-                  </div>
-                )}
+            {/* Generate Button */}
+            <button
+              onClick={handleGenerate}
+              disabled={generating || !prompt.trim()}
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-4 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {generating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Generate
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Right Side - Presets & Quick Actions */}
+          <div className="lg:col-span-3">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6 sticky top-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Preset LoRAs</h3>
+                <div className="space-y-2">
+                  {['Mystic', 'Flux', 'Keywords: AiArtV'].map((preset, index) => (
+                    <button
+                      key={index}
+                      className="w-full p-3 rounded-lg border-2 border-gray-700 hover:border-gray-600 transition-all text-left"
+                    >
+                      <Zap className="inline-block h-4 w-4 mr-2" />
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-gray-800">
+                <h3 className="text-lg font-semibold mb-4">Quick Tips</h3>
+                <ul className="space-y-2 text-sm text-gray-400">
+                  <li>• Be specific with details</li>
+                  <li>• Mention lighting style</li>
+                  <li>• Include camera angle</li>
+                  <li>• Add style keywords</li>
+                </ul>
               </div>
             </div>
           </div>

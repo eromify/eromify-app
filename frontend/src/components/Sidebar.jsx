@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { 
-  Compass, 
-  Users, 
-  Sparkles, 
-  Video, 
+import {
+  Compass,
+  Users,
+  Store,
+  Sparkles,
+  Video,
   ChevronDown,
   ChevronUp,
   DollarSign,
@@ -61,7 +62,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigationItems = {
     overview: [
       { path: '/dashboard', icon: Compass, label: 'Discover', active: isActive('/dashboard') },
-      { path: '/influencers', icon: Users, label: 'Influencers', active: isActive('/influencers') }
+      { path: '/influencers', icon: Users, label: 'Influencers', active: isActive('/influencers') },
+      { path: '/influencer-marketplace', icon: Store, label: 'Marketplace', active: isActive('/influencer-marketplace') }
     ],
     tools: [
       { path: '/generate', icon: Sparkles, label: 'Generate Images', active: isActive('/generate') },
@@ -80,12 +82,11 @@ const Sidebar = ({ isOpen, onClose }) => {
     <button
       onClick={() => {
         navigate(item.path)
-        // Close sidebar on mobile after navigation
         onClose()
       }}
-              className={`w-full flex items-center px-3 py-2 text-left transition-all duration-200 rounded-lg mb-1 ${
-        item.active 
-          ? 'bg-gradient-to-l from-purple-900 to-[#601a2f] text-white' 
+      className={`w-full flex items-center px-3 py-2 text-left transition-all duration-200 rounded-lg mb-1 ${
+        item.active
+          ? 'bg-gradient-to-l from-purple-900 to-[#601a2f] text-white'
           : 'text-gray-300 hover:text-white hover:bg-gray-800'
       }`}
     >
