@@ -52,8 +52,10 @@ const DashboardMarketplacePage = () => {
 
   // Check if user can claim more influencers
   const canClaimMore = () => {
-    const maxInfluencers = subscription?.influencerTrainings || 0
+    const maxInfluencers = subscription?.influencerTrainings
     const currentInfluencers = influencers.length
+    // If maxInfluencers is null (unlimited), always return true
+    if (maxInfluencers === null) return true
     return currentInfluencers < maxInfluencers
   }
 

@@ -370,15 +370,16 @@ router.post('/claim-marketplace', authenticateToken, async (req, res) => {
     }
 
     const currentInfluencerCount = existingInfluencers?.length || 0;
-    const maxInfluencers = userData.influencer_trainings || 0;
+    const maxInfluencers = userData.influencer_trainings;
 
     console.log('🔍 Influencer limit check:', {
       currentCount: currentInfluencerCount,
-      maxAllowed: maxInfluencers,
+      maxAllowed: maxInfluencers === null ? 'unlimited' : maxInfluencers,
       plan: userData.subscription_plan
     });
 
-    if (currentInfluencerCount >= maxInfluencers) {
+    // Check limit only if maxInfluencers is not null (null means unlimited)
+    if (maxInfluencers !== null && currentInfluencerCount >= maxInfluencers) {
       console.log('❌ Influencer limit reached');
       return res.status(403).json({
         success: false,

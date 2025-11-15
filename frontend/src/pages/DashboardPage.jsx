@@ -172,23 +172,27 @@ const DashboardPage = () => {
   }, [refreshCounter])
 
   const handleCreateInfluencer = () => {
-    const maxInfluencers = subscription?.influencerTrainings || 0
+    const maxInfluencers = subscription?.influencerTrainings
     const currentInfluencers = influencers.length
     
     console.log('🎨 Create Influencer clicked:', {
       currentInfluencers,
-      maxInfluencers,
-      hasSlots: currentInfluencers < maxInfluencers
+      maxInfluencers: maxInfluencers === null ? 'unlimited' : maxInfluencers,
+      hasSlots: maxInfluencers === null ? true : currentInfluencers < maxInfluencers
     })
     
-    // Check if user has reached their influencer limit
-    if (currentInfluencers >= maxInfluencers) {
+    // Check if user has reached their influencer limit (skip check if unlimited)
+    if (maxInfluencers !== null && currentInfluencers >= maxInfluencers) {
       console.log('❌ Influencer limit reached, showing upgrade modal')
       setShowInfluencerLimitModal(true)
     } else {
       console.log('✅ User has available influencer slots, proceeding...')
       // TODO: Navigate to influencer creation page (to be implemented later)
-      alert(`You can create ${maxInfluencers - currentInfluencers} more influencer(s)! Creation flow coming soon.`)
+      if (maxInfluencers === null) {
+        alert(`You have unlimited influencers! Creation flow coming soon.`)
+      } else {
+        alert(`You can create ${maxInfluencers - currentInfluencers} more influencer(s)! Creation flow coming soon.`)
+      }
     }
   }
 
@@ -239,11 +243,11 @@ const DashboardPage = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <div className="flex items-center bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 border border-yellow-500/30 text-white px-4 py-2 rounded-lg whitespace-nowrap">
               <Star className="h-5 w-5 mr-2 text-yellow-400" />
-              <span>{subscription?.credits || 0} Credits</span>
+              <span>{subscription && (subscription.credits === null || subscription.credits === undefined) ? '∞' : (subscription?.credits ?? 0)} Credits</span>
             </div>
             <div className="flex items-center bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30 text-white px-4 py-2 rounded-lg whitespace-nowrap">
               <Users className="h-5 w-5 mr-2 text-purple-400" />
-              <span>{influencers.length}/{subscription?.influencerTrainings || 0} Influencers</span>
+              <span>{influencers.length}/{subscription && (subscription.influencerTrainings === null || subscription.influencerTrainings === undefined) ? '∞' : (subscription?.influencerTrainings ?? 0)} Influencers</span>
             </div>
             <button 
               onClick={handleCreateInfluencer}
