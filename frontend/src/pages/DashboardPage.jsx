@@ -22,6 +22,7 @@ const DashboardPage = () => {
   const [checkingPayment, setCheckingPayment] = useState(true)
   const [subscription, setSubscription] = useState(null)
   const [refreshCounter, setRefreshCounter] = useState(0)
+  const [influencers, setInfluencers] = useState([])
   const hasAttemptedMarketplaceClaim = useRef(false)
 
   const refreshSubscription = useCallback(async () => {
@@ -137,9 +138,22 @@ const DashboardPage = () => {
     const loadDashboard = async () => {
       try {
         setLoading(true)
-        const response = await userService.getDashboard()
-        if (isMounted && response.success) {
-          setDashboardData(response.dashboard)
+        
+        // Fetch dashboard data and influencers in parallel
+        const [dashboardResponse, influencersResponse] = await Promise.all([
+          userService.getDashboard(),
+          influencerService.getInfluencers()
+        ])
+        
+        if (isMounted) {
+          if (dashboardResponse.success) {
+            setDashboardData(dashboardResponse.dashboard)
+          }
+          
+          if (influencersResponse.success) {
+            console.log('✅ Loaded influencers:', influencersResponse.influencers)
+            setInfluencers(influencersResponse.influencers || [])
+          }
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error)
@@ -158,7 +172,24 @@ const DashboardPage = () => {
   }, [refreshCounter])
 
   const handleCreateInfluencer = () => {
-    setShowInfluencerLimitModal(true)
+    const maxInfluencers = subscription?.influencerTrainings || 0
+    const currentInfluencers = influencers.length
+    
+    console.log('🎨 Create Influencer clicked:', {
+      currentInfluencers,
+      maxInfluencers,
+      hasSlots: currentInfluencers < maxInfluencers
+    })
+    
+    // Check if user has reached their influencer limit
+    if (currentInfluencers >= maxInfluencers) {
+      console.log('❌ Influencer limit reached, showing upgrade modal')
+      setShowInfluencerLimitModal(true)
+    } else {
+      console.log('✅ User has available influencer slots, proceeding...')
+      // TODO: Navigate to influencer creation page (to be implemented later)
+      alert(`You can create ${maxInfluencers - currentInfluencers} more influencer(s)! Creation flow coming soon.`)
+    }
   }
 
   if (loading) {
@@ -206,17 +237,17 @@ const DashboardPage = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <div className="flex items-center bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 border border-yellow-500/30 text-white px-4 py-2 rounded-lg">
+            <div className="flex items-center bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 border border-yellow-500/30 text-white px-4 py-2 rounded-lg whitespace-nowrap">
               <Star className="h-5 w-5 mr-2 text-yellow-400" />
-              <span>75 Credits</span>
+              <span>{subscription?.credits || 0} Credits</span>
             </div>
-            <div className="flex items-center bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30 text-white px-4 py-2 rounded-lg">
+            <div className="flex items-center bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30 text-white px-4 py-2 rounded-lg whitespace-nowrap">
               <Users className="h-5 w-5 mr-2 text-purple-400" />
-              <span>0/0 Influencers</span>
+              <span>{influencers.length}/{subscription?.influencerTrainings || 0} Influencers</span>
             </div>
             <button 
               onClick={handleCreateInfluencer}
-              className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto"
+              className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto whitespace-nowrap"
             >
               <Plus className="h-5 w-5 mr-2" />
               Create New Influencer
@@ -227,22 +258,56 @@ const DashboardPage = () => {
         {/* Recent Influencers Section */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-white mb-6">Recent Influencers</h2>
-          <div className="bg-black border border-gray-900 rounded-2xl p-12 text-center">
-            <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Users className="h-12 w-12 text-gray-400" />
+          
+          {influencers.length === 0 ? (
+            <div className="bg-black border border-gray-900 rounded-2xl p-12 text-center">
+              <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="h-12 w-12 text-gray-400" />
+              </div>
+              <h3 className="text-2xl font-semibold text-white mb-2">No Influencers Yet</h3>
+              <p className="text-gray-400 mb-8 max-w-md mx-auto">
+                Create your first AI influencer to get started with your virtual personality
+              </p>
+              <button 
+                onClick={handleCreateInfluencer}
+                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center mx-auto"
+              >
+                <Plus className="h-6 w-6 mr-3" />
+                Create Your First Influencer
+              </button>
             </div>
-            <h3 className="text-2xl font-semibold text-white mb-2">No Influencers Yet</h3>
-            <p className="text-gray-400 mb-8 max-w-md mx-auto">
-              Create your first AI influencer to get started with your virtual personality
-            </p>
-            <button 
-              onClick={handleCreateInfluencer}
-              className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center mx-auto"
-            >
-              <Plus className="h-6 w-6 mr-3" />
-              Create Your First Influencer
-            </button>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {influencers.slice(0, 6).map((influencer) => (
+                <div
+                  key={influencer.id}
+                  onClick={() => navigate(`/influencers`)}
+                  className="bg-black border border-gray-900 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-all duration-200 cursor-pointer group"
+                >
+                  {/* Influencer Image */}
+                  {influencer.avatar_url && (
+                    <div className="relative w-full aspect-[3/4] overflow-hidden">
+                      <img 
+                        src={influencer.avatar_url} 
+                        alt={influencer.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      <div className="absolute top-2 right-2 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Live
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Influencer Info */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-white mb-1">{influencer.name}</h3>
+                    <p className="text-purple-400 text-sm uppercase mb-2">{influencer.niche}</p>
+                    <p className="text-gray-400 text-sm line-clamp-2">{influencer.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* AI Tools Section */}

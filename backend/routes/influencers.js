@@ -1,14 +1,31 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken, requireSubscription } = require('../middleware/auth');
 const Joi = require('joi');
+const { getSupabaseAdmin } = require('../lib/supabaseAdmin');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+let supabase;
+try {
+  supabase = getSupabaseAdmin();
+} catch (error) {
+  console.error('Failed to initialise Supabase admin client for influencers route:', error.message);
+}
 
 const router = express.Router();
+
+router.use((req, res, next) => {
+  if (!supabase) {
+    return res.status(500).json({
+      success: false,
+      error: 'Supabase service configuration is missing on the server.'
+    });
+  }
+
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  res.set('Surrogate-Control', 'no-store');
+  next();
+});
 
 // Validation schemas
 const createInfluencerSchema = Joi.object({
@@ -39,6 +56,8 @@ const claimMarketplaceSchema = Joi.object({
 // Get all influencers for a user
 router.get('/', authenticateToken, async (req, res) => {
   try {
+    console.log('🔍 Fetching influencers for user:', req.user?.id, req.user?.email);
+
     const { data: influencers, error } = await supabase
       .from('influencers')
       .select('*')
@@ -54,8 +73,11 @@ router.get('/', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      influencers
+      influencers,
+      generatedAt: new Date().toISOString()
     });
+
+    console.log('✅ Influencers fetched:', Array.isArray(influencers) ? influencers.length : 'unknown');
 
   } catch (error) {
     console.error('Get influencers error:', error);

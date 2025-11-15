@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import api from '../utils/api'
 import { trackLead } from '../utils/metaPixel'
+import paymentService from '../services/paymentService'
 
 const AuthContext = createContext({})
 
@@ -55,9 +56,40 @@ export const AuthProvider = ({ children }) => {
                   source: 'google'
                 })
                 
-                // Clear the hash from URL and redirect to onboarding
-                window.history.replaceState({}, document.title, '/')
-                navigate('/onboarding', { replace: true })
+                // Check if user has paid subscription
+                try {
+                  const subscription = await paymentService.getSubscription()
+                  console.log('Subscription response:', subscription)
+                  
+                  const hasPaid = 
+                    subscription?.hasActiveSubscription === true || 
+                    subscription?.status === 'active' || 
+                    Boolean(subscription?.plan && subscription?.plan !== null)
+                  
+                  console.log('Has paid check:', {
+                    hasActiveSubscription: subscription?.hasActiveSubscription,
+                    status: subscription?.status,
+                    plan: subscription?.plan,
+                    hasPaid
+                  })
+                  
+                  // Clear the hash from URL
+                  window.history.replaceState({}, document.title, '/')
+                  
+                  if (hasPaid) {
+                    console.log('✅ User has active subscription, redirecting to dashboard')
+                    navigate('/dashboard', { replace: true })
+                  } else {
+                    console.log('❌ User has no active subscription, redirecting to onboarding')
+                    navigate('/onboarding', { replace: true })
+                  }
+                } catch (subError) {
+                  console.error('❌ Error checking subscription:', subError)
+                  console.error('Subscription error details:', subError.response?.data)
+                  // If subscription check fails, default to onboarding
+                  window.history.replaceState({}, document.title, '/')
+                  navigate('/onboarding', { replace: true })
+                }
                 return
               }
             } catch (error) {
@@ -89,9 +121,40 @@ export const AuthProvider = ({ children }) => {
                     source: 'google_fallback'
                   })
                   
-                  // Clear the hash from URL and redirect to onboarding
-                  window.history.replaceState({}, document.title, '/')
-                  navigate('/onboarding', { replace: true })
+                  // Check if user has paid subscription
+                  try {
+                    const subscription = await paymentService.getSubscription()
+                    console.log('Subscription response (fallback):', subscription)
+                    
+                    const hasPaid = 
+                      subscription?.hasActiveSubscription === true || 
+                      subscription?.status === 'active' || 
+                      Boolean(subscription?.plan && subscription?.plan !== null)
+                    
+                    console.log('Has paid check (fallback):', {
+                      hasActiveSubscription: subscription?.hasActiveSubscription,
+                      status: subscription?.status,
+                      plan: subscription?.plan,
+                      hasPaid
+                    })
+                    
+                    // Clear the hash from URL
+                    window.history.replaceState({}, document.title, '/')
+                    
+                    if (hasPaid) {
+                      console.log('✅ User has active subscription, redirecting to dashboard')
+                      navigate('/dashboard', { replace: true })
+                    } else {
+                      console.log('❌ User has no active subscription, redirecting to onboarding')
+                      navigate('/onboarding', { replace: true })
+                    }
+                  } catch (subError) {
+                    console.error('❌ Error checking subscription (fallback):', subError)
+                    console.error('Subscription error details:', subError.response?.data)
+                    // If subscription check fails, default to onboarding
+                    window.history.replaceState({}, document.title, '/')
+                    navigate('/onboarding', { replace: true })
+                  }
                   return
                 }
               } catch (fallbackError) {

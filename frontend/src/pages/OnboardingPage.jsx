@@ -131,6 +131,8 @@ const OnboardingPage = () => {
         const onboardingSelection = {
           modelId: selectedModel.id,
           modelName: selectedModel.name,
+          modelImage: selectedModel.images && selectedModel.images[0] ? selectedModel.images[0] : null,
+          modelImages: selectedModel.images || [],
           aiName,
           niche: selectedNiche,
           visualStyle: selectedVisualStyle,
@@ -177,6 +179,8 @@ const OnboardingPage = () => {
               onboardingSelection: {
                 modelId: selectedModel.id,
                 modelName: selectedModel.name,
+                modelImage: selectedModel.images && selectedModel.images[0] ? selectedModel.images[0] : null,
+                modelImages: selectedModel.images || [],
                 aiName,
                 niche: selectedNiche,
                 visualStyle: selectedVisualStyle,

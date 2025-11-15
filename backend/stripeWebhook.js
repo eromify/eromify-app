@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY?.trim());
+const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
+const stripe = stripeKey ? require('stripe')(stripeKey) : null;
 const { createClient } = require('@supabase/supabase-js');
 
 // Use fallback values for development if env vars are not set
@@ -95,9 +96,9 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
 // Handle successful payment
 async function handleSuccessfulPayment(session) {
   try {
-    const { userId, plan, billing, credits, influencerTrainings } = session.metadata;
+    const { userId, plan, billing, credits, influencerTrainings, onboardingSelection } = session.metadata;
 
-    console.log('💳 Processing successful payment:', { userId, plan, billing, credits, influencerTrainings });
+    console.log('💳 Processing successful payment:', { userId, plan, billing, credits, influencerTrainings, hasOnboardingSelection: !!onboardingSelection });
 
     // Update user subscription in database
     const { error } = await supabase
@@ -119,6 +120,79 @@ async function handleSuccessfulPayment(session) {
     }
 
     console.log(`✅ Payment successful for user ${userId}, plan: ${plan}, billing: ${billing}`);
+
+    // Create influencer from onboarding selection if provided
+    if (onboardingSelection) {
+      try {
+        const selection = typeof onboardingSelection === 'string' 
+          ? JSON.parse(onboardingSelection) 
+          : onboardingSelection;
+        
+        console.log('🎨 Creating influencer from onboarding selection:', selection);
+
+        const nicheNames = {
+          'fashion': 'Fashion & Beauty',
+          'fitness': 'Fitness & Health',
+          'travel': 'Travel & Lifestyle',
+          'gaming': 'Gaming & Tech',
+          'food': 'Food & Cooking',
+          'art': 'Art & Creativity',
+          'business': 'Business & Finance',
+          'other': 'Other'
+        };
+
+        const defaultDescription = selection.description && selection.description.length >= 10
+          ? selection.description
+          : `AI influencer ${selection.modelName ? `inspired by ${selection.modelName}` : selection.aiName}${selection.goal ? `, designed to help you ${selection.goal.replace(/-/g, ' ')}` : ''}.`;
+
+        const platformsText = selection.platforms && selection.platforms.length
+          ? `Focus platforms: ${selection.platforms.join(', ')}.`
+          : 'Active across major social platforms.';
+
+        const contentTypesText = selection.contentTypes && selection.contentTypes.length
+          ? `Primary content types: ${selection.contentTypes.join(', ')}.`
+          : 'Delivers engaging multimedia content.';
+
+        const defaultPersonality = selection.personality && selection.personality.length >= 10
+          ? selection.personality
+          : `Confident, engaging, and aspirational persona with a ${selection.visualStyle || 'signature'} visual style.`;
+
+        const defaultTargetAudience = selection.targetAudience && selection.targetAudience.length >= 10
+          ? selection.targetAudience
+          : `Ideal for audiences interested in ${nicheNames[selection.niche] || selection.niche} content. ${platformsText}`;
+
+        const defaultContentStyle = selection.contentStyle && selection.contentStyle.length >= 10
+          ? selection.contentStyle
+          : `Combines ${selection.visualStyle || 'premium'} visuals with ${contentTypesText} ${selection.frequency ? `at a ${selection.frequency} cadence.` : ''}`.trim();
+
+        const { data: influencer, error: createError} = await supabase
+          .from('influencers')
+          .insert([
+            {
+              user_id: userId,
+              name: selection.modelName || selection.aiName || 'AI Influencer',
+              description: defaultDescription,
+              niche: nicheNames[selection.niche] || selection.niche || 'Lifestyle',
+              personality: defaultPersonality,
+              target_audience: defaultTargetAudience,
+              content_style: defaultContentStyle,
+              avatar_url: selection.modelImage || null,
+              images: selection.modelImages || (selection.modelImage ? [selection.modelImage] : null),
+              created_at: new Date().toISOString()
+            }
+          ])
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('❌ Failed to create influencer from onboarding:', createError);
+        } else {
+          console.log(`✅ Influencer created successfully:`, influencer.id);
+        }
+      } catch (parseError) {
+        console.error('❌ Error parsing onboarding selection:', parseError);
+      }
+    }
   } catch (error) {
     console.error('❌ Error handling successful payment:', error);
     throw error;

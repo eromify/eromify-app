@@ -30,8 +30,19 @@ export const paymentService = {
 
   // Get subscription status
   getSubscription: async () => {
-    const response = await api.get('/payments/subscription')
-    return response.data
+    console.log('🔍 paymentService.getSubscription called')
+    console.log('🔑 Token in localStorage:', localStorage.getItem('token') ? localStorage.getItem('token').substring(0, 20) + '...' : 'no token')
+    
+    try {
+      const response = await api.get('/payments/subscription')
+      console.log('📨 Subscription API response:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ Payment service getSubscription error:', error)
+      console.error('❌ Error response:', error.response?.data)
+      console.error('❌ Error status:', error.response?.status)
+      throw error
+    }
   },
 
   // Cancel subscription

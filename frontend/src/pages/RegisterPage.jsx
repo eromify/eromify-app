@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react'
 import { trackLead } from '../utils/metaPixel'
+import paymentService from '../services/paymentService'
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -50,7 +51,7 @@ const RegisterPage = () => {
         setError(error)
         setLoading(false)
       } else if (data && data.success) {
-        console.log('Registration successful, redirecting to onboarding')
+        console.log('Registration successful, checking payment status...')
         console.log('Registration data:', data)
         
         // Track Lead event for successful registration
@@ -60,10 +61,37 @@ const RegisterPage = () => {
           source: 'email'
         })
         
-        // Small delay to ensure user state is updated
-        setTimeout(() => {
-          console.log('Navigating to onboarding...')
-          navigate('/onboarding')
+        // Small delay to ensure user state is updated, then check subscription
+        setTimeout(async () => {
+          try {
+            const subscription = await paymentService.getSubscription()
+            console.log('Subscription response:', subscription)
+            
+            const hasPaid = 
+              subscription?.hasActiveSubscription === true || 
+              subscription?.status === 'active' || 
+              Boolean(subscription?.plan && subscription?.plan !== null)
+            
+            console.log('Has paid check:', {
+              hasActiveSubscription: subscription?.hasActiveSubscription,
+              status: subscription?.status,
+              plan: subscription?.plan,
+              hasPaid
+            })
+            
+            if (hasPaid) {
+              console.log('✅ User has active subscription, redirecting to dashboard')
+              navigate('/dashboard')
+            } else {
+              console.log('❌ User has no active subscription, redirecting to onboarding')
+              navigate('/onboarding')
+            }
+          } catch (subError) {
+            console.error('❌ Error checking subscription:', subError)
+            console.error('Subscription error details:', subError.response?.data)
+            // If subscription check fails, default to onboarding
+            navigate('/onboarding')
+          }
         }, 100)
       } else {
         setError('Registration failed')

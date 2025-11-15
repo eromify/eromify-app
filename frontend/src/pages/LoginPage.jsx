@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react'
+import paymentService from '../services/paymentService'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -25,9 +26,56 @@ const LoginPage = () => {
         setError(error)
         setLoading(false)
       } else if (data && data.success) {
-        console.log('Login successful, redirecting to onboarding')
-        // Don't set loading to false here, let the redirect happen
-        navigate('/onboarding')
+        console.log('Login successful, token saved. Waiting before checking payment status...')
+        // Small delay to ensure token is stored and auth is ready
+        setTimeout(async () => {
+          try {
+            console.log('🔍 Checking payment status...')
+            console.log('🔑 Token in localStorage:', localStorage.getItem('token') ? 'Token exists' : 'NO TOKEN')
+            
+            const subscription = await paymentService.getSubscription()
+            console.log('📋 Full subscription response:', JSON.stringify(subscription, null, 2))
+            
+            // More comprehensive check - check all possible fields
+            const hasActiveSubscription = subscription?.hasActiveSubscription === true
+            const hasActiveStatus = subscription?.status === 'active'
+            const hasPlan = Boolean(subscription?.plan && subscription?.plan !== null && subscription?.plan !== '')
+            
+            const hasPaid = hasActiveSubscription || hasActiveStatus || hasPlan
+            
+            console.log('🔎 Detailed subscription check:', {
+              rawResponse: subscription,
+              hasActiveSubscription,
+              hasActiveStatus,
+              hasPlan,
+              planValue: subscription?.plan,
+              statusValue: subscription?.status,
+              hasActiveSubscriptionValue: subscription?.hasActiveSubscription,
+              finalDecision: hasPaid ? 'PAID - redirecting to dashboard' : 'NOT PAID - redirecting to onboarding'
+            })
+            
+            // DEBUG: Log the full response object to console
+            console.log('🔍 FULL SUBSCRIPTION RESPONSE:', JSON.stringify(subscription, null, 2))
+            
+            if (hasPaid) {
+              console.log('✅ User has active subscription, redirecting to dashboard')
+              navigate('/dashboard')
+            } else {
+              console.log('❌ User has no active subscription')
+              console.log('📊 Subscription data:', subscription)
+              console.log('⚠️ Redirecting to onboarding')
+              navigate('/onboarding')
+            }
+          } catch (subError) {
+            console.error('❌ Error checking subscription:', subError)
+            console.error('❌ Error message:', subError.message)
+            console.error('❌ Error response data:', subError.response?.data)
+            console.error('❌ Error response status:', subError.response?.status)
+            console.error('❌ Full error:', subError)
+            // If subscription check fails, default to onboarding
+            navigate('/onboarding')
+          }
+        }, 500) // Increased delay to ensure token is set
       } else {
         setError('Login failed')
         setLoading(false)

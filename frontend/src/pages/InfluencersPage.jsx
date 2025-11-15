@@ -4,18 +4,41 @@ import DashboardLayout from '../components/DashboardLayout'
 import CreateInfluencerModal from '../components/CreateInfluencerModal'
 import LimitReachedModal from '../components/LimitReachedModal'
 import influencerService from '../services/influencerService'
+import paymentService from '../services/paymentService'
 import toast from 'react-hot-toast'
-import { Plus, Edit, Trash2, Users, Star } from 'lucide-react'
+import { Plus, Edit, Trash2, Users, Star, ChevronLeft, ChevronRight } from 'lucide-react'
+
+const ONBOARDING_SELECTION_STORAGE_KEY = 'eromify/onboardingSelection'
 
 const InfluencersPage = () => {
   const [influencers, setInfluencers] = useState([])
+  const [fallbackInfluencer, setFallbackInfluencer] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [subscription, setSubscription] = useState(null)
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState({})
   const navigate = useNavigate()
 
   useEffect(() => {
     fetchInfluencers()
+  }, [])
+
+  useEffect(() => {
+    const loadSubscription = async () => {
+      try {
+        setSubscriptionLoading(true)
+        const response = await paymentService.getSubscription()
+        setSubscription(response)
+      } catch (error) {
+        console.error('Failed to fetch subscription information for influencer limit', error)
+      } finally {
+        setSubscriptionLoading(false)
+      }
+    }
+
+    loadSubscription()
   }, [])
 
   const fetchInfluencers = async () => {
@@ -32,6 +55,76 @@ const InfluencersPage = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (loading) return
+
+    if (influencers && influencers.length > 0) {
+      setFallbackInfluencer(null)
+      return
+    }
+
+    if (typeof window === 'undefined') return
+
+    try {
+      const storedSelection = localStorage.getItem(ONBOARDING_SELECTION_STORAGE_KEY)
+      if (!storedSelection) {
+        setFallbackInfluencer(null)
+        return
+      }
+
+      const parsed = JSON.parse(storedSelection)
+      if (!parsed?.modelId) {
+        setFallbackInfluencer(null)
+        return
+      }
+
+      const {
+        aiName,
+        modelName,
+        selectedNiche,
+        selectedVisualStyle,
+        selectedPlatforms,
+        selectedContentTypes,
+        selectedFrequency,
+        description,
+        personality,
+        targetAudience,
+        contentStyle
+      } = parsed
+
+      const platformsText = Array.isArray(selectedPlatforms) && selectedPlatforms.length
+        ? selectedPlatforms.join(', ')
+        : 'major social platforms'
+
+      const contentTypesText = Array.isArray(selectedContentTypes) && selectedContentTypes.length
+        ? selectedContentTypes.join(', ')
+        : 'high-impact formats'
+
+      setFallbackInfluencer({
+        id: `local-${parsed.modelId}`,
+        name: aiName || modelName || 'Marketplace Influencer',
+        niche: selectedNiche || 'lifestyle',
+        description:
+          description ||
+          `AI influencer inspired by ${modelName || 'your selected marketplace model'}.`,
+        personality:
+          personality ||
+          `Confident and engaging persona with a ${selectedVisualStyle || 'signature'} visual style.`,
+        target_audience:
+          targetAudience ||
+          `Ideal for audiences on ${platformsText}.`,
+        content_style:
+          contentStyle ||
+          `Delivers ${contentTypesText} at a ${selectedFrequency || 'steady'} cadence.`,
+        created_at: new Date().toISOString(),
+        _isLocal: true
+      })
+    } catch (error) {
+      console.error('Failed to load onboarding selection as fallback influencer:', error)
+      setFallbackInfluencer(null)
+    }
+  }, [loading, influencers])
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this influencer?')) {
@@ -53,102 +146,209 @@ const InfluencersPage = () => {
     fetchInfluencers()
   }
 
+  const handleCreateInfluencer = () => {
+    const maxInfluencers = subscription?.influencerTrainings || 0
+    const currentInfluencers = influencers.length
+    
+    console.log('🎨 Create Influencer clicked (Influencers Page):', {
+      currentInfluencers,
+      maxInfluencers,
+      hasSlots: currentInfluencers < maxInfluencers
+    })
+    
+    // Check if user has reached their influencer limit
+    if (currentInfluencers >= maxInfluencers) {
+      console.log('❌ Influencer limit reached, showing upgrade modal')
+      setShowInfluencerLimitModal(true)
+    } else {
+      console.log('✅ User has available influencer slots, proceeding...')
+      // TODO: Navigate to influencer creation page (to be implemented later)
+      alert(`You can create ${maxInfluencers - currentInfluencers} more influencer(s)! Creation flow coming soon.`)
+    }
+  }
+
+  const displayedInfluencers =
+    influencers && influencers.length > 0
+      ? influencers
+      : fallbackInfluencer
+      ? [fallbackInfluencer]
+      : []
+
   return (
     <DashboardLayout>
       <div className="p-4 lg:p-8 bg-black text-white min-h-screen">
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+        <div className="space-y-8">
+          <section className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Manage Influencers</h1>
+              <h1 className="text-3xl font-bold text-white mb-2">Influencers</h1>
               <p className="text-gray-400">
-                Manage your AI influencers and view analytics.
+                Every AI persona you launch is collected here with the strategy you set during onboarding.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <div className="flex items-center bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30 text-white px-4 py-2 rounded-lg">
-                <Users className="h-5 w-5 mr-2 text-purple-400" />
-                <span>0/0 Influencers</span>
+              <div className="flex items-center bg-gradient-to-r from-yellow-900/20 to-yellow-700/20 border border-yellow-500/30 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                <Star className="h-5 w-5 mr-2 text-yellow-400" />
+                <span>{subscription?.credits || 0} Credits</span>
               </div>
-              <button 
-                onClick={() => setShowInfluencerLimitModal(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto"
+              <div className="flex items-center bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                <Users className="h-5 w-5 mr-2 text-purple-400" />
+                <span>{influencers.length}/{subscription?.influencerTrainings || 0} Influencers</span>
+              </div>
+              <button
+                onClick={handleCreateInfluencer}
+                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto whitespace-nowrap"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Create New Influencer
               </button>
             </div>
-          </div>
+          </section>
 
-          {/* Influencers Grid */}
-          {influencers.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {influencers.map((influencer) => (
-                <div key={influencer.id} className="bg-gradient-to-br from-gray-950/80 to-gray-900/50 border border-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:border-purple-500/30 transition-all duration-300 group">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center">
-                      <div className="h-12 w-12 rounded-full bg-gradient-to-br from-pink-500/30 to-purple-500/20 flex items-center justify-center border border-pink-500/30 group-hover:from-pink-400/40 group-hover:to-purple-400/30 transition-all duration-300">
-                        <Users className="h-6 w-6 text-pink-400" />
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {displayedInfluencers.map((influencer) => (
+              <article
+                key={influencer.id}
+                className="relative overflow-hidden rounded-2xl border border-gray-900 bg-gradient-to-br from-gray-950 to-gray-900/60 shadow-lg shadow-black/40 transition-all duration-300 hover:-translate-y-1 hover:border-purple-500/40 hover:shadow-purple-900/30"
+              >
+                <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#a855f720_1px,transparent_1px)] [background-size:18px_18px]" />
+                
+                {/* Image Carousel */}
+                {influencer.avatar_url && (() => {
+                  const images = influencer.images || [influencer.avatar_url]
+                  const currentIndex = currentImageIndex[influencer.id] || 0
+                  
+                  const nextImage = () => {
+                    setCurrentImageIndex(prev => ({
+                      ...prev,
+                      [influencer.id]: (currentIndex + 1) % images.length
+                    }))
+                  }
+                  
+                  const prevImage = () => {
+                    setCurrentImageIndex(prev => ({
+                      ...prev,
+                      [influencer.id]: currentIndex === 0 ? images.length - 1 : currentIndex - 1
+                    }))
+                  }
+                  
+                  return (
+                    <div className="relative w-full aspect-[3/4] overflow-hidden group">
+                      <img 
+                        src={images[currentIndex]} 
+                        alt={`${influencer.name} - Image ${currentIndex + 1}`}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      <div className="absolute top-2 right-2 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Live
                       </div>
-                      <div className="ml-3">
-                        <h3 className="text-lg font-semibold text-white">{influencer.name}</h3>
-                        <p className="text-sm text-gray-400 capitalize">{influencer.niche}</p>
-                      </div>
+                      
+                      {/* Navigation Arrows - Only show if multiple images */}
+                      {images.length > 1 && (
+                        <>
+                          <button
+                            onClick={prevImage}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <ChevronLeft className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={nextImage}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <ChevronRight className="w-5 h-5" />
+                          </button>
+                          
+                          {/* Image Indicator Dots */}
+                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
+                            {images.map((_, idx) => (
+                              <div
+                                key={idx}
+                                className={`w-2 h-2 rounded-full transition-all ${
+                                  idx === currentIndex ? 'bg-white w-4' : 'bg-white/50'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )
+                })()}
+                
+                <div className="p-6">
+                  <div className="relative flex items-start justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold text-white mb-1">{influencer.name}</h2>
+                      <p className="text-xs uppercase tracking-wider text-purple-300">
+                        {influencer.niche || 'Niche Unspecified'}
+                      </p>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition-all duration-200">
-                        <Edit className="h-4 w-4" />
+                      <button className="rounded-lg border border-gray-800/80 bg-black/30 px-3 py-1 text-xs text-gray-400 transition-colors duration-200 hover:border-purple-400/60 hover:text-white">
+                        View
                       </button>
-                      <button 
-                        onClick={() => handleDelete(influencer.id)}
-                        className="text-gray-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-900/20 transition-all duration-200"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {!influencer._isLocal && (
+                        <button
+                          onClick={() => handleDelete(influencer.id)}
+                          className="rounded-lg border border-transparent px-3 py-1 text-xs text-red-400 transition-colors duration-200 hover:border-red-500/40 hover:bg-red-500/10"
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </div>
-                  
-                  <p className="text-sm text-gray-300 mb-4 line-clamp-3">
-                    {influencer.description}
-                  </p>
-                  
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-xs font-medium text-gray-500">Personality:</span>
-                      <p className="text-xs text-gray-400 line-clamp-2">{influencer.personality}</p>
-                    </div>
-                    <div>
-                      <span className="text-xs font-medium text-gray-500">Target Audience:</span>
-                      <p className="text-xs text-gray-400 line-clamp-2">{influencer.target_audience}</p>
-                    </div>
+
+                  <div className="relative mt-6 space-y-4 text-sm text-gray-300">
+                  <div className="rounded-xl border border-gray-800/60 bg-black/30 p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                      Voice & Personality
+                    </h3>
+                    <p className="text-sm text-gray-300 line-clamp-3">
+                      {influencer.personality || 'Defined during onboarding to match your brand tone.'}
+                    </p>
                   </div>
-                  
-                  <div className="mt-4 pt-4 border-t border-gray-800">
-                    <span className="text-xs text-gray-500">
-                      Created {new Date(influencer.created_at).toLocaleDateString()}
-                    </span>
+
+                  <div className="rounded-xl border border-gray-800/60 bg-black/30 p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                      Target Audience
+                    </h3>
+                    <p className="text-sm text-gray-300 line-clamp-3">
+                      {influencer.target_audience || 'Audience priorities synced from the onboarding questions.'}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-gray-800/60 bg-black/30 p-4 grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-gray-500">Created</p>
+                      <p className="text-sm text-white">
+                        {influencer._isLocal
+                          ? 'Synced from onboarding'
+                          : influencer.created_at
+                          ? new Date(influencer.created_at).toLocaleDateString()
+                          : 'Recently'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-gray-500">Status</p>
+                      <p className="text-sm text-green-400">
+                        {influencer._isLocal ? 'Pending sync' : 'Live'}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="h-12 w-12 text-gray-400" />
+                </div>
+              </article>
+            ))}
+
+            {displayedInfluencers.length === 0 && !loading && (
+              <div className="rounded-2xl border border-dashed border-gray-800/80 bg-black/40 p-8 text-center text-gray-400">
+                <p className="text-sm">
+                  Claim an influencer during onboarding or use &ldquo;Create New Influencer&rdquo; to launch one
+                  instantly.
+                </p>
               </div>
-              <h3 className="text-2xl font-semibold text-white mb-2">No Influencers Yet</h3>
-              <p className="text-gray-400 mb-8 max-w-md mx-auto">
-                Create your first AI influencer to get started with your virtual personality
-              </p>
-              <button 
-                onClick={() => setShowInfluencerLimitModal(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center mx-auto"
-              >
-                <Plus className="h-6 w-6 mr-3" />
-                Create Your First Influencer
-              </button>
-            </div>
-          )}
+            )}
+          </section>
         </div>
 
         {/* Create Modal */}

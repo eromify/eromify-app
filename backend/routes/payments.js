@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY?.trim());
+const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
+const stripe = stripeKey ? require('stripe')(stripeKey) : null;
 const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -51,9 +52,10 @@ const PRICING_PLANS = {
   }
 };
 
+// Only use mock subscriptions when explicitly enabled via env variable
+// This ensures localhost behaves like production (requires actual payment)
 const shouldUseMockSubscriptions =
-  process.env.ENABLE_LOCAL_SUBSCRIPTION_MOCK === 'true' ||
-  (process.env.NODE_ENV || 'development') !== 'production';
+  process.env.ENABLE_LOCAL_SUBSCRIPTION_MOCK === 'true';
 
 // Create Stripe checkout session
 router.post('/create-checkout-session', authenticateToken, async (req, res) => {
@@ -119,6 +121,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
     // Support mocked checkout flow for local testing when Stripe keys aren't set
     const shouldMockCheckout =
       process.env.STRIPE_MOCK_MODE === 'true' ||
+      !stripe ||
       (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production');
 
     if (shouldMockCheckout) {
@@ -183,34 +186,91 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
 router.get('/subscription', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log('Fetching subscription for user ID:', userId);
+    console.log('🔍🔍🔍 ===== SUBSCRIPTION CHECK START =====');
+    console.log('🔍 User ID:', userId);
+    console.log('🔍 User email:', req.user.email);
+    console.log('🔍 Supabase client type:', supabase.constructor.name);
+    
     // Prevent caching so clients don't see stale 304 responses
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
     res.set('Surrogate-Control', 'no-store');
 
+    console.log('🔍 Querying public.users table...');
     const { data: user, error } = await supabase
       .from('users')
       .select('subscription_plan, subscription_billing, subscription_status, credits, influencer_trainings, stripe_customer_id, subscription_id')
       .eq('id', userId)
       .single();
+    
+    console.log('🔍 Query completed. Error:', error ? 'YES' : 'NO');
+    console.log('🔍 User data:', user ? 'FOUND' : 'NULL');
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('❌ Supabase error fetching user:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        userId: userId
+      });
 
+      // PGRST116 = no rows returned (user not found)
+      // PGRST200 = query succeeded but no rows
+      if (error.code === 'PGRST116' || error.code === 'PGRST200') {
+        console.log('⚠️ User not found in database, returning no subscription');
+        return res.status(200).json({
+          plan: null,
+          billing: null,
+          status: null,
+          credits: null,
+          influencerTrainings: null,
+          hasActiveSubscription: false
+        });
+      }
+
+      // Only use mock subscriptions if explicitly enabled
       if (shouldUseMockSubscriptions) {
         console.log('Using local subscription mock fallback due to Supabase error:', error.code);
         return res.status(200).json(buildMockSubscriptionResponse(req.query));
       }
 
-      return res.status(500).json({ error: 'Failed to fetch subscription' });
+      // For other errors, return a more descriptive error
+      console.error('❌ Unexpected Supabase error, returning 500');
+      return res.status(500).json({ 
+        error: 'Failed to fetch subscription',
+        details: error.message,
+        code: error.code
+      });
     }
 
-    console.log('Subscription data found:', user);
+    if (!user) {
+      console.log('⚠️ User query succeeded but user is null');
+      return res.status(200).json({
+        plan: null,
+        billing: null,
+        status: null,
+        credits: null,
+        influencerTrainings: null,
+        hasActiveSubscription: false
+      });
+    }
+
+    console.log('📊 Subscription data found in users table:', {
+      userId,
+      subscription_status: user?.subscription_status,
+      subscription_plan: user?.subscription_plan,
+      subscription_billing: user?.subscription_billing,
+      credits: user?.credits,
+      influencer_trainings: user?.influencer_trainings,
+      hasStripeCustomerId: !!user?.stripe_customer_id,
+      hasSubscriptionId: !!user?.subscription_id
+    });
 
     // If users table indicates active, return immediately
     if (user && user.subscription_status === 'active') {
+      console.log('✅ User has active subscription in users table');
       return res.status(200).json({
         plan: user.subscription_plan,
         billing: user.subscription_billing,
@@ -219,18 +279,31 @@ router.get('/subscription', authenticateToken, async (req, res) => {
         influencerTrainings: user.influencer_trainings,
         hasActiveSubscription: true
       });
+    } else {
+      console.log('⚠️ User subscription_status is NOT active:', user?.subscription_status);
     }
 
     // Fallback: also check subscriptions table for an active record
+    console.log('🔍 Checking subscriptions table for active subscription...');
     try {
-      const { data: sub } = await supabase
+      const { data: sub, error: subError } = await supabase
         .from('subscriptions')
         .select('*')
         .eq('user_id', userId)
         .eq('status', 'active')
         .single();
 
+      if (subError) {
+        console.log('📋 Subscriptions table query error (or no record):', subError.code, subError.message);
+      }
+
       if (sub) {
+        console.log('✅ Found active subscription in subscriptions table:', {
+          plan: sub.plan,
+          billing: sub.billing,
+          status: sub.status,
+          credits: sub.credits
+        });
         return res.status(200).json({
           plan: sub.plan ?? user?.subscription_plan ?? null,
           billing: sub.billing ?? user?.subscription_billing ?? null,
@@ -239,15 +312,30 @@ router.get('/subscription', authenticateToken, async (req, res) => {
           influencerTrainings: sub.influencer_trainings ?? user?.influencer_trainings ?? null,
           hasActiveSubscription: true
         });
+      } else {
+        console.log('❌ No active subscription found in subscriptions table');
       }
-    } catch (_) {}
+    } catch (subErr) {
+      console.error('❌ Error checking subscriptions table:', subErr);
+    }
 
+    // Only use mock subscriptions if explicitly enabled
+    // Without explicit enablement, users without subscriptions will be redirected to onboarding
     if (shouldUseMockSubscriptions) {
       console.log('Using local subscription mock fallback (no active subscription records).');
       return res.status(200).json(buildMockSubscriptionResponse(req.query));
     }
 
-    // Default: no active subscription
+    // Default: no active subscription (matches production behavior)
+    console.log('❌ Returning response with NO active subscription');
+    console.log('📋 Final response data:', {
+      plan: user?.subscription_plan ?? null,
+      billing: user?.subscription_billing ?? null,
+      status: user?.subscription_status ?? null,
+      credits: user?.credits ?? null,
+      influencerTrainings: user?.influencer_trainings ?? null,
+      hasActiveSubscription: false
+    });
     res.status(200).json({
       plan: user?.subscription_plan ?? null,
       billing: user?.subscription_billing ?? null,

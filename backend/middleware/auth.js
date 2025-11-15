@@ -74,15 +74,9 @@ const requireSubscription = (plan) => {
         });
       }
 
-      // Skip subscription check in development
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Development mode: skipping subscription check');
-        req.subscription = { plan: 'free', status: 'active' };
-        next();
-        return;
-      }
-
       // Get user subscription from database
+      // Note: Subscription check is enforced in both development and production
+      // To enable mock subscriptions for testing, use ENABLE_LOCAL_SUBSCRIPTION_MOCK env variable
       const { data: subscription, error } = await supabase
         .from('subscriptions')
         .select('*')
