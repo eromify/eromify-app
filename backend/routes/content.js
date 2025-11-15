@@ -1,15 +1,12 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
 const { authenticateToken, requireSubscription } = require('../middleware/auth');
+const { getSupabaseAdmin } = require('../lib/supabaseAdmin');
 const OpenAI = require('openai');
 const Joi = require('joi');
 const { generateImageWithFaceConsistency } = require('../services/replicateService');
 const { generateVideoFromImage, checkGenerationStatus } = require('../services/runwayService');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const supabase = getSupabaseAdmin();
 
 // Initialize OpenAI only when needed
 let openai = null;
@@ -193,68 +190,67 @@ Generate engaging, authentic content that matches this influencer's brand and re
 });
 
 // Credit costs
-const IMAGE_COST = 10;
-const VIDEO_COST = 25;
+const IMAGE_COST = 5;
+const VIDEO_COST = 10;
 
 // Helper function to check and deduct credits
 async function checkAndDeductCredits(userId, cost) {
   try {
+    console.log(`💳 Checking credits for user ${userId}, cost: ${cost}`);
+    
     const { data: user, error } = await supabase
       .from('users')
-      .select('credits, subscription_plan')
+      .select('credits, subscription_plan, subscription_status')
       .eq('id', userId)
       .single();
 
-    // If user doesn't exist in users table, give them default credits
-    if (error && error.code === 'PGRST116') {
-      console.log(`User ${userId} not in users table, providing default credits`);
-      // In development/test, allow without database user entry
-      if (process.env.NODE_ENV === 'development') {
-        return { success: true, remaining: 1000 }; // Give plenty for testing
-      }
-    }
-
-    if (error && error.code !== 'PGRST116') {
+    if (error) {
+      console.error('❌ Failed to fetch user credits:', error);
       throw new Error('Failed to fetch user credits');
     }
 
-    // If user exists and has unlimited credits (Growth plan)
-    if (user && user.credits === null) {
+    if (!user) {
+      console.error('❌ User not found');
+      return { success: false, remaining: 0, required: cost };
+    }
+
+    // Check if user has active subscription
+    if (user.subscription_status !== 'active') {
+      console.log('❌ User does not have active subscription');
+      return { success: false, remaining: 0, required: cost };
+    }
+
+    // If user has unlimited credits (Growth plan - credits is NULL)
+    if (user.credits === null) {
+      console.log('✅ User has unlimited credits');
       return { success: true, remaining: null }; // Unlimited
     }
 
-    // If user exists and doesn't have enough credits
-    if (user && user.credits < cost) {
+    console.log(`💰 User has ${user.credits} credits, needs ${cost}`);
+
+    // Check if user has enough credits
+    if (user.credits < cost) {
+      console.log('❌ Insufficient credits');
       return { success: false, remaining: user.credits, required: cost };
     }
 
-    // Deduct credits if user exists
-    if (user) {
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({ credits: user.credits - cost })
-        .eq('id', userId);
+    // Deduct credits
+    const newBalance = user.credits - cost;
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ credits: newBalance })
+      .eq('id', userId);
 
-      if (updateError) {
-        console.error('Failed to deduct credits:', updateError);
-        // Still allow in development even if update fails
-        if (process.env.NODE_ENV === 'development') {
-          return { success: true, remaining: user.credits - cost };
-        }
-        throw new Error('Failed to deduct credits');
-      }
-
-      return { success: true, remaining: user.credits - cost };
+    if (updateError) {
+      console.error('❌ Failed to deduct credits:', updateError);
+      throw new Error('Failed to deduct credits');
     }
 
-    // Fallback for development
-    return { success: true, remaining: 1000 };
+    console.log(`✅ Credits deducted. New balance: ${newBalance}`);
+    return { success: true, remaining: newBalance };
+
   } catch (error) {
-    console.error('Credit check error:', error);
-    // In development, allow the request even if there's an error
-    if (process.env.NODE_ENV === 'development') {
-      return { success: true, remaining: 1000 };
-    }
+    console.error('❌ Credit check error:', error);
     throw error;
   }
 }
@@ -271,17 +267,14 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
       });
     }
 
-    // Check and deduct credits (skip in development)
-    let creditCheck = { success: true, remaining: null };
-    if (process.env.NODE_ENV === 'production') {
-      creditCheck = await checkAndDeductCredits(req.user.id, IMAGE_COST);
-      if (!creditCheck.success) {
-        return res.status(402).json({
-          success: false,
-          error: `Insufficient credits. Required: ${creditCheck.required}, Available: ${creditCheck.remaining}`,
-          credits: creditCheck.remaining
-        });
-      }
+    // Check and deduct credits (handles unlimited plans automatically)
+    const creditCheck = await checkAndDeductCredits(req.user.id, IMAGE_COST);
+    if (!creditCheck.success) {
+      return res.status(402).json({
+        success: false,
+        error: `Insufficient credits. Required: ${creditCheck.required}, Available: ${creditCheck.remaining}`,
+        credits: creditCheck.remaining
+      });
     }
 
     let enhancedPrompt = prompt;
