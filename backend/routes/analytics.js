@@ -197,12 +197,12 @@ router.get('/usage', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Get user's subscription
+    // Get user's subscription from users table
     const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('status', 'active')
+      .from('users')
+      .select('subscription_plan, subscription_status')
+      .eq('id', userId)
+      .eq('subscription_status', 'active')
       .single();
 
     // Get current month usage

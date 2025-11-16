@@ -61,14 +61,14 @@ router.post('/generate', authenticateToken, requireSubscription('free'), async (
 
     // Check user's content generation limit
     const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('plan')
-      .eq('user_id', req.user.id)
-      .eq('status', 'active')
+      .from('users')
+      .select('subscription_plan')
+      .eq('id', req.user.id)
+      .eq('subscription_status', 'active')
       .single();
 
     const limits = { free: 10, basic: 100, pro: 500, enterprise: 2000 };
-    const dailyLimit = limits[subscription?.plan] || 10;
+    const dailyLimit = limits[subscription?.subscription_plan] || 10;
 
     // Count today's generated content
     const today = new Date().toISOString().split('T')[0];

@@ -283,15 +283,13 @@ router.get('/subscription', authenticateToken, async (req, res) => {
       console.log('⚠️ User subscription_status is NOT active:', user?.subscription_status);
     }
 
-    // Fallback: also check subscriptions table for an active record
-    console.log('🔍 Checking subscriptions table for active subscription...');
+    // All subscription data is in users table (already fetched above)
+    // No need to check a separate subscriptions table
+    console.log('✅ Using subscription data from users table');
     try {
-      const { data: sub, error: subError } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .single();
+      // Skip subscriptions table query - using users table data instead
+      const sub = null;
+      const subError = null;
 
       if (subError) {
         console.log('📋 Subscriptions table query error (or no record):', subError.code, subError.message);

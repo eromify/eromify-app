@@ -45,12 +45,12 @@ router.get('/profile', authenticateToken, async (req, res) => {
       });
     }
 
-    // Get user's subscription info
+    // Get user's subscription info from users table
     const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', req.user.id)
-      .eq('status', 'active')
+      .from('users')
+      .select('subscription_plan, subscription_status, credits, influencer_trainings')
+      .eq('id', req.user.id)
+      .eq('subscription_status', 'active')
       .single();
 
     // Get user's stats
@@ -221,10 +221,10 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
 router.get('/subscription', authenticateToken, async (req, res) => {
   try {
     const { data: subscription, error } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', req.user.id)
-      .eq('status', 'active')
+      .from('users')
+      .select('subscription_plan, subscription_status, credits, influencer_trainings, subscription_billing')
+      .eq('id', req.user.id)
+      .eq('subscription_status', 'active')
       .single();
 
     if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned

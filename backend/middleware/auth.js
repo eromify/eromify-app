@@ -78,10 +78,10 @@ const requireSubscription = (plan) => {
       // Note: Subscription check is enforced in both development and production
       // To enable mock subscriptions for testing, use ENABLE_LOCAL_SUBSCRIPTION_MOCK env variable
       const { data: subscription, error } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', req.user.id)
-        .eq('status', 'active')
+        .from('users')
+        .select('subscription_plan, subscription_status')
+        .eq('id', req.user.id)
+        .eq('subscription_status', 'active')
         .single();
 
       if (error || !subscription) {
@@ -93,7 +93,7 @@ const requireSubscription = (plan) => {
 
       // Check if user's plan meets requirements
       const planLevels = { free: 0, basic: 1, pro: 2, enterprise: 3 };
-      const userPlanLevel = planLevels[subscription.plan] || 0;
+      const userPlanLevel = planLevels[subscription.subscription_plan] || 0;
       const requiredPlanLevel = planLevels[plan] || 0;
 
       if (userPlanLevel < requiredPlanLevel) {

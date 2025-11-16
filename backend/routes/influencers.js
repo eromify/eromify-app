@@ -136,14 +136,14 @@ router.post('/', authenticateToken, requireSubscription('free'), async (req, res
 
     // Check user's influencer limit based on subscription
     const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('plan')
-      .eq('user_id', req.user.id)
-      .eq('status', 'active')
+      .from('users')
+      .select('subscription_plan, influencer_trainings')
+      .eq('id', req.user.id)
+      .eq('subscription_status', 'active')
       .single();
 
     const limits = { free: 3, basic: 10, pro: 50, enterprise: 200 };
-    const limit = limits[subscription?.plan] || 3;
+    const limit = limits[subscription?.subscription_plan] || 3;
 
     const { count } = await supabase
       .from('influencers')
