@@ -38,7 +38,11 @@ app.use(cors({
 // Logging
 app.use(morgan('combined'));
 
-// Body parsing middleware
+// Stripe webhook must be mounted BEFORE body parsers to preserve the raw body
+const stripeWebhook = require('./stripeWebhook');
+app.use('/api/payments/webhook', stripeWebhook);
+
+// Body parsing middleware (runs after webhook route)
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
