@@ -287,3 +287,46 @@ Auth middleware - JWT token verified, user: vintorpzo@gmail.com
 🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
 ✅ Influencers fetched: 2
 127.0.0.1 - - [23/Nov/2025:09:58:25 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎨 ComfyUI Image Generation Request: {
+  prompt: 'bria naked in the bedroom...',
+  aspectRatio: '2:3',
+  influencerId: 'cb01522f-1edc-45c9-9f3a-8e9d3fe990fa'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 5
+✅ User has unlimited credits
+🔍 Mapped "Bria Sanchez" → marketplace ID 24 via first name "bria"
+🎨 Generating image with RunPod ComfyUI...
+📦 Influencer ID: 24
+🎭 LoRA: bria.safetensors
+📐 Aspect Ratio: 2:3
+💬 Prompt: bria naked in the bedroom...
+📏 Dimensions: 896x1152
+📐 Resolution: portrait - 896x1152 (3:4)
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: '66c04fb8-9d5c-4718-9854-29190647abbe',
+  number: 49,
+  node_errors: {
+    '17': {
+      errors: [Array],
+      dependent_outputs: [Array],
+      class_type: 'PreviewImage'
+    }
+  }
+}
+⏳ Waiting for completion... (attempt 1/60)
+⏳ Waiting for completion... (attempt 2/60)
+⏳ Waiting for completion... (attempt 3/60)
+⏳ Waiting for completion... (attempt 4/60)
+⏳ Waiting for completion... (attempt 5/60)
+✅ Image generation completed!
+🖼️ Image URL: https://qwner9w79n2dyp-8188.proxy.runpod.net/view?filename=ComfyUI_temp_rsjby_00034_.png&subfolder=&type=temp
+Failed to save generated content: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
+}
+127.0.0.1 - - [23/Nov/2025:11:39:35 +0000] "POST /api/content/generate-image-comfyui HTTP/1.1" 200 463 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"

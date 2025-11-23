@@ -92,9 +92,17 @@ const requireSubscription = (plan) => {
       }
 
       // Check if user's plan meets requirements
-      const planLevels = { free: 0, basic: 1, pro: 2, enterprise: 3 };
+      const planLevels = { free: 0, basic: 1, growth: 2, pro: 2, enterprise: 3 };
       const userPlanLevel = planLevels[subscription.subscription_plan] || 0;
       const requiredPlanLevel = planLevels[plan] || 0;
+      
+      console.log('🔐 Subscription check:', {
+        userId: req.user.id,
+        plan: subscription.subscription_plan,
+        status: subscription.subscription_status,
+        userLevel: userPlanLevel,
+        requiredLevel: requiredPlanLevel
+      });
 
       if (userPlanLevel < requiredPlanLevel) {
         return res.status(403).json({ 
