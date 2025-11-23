@@ -1,10 +1,15 @@
 const jwt = require('jsonwebtoken');
 const { createClient } = require('@supabase/supabase-js');
+const { getSupabaseAdmin } = require('../lib/supabaseAdmin');
 
-const supabase = createClient(
+// User-facing client for token verification (uses anon key)
+const supabaseAuth = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
+
+// Admin client for database queries (bypasses RLS)
+const supabase = getSupabaseAdmin();
 
 const authenticateToken = async (req, res, next) => {
   try {
@@ -39,7 +44,7 @@ const authenticateToken = async (req, res, next) => {
 
     // If JWT fails, try Supabase token verification
     console.log('Auth middleware - verifying token with Supabase...');
-    const { data: { user }, error } = await supabase.auth.getUser(token);
+    const { data: { user }, error } = await supabaseAuth.auth.getUser(token);
 
     if (error || !user) {
       console.log('Auth middleware - Supabase verification failed:', error);
