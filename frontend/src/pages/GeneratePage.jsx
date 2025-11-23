@@ -60,11 +60,8 @@ const GeneratePage = () => {
       console.log('🖼️ Image URL:', response.image?.url)
 
       if (response.success) {
-        setGeneratedImages(prev => {
-          const newImages = [response.image.url, ...prev]
-          console.log('📸 Updated generatedImages:', newImages)
-          return newImages
-        })
+        // Only keep the latest image (clear previous ones to avoid memory issues)
+        setGeneratedImages([response.image.url])
         setCreditsRemaining(response.image.creditsRemaining)
         toast.success(`Image generated! Credits remaining: ${response.image.creditsRemaining ?? 'Unlimited'}`)
       }
