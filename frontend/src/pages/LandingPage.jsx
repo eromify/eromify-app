@@ -135,7 +135,7 @@ const LandingPage = () => {
               playsInline
               className="w-full h-auto"
             >
-              <source src="/Hero-Landing-Video.mp4" type="video/mp4" />
+              <source src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/Hero-Landing-Video.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -161,7 +161,7 @@ const LandingPage = () => {
             <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
               <div className="h-[18.5rem] overflow-hidden">
                 <img 
-                  src="/marketplace.webp" 
+                  src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/marketplace.webp" 
                   alt="AI Model Marketplace" 
                   className="w-full h-full object-cover object-top"
                 />
@@ -177,7 +177,7 @@ const LandingPage = () => {
             {/* SDXL + Flux + Latest Models */}
             <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
               <img 
-                src="/generation-screenshot.webp" 
+                src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/generation-screenshot.webp" 
                 alt="SDXL + Flux + Latest Models" 
                 className="w-full h-auto"
               />
@@ -192,7 +192,7 @@ const LandingPage = () => {
             {/* Skin Upscale */}
             <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
               <img 
-                src="/skin-upscale.webp" 
+                src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/skin-upscale.webp" 
                 alt="Skin Upscale" 
                 className="w-full h-auto"
               />
@@ -207,7 +207,7 @@ const LandingPage = () => {
             {/* Advanced Video Generation */}
             <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden">
               <img 
-                src="/video-generation.webp" 
+                src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/video-generation.webp" 
                 alt="Advanced Video Generation" 
                 className="w-full h-auto"
               />
@@ -240,21 +240,21 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="rounded-2xl overflow-hidden">
               <img 
-                src="/showcase1.webp" 
+                src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/showcase1.webp" 
                 alt="Quality Showcase 1" 
                 className="w-full h-auto"
               />
             </div>
             <div className="rounded-2xl overflow-hidden">
               <img 
-                src="/showcase2.webp" 
+                src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/showcase2.webp" 
                 alt="Quality Showcase 2" 
                 className="w-full h-auto"
               />
             </div>
             <div className="rounded-2xl overflow-hidden">
               <img 
-                src="/showcase3.webp" 
+                src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/showcase3.webp" 
                 alt="Quality Showcase 3" 
                 className="w-full h-auto"
               />
@@ -307,7 +307,7 @@ const LandingPage = () => {
               </div>
               <div>
                 <img 
-                  src="/marketplace.webp" 
+                  src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/marketplace.webp" 
                   alt="Step 1" 
                   className="w-full h-auto rounded-2xl"
                 />
@@ -318,7 +318,7 @@ const LandingPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-2 md:order-1">
                 <img 
-                  src="/step2-create-content.webp" 
+                  src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/step2-create-content.webp" 
                   alt="Step 2" 
                   className="w-full h-auto rounded-2xl"
                 />
@@ -343,7 +343,7 @@ const LandingPage = () => {
               </div>
               <div>
                 <img 
-                  src="/step3-export-monetize.webp" 
+                  src="https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/step3-export-monetize.webp" 
                   alt="Step 3" 
                   className="w-full h-auto rounded-2xl"
                 />

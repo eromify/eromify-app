@@ -8,7 +8,7 @@ export const marketplaceModels = [
   {
     id: 19,
     name: "Adriana Perez",
-    images: ["/model19 1.jpeg", "/model19 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model19%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model19%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -22,7 +22,7 @@ export const marketplaceModels = [
   {
     id: 20,
     name: "Veronica Millsap",
-    images: ["/model20 1.webp", "/model20 2.webp"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model20%201.webp", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model20%202.webp"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -36,7 +36,7 @@ export const marketplaceModels = [
   {
     id: 23,
     name: "Luna Williams",
-    images: ["/model24.webp"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model24.webp"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -50,7 +50,7 @@ export const marketplaceModels = [
   {
     id: 24,
     name: "Bria Sanchez",
-    images: ["/model25 1.jpeg", "/model25 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model25%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model25%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -64,7 +64,7 @@ export const marketplaceModels = [
   {
     id: 22,
     name: "Riya Yasin",
-    images: ["/model22 3.jpeg", "/model22 6.png", "/model22 7.png", "/model22 8.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model22%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model22%206.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model22%207.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model22%208.jpeg"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -78,7 +78,7 @@ export const marketplaceModels = [
   {
     id: 25,
     name: "Valentina Gomez",
-    images: ["/model26 1.jpeg", "/model26 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model26%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model26%202.jpeg"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -92,7 +92,7 @@ export const marketplaceModels = [
   {
     id: 59,
     name: "Ava Rhodes",
-    images: ["/model59 1.jpeg", "/model59 2.jpeg", "/model59 3.jpeg", "/model59 4.jpeg", "/model59 5.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model59%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model59%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model59%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model59%204.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model59%205.jpeg"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -106,7 +106,7 @@ export const marketplaceModels = [
   {
     id: 50,
     name: "Aiko Tanaka",
-    images: ["/model50 4.jpeg", "/model50 1.jpeg", "/model50 2.jpeg", "/model50 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model50%204.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model50%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model50%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model50%203.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -120,7 +120,7 @@ export const marketplaceModels = [
   {
     id: 42,
     name: "Yumi Nakamura",
-    images: ["/model42 1.jpeg", "/model42 2.jpeg", "/model42 3.jpeg", "/model42 4.jpeg", "/model42 5.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model42%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model42%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model42%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model42%204.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model42%205.jpeg"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -134,7 +134,7 @@ export const marketplaceModels = [
   {
     id: 21,
     name: "Ava Diaz",
-    images: ["/model 21 1.jpeg", "/model 21 2.jpeg", "/model21 3.jpeg"],
+    images: ["/model 21 1.jpeg", "/model 21 2.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model21%203.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -148,7 +148,7 @@ export const marketplaceModels = [
   {
     id: 60,
     name: "Kimberly Monroe",
-    images: ["/model60 1.jpg", "/model60 2.jpg", "/model60 3.jpg", "/model60 4.jpg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model60%201.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model60%202.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model60%203.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model60%204.jpg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -162,7 +162,7 @@ export const marketplaceModels = [
   {
     id: 67,
     name: "Jessica Parker",
-    images: ["/model67 1.PNG", "/model67 2.PNG", "/model67 3.PNG", "/model67 4.PNG", "/model67 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model67%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model67%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model67%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model67%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model67%205.PNG"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -176,7 +176,7 @@ export const marketplaceModels = [
   {
     id: 1,
     name: "Audrey Sinclair",
-    images: ["/preview_1.png", "/preview_2.png", "/preview_3.png", "/preview_4.png", "/preview_5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_2.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_3.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_4.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_5.png"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -190,7 +190,7 @@ export const marketplaceModels = [
   {
     id: 43,
     name: "Kim Nguyen",
-    images: ["/model23 5.jpeg", "/model23 6.jpeg", "/model 23 1.jpeg", "/model23 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model23%205.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model23%206.jpeg", "/model 23 1.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model23%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -204,7 +204,7 @@ export const marketplaceModels = [
   {
     id: 26,
     name: "Lina Morales",
-    images: ["/model27 1.jpg", "/model27 2.jpg", "/model27 3.jpg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model27%201.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model27%202.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model27%203.jpg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -218,7 +218,7 @@ export const marketplaceModels = [
   {
     id: 57,
     name: "Rina Takahashi",
-    images: ["/model57 1.jpeg", "/model57 2.jpeg", "/model57 3.jpeg", "/model57 4.jpeg", "/model57 5.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model57%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model57%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model57%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model57%204.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model57%205.jpeg"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -232,7 +232,7 @@ export const marketplaceModels = [
   {
     id: 61,
     name: "Alexis Barrett",
-    images: ["/model61 1.jpeg", "/model61 2.jpeg", "/model61 3.jpeg", "/model61 4.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model61%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model61%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model61%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model61%204.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -246,7 +246,7 @@ export const marketplaceModels = [
   {
     id: 68,
     name: "Madison Walker",
-    images: ["/model68 1.PNG", "/model68 2.PNG", "/model68 3.PNG", "/model68 4.PNG", "/model68 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model68%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model68%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model68%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model68%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model68%205.PNG"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -260,7 +260,7 @@ export const marketplaceModels = [
   {
     id: 70,
     name: "Lauren Scott",
-    images: ["/model70 1.PNG", "/model70 2.PNG", "/model70 3.PNG", "/model70 4.PNG", "/model70 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%205.PNG"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -274,7 +274,7 @@ export const marketplaceModels = [
   {
     id: 2,
     name: "Mackenzie Cole",
-    images: ["/model2 1.png", "/model2 2.png", "/model2 3.png", "/model2 4.png", "/model2 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model2%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model2%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model2%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model2%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model2%205.png"],
     claimed: "2/5",
     fullyClaimed: false,
     hair: "honey blonde",
@@ -287,7 +287,7 @@ export const marketplaceModels = [
   {
     id: 27,
     name: "Model 27",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -300,7 +300,7 @@ export const marketplaceModels = [
   {
     id: 72,
     name: "Clara Coleman",
-    images: ["/model72 1.PNG", "/model72 2.PNG", "/model72 3.PNG", "/model72 4.PNG", "/model72 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model72%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model72%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model72%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model72%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model72%205.PNG"],
     isLive: true,
     claimed: "4/5",
     fullyClaimed: false,
@@ -314,7 +314,7 @@ export const marketplaceModels = [
   {
     id: 28,
     name: "Lila Miller",
-    images: ["/model28 1.webp", "/model28 2.webp"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model28%201.webp", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model28%202.webp"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -328,7 +328,7 @@ export const marketplaceModels = [
   {
     id: 49,
     name: "Haruna Sato",
-    images: ["/model49 1.jpeg", "/model49 2.jpeg", "/model49 3.jpeg", "/model49 4.jpeg", "/model49 5.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model49%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model49%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model49%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model49%204.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model49%205.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -342,7 +342,7 @@ export const marketplaceModels = [
   {
     id: 66,
     name: "Hailey Morgan",
-    images: ["/model66 1.PNG", "/model66 2.PNG", "/model66 3.PNG", "/model66 4.PNG", "/model66 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model66%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model66%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model66%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model66%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model66%205.PNG"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -356,7 +356,7 @@ export const marketplaceModels = [
   {
     id: 69,
     name: "Amber Richardson",
-    images: ["/model69 1.PNG", "/model69 2.PNG", "/model69 3.PNG", "/model69 4.PNG", "/model69 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model69%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model69%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model69%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model69%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model69%205.PNG"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -370,7 +370,7 @@ export const marketplaceModels = [
   {
     id: 73,
     name: "Brianna Collins",
-    images: ["/model73 1.PNG", "/model73 2.PNG", "/model73 3.PNG", "/model73 4.PNG", "/model73 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model73%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model73%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model73%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model73%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model73%205.PNG"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -384,7 +384,7 @@ export const marketplaceModels = [
   {
     id: 74,
     name: "Tara Phillips",
-    images: ["/model74 1.PNG", "/model74 2.PNG", "/model74 3.PNG", "/model74 4.PNG", "/model74 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model74%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model74%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model74%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model74%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model74%205.PNG"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -398,7 +398,7 @@ export const marketplaceModels = [
   {
     id: 29,
     name: "Alice Lin",
-    images: ["/model29 1.webp", "/model29 2.webp"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model29%201.webp", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model29%202.webp"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -412,7 +412,7 @@ export const marketplaceModels = [
   {
     id: 3,
     name: "Bailey Summers",
-    images: ["/model3 1.png", "/model3 2.png", "/model3 3.png", "/model3 4.png", "/model3 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model3%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model3%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model3%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model3%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model3%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "light blonde",
@@ -425,7 +425,7 @@ export const marketplaceModels = [
   {
     id: 31,
     name: "Rose Moore",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -438,7 +438,7 @@ export const marketplaceModels = [
   {
     id: 32,
     name: "Camilla Gomez",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -451,7 +451,7 @@ export const marketplaceModels = [
   {
     id: 4,
     name: "Briar Westbrook",
-    images: ["/model4 1.png", "/model4 2.png", "/model4 3.png", "/model4 4.png", "/model4 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model4%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model4%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model4%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model4%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model4%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "dark blonde",
@@ -464,7 +464,7 @@ export const marketplaceModels = [
   {
     id: 33,
     name: "Ariana Garcia",
-    images: ["/model33 1.jpeg", "/model33 2.jpeg", "/model33 3.jpeg", "/model33 4.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model33%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model33%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model33%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model33%204.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -478,7 +478,7 @@ export const marketplaceModels = [
   {
     id: 58,
     name: "Kylie Walsh",
-    images: ["/model58 1.jpeg", "/model58 2.jpeg", "/model58 3.jpeg", "/model58 4.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model58%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model58%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model58%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model58%204.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -492,7 +492,7 @@ export const marketplaceModels = [
   {
     id: 76,
     name: "Addison Price",
-    images: ["/model76 1.PNG", "/model76 2.PNG", "/model76 3.PNG", "/model76 4.PNG", "/model76 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model76%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model76%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model76%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model76%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model76%205.PNG"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -506,7 +506,7 @@ export const marketplaceModels = [
   {
     id: 5,
     name: "Model 5",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -519,7 +519,7 @@ export const marketplaceModels = [
   {
     id: 51,
     name: "Mei Suzuki",
-    images: ["/model51 1.jpeg", "/model51 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model51%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model51%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -533,7 +533,7 @@ export const marketplaceModels = [
   {
     id: 6,
     name: "Chloe Morales",
-    images: ["/model6 1.png", "/model6 2.png", "/model6 3.png", "/model6 4.png", "/model6 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model6%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model6%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model6%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model6%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model6%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "dark blonde",
@@ -546,7 +546,7 @@ export const marketplaceModels = [
   {
     id: 54,
     name: "Ayaka Kobayashi",
-    images: ["/model54 1.jpeg", "/model54 2.jpeg", "/model54 3.jpeg", "/model54 4.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model54%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model54%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model54%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model54%204.jpeg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -560,7 +560,7 @@ export const marketplaceModels = [
   {
     id: 7,
     name: "Emma Reed",
-    images: ["/model7 1.png", "/model7 2.png", "/model7 3.png", "/model7 4.png", "/model7 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model7%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model7%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model7%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model7%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model7%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "light brown",
@@ -573,7 +573,7 @@ export const marketplaceModels = [
   {
     id: 30,
     name: "Naima Johnson",
-    images: ["/model30 1.jpeg", "/model30 2.jpeg", "/model30 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model30%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model30%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model30%203.jpeg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -587,7 +587,7 @@ export const marketplaceModels = [
   {
     id: 8,
     name: "Holly Arlington",
-    images: ["/model8 1.png", "/model8 2.png", "/model8 3.png", "/model8 4.png", "/model8 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model8%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model8%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model8%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model8%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model8%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "brown",
@@ -600,7 +600,7 @@ export const marketplaceModels = [
   {
     id: 64,
     name: "Paige Franklin",
-    images: ["/model64 1.jpg", "/model64 2.jpg", "/model64 3.jpg", "/model64 4.jpg", "/model64 5.jpg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model64%201.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model64%202.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model64%203.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model64%204.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model64%205.jpg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -614,7 +614,7 @@ export const marketplaceModels = [
   {
     id: 34,
     name: "Alia Wilson",
-    images: ["/model34 1.jpeg", "/model34 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model34%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model34%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -628,7 +628,7 @@ export const marketplaceModels = [
   {
     id: 9,
     name: "Sloane Bennett",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -641,7 +641,7 @@ export const marketplaceModels = [
   {
     id: 48,
     name: "Sakura Fujimoto",
-    images: ["/model48 1.jpeg", "/model48 2.jpeg", "/model48 3.jpeg", "/model48 4.jpeg", "/model48 5.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model48%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model48%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model48%203.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model48%204.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model48%205.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -655,7 +655,7 @@ export const marketplaceModels = [
   {
     id: 35,
     name: "Scarlet Cunningham",
-    images: ["/model35 1.webp", "/model35 2.webp"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model35%201.webp", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model35%202.webp"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -669,7 +669,7 @@ export const marketplaceModels = [
   {
     id: 36,
     name: "Helena Anderson",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -682,7 +682,7 @@ export const marketplaceModels = [
   {
     id: 62,
     name: "Gaia Blake",
-    images: ["/model62 1.jpg", "/model62 2.jpg", "/model62 3.jpg", "/model62 4.jpg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model62%201.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model62%202.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model62%203.jpg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model62%204.jpg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -696,7 +696,7 @@ export const marketplaceModels = [
   {
     id: 77,
     name: "Megan Hayes",
-    images: ["/model77 1.PNG", "/model77 2.PNG", "/model77 3.PNG", "/model77 4.PNG", "/model77 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model77%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model77%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model77%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model77%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model77%205.PNG"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -710,7 +710,7 @@ export const marketplaceModels = [
   {
     id: 65,
     name: "Gabriella Steele",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -723,7 +723,7 @@ export const marketplaceModels = [
   {
     id: 10,
     name: "Aria Chen",
-    images: ["/model10 1.png", "/model10 2.png", "/model10 3.png", "/model10 4.png", "/model10 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model10%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model10%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model10%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model10%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model10%205.png"],
     claimed: "2/5",
     fullyClaimed: false,
     hair: "black",
@@ -736,7 +736,7 @@ export const marketplaceModels = [
   {
     id: 71,
     name: "Julia Warren",
-    images: ["/model71 1.PNG", "/model71 2.PNG", "/model71 3.PNG", "/model71 4.PNG", "/model71 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model71%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model71%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model71%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model71%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model71%205.PNG"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -750,7 +750,7 @@ export const marketplaceModels = [
   {
     id: 63,
     name: "Marta Matthews",
-    images: ["/model63 1.jpeg", "/model63 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model63%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model63%202.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -764,7 +764,7 @@ export const marketplaceModels = [
   {
     id: 11,
     name: "Model 11",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -777,7 +777,7 @@ export const marketplaceModels = [
   {
     id: 12,
     name: "Model 12",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -790,7 +790,7 @@ export const marketplaceModels = [
   {
     id: 13,
     name: "Mia Rodriguez",
-    images: ["/model13 1.png", "/model13 2.png", "/model13 3.png", "/model13 4.png", "/model13 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model13%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model13%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model13%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model13%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model13%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "dark brown",
@@ -803,7 +803,7 @@ export const marketplaceModels = [
   {
     id: 37,
     name: "Kylie Murphy",
-    images: ["/model37 1.jpeg", "/model37 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model37%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model37%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -817,7 +817,7 @@ export const marketplaceModels = [
   {
     id: 52,
     name: "Erika Matsuda",
-    images: ["/model52 1.jpeg", "/model52 2.jpeg", "/model52 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model52%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model52%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model52%203.jpeg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -831,7 +831,7 @@ export const marketplaceModels = [
   {
     id: 14,
     name: "Nina Patel",
-    images: ["/model14 1.png", "/model14 2.png", "/model14 3.png", "/model14 4.png", "/model14 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model14%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model14%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model14%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model14%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model14%205.png"],
     claimed: "2/5",
     fullyClaimed: false,
     hair: "black",
@@ -844,7 +844,7 @@ export const marketplaceModels = [
   {
     id: 75,
     name: "Karina Dawson",
-    images: ["/model75 1.PNG", "/model75 2.PNG", "/model75 3.PNG", "/model75 4.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model75%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model75%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model75%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model75%204.PNG"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -858,7 +858,7 @@ export const marketplaceModels = [
   {
     id: 39,
     name: "Kimberly Smith",
-    images: ["/model39 1.jpeg", "/model39 2.jpeg", "/model39 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model39%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model39%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model39%203.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -872,7 +872,7 @@ export const marketplaceModels = [
   {
     id: 38,
     name: "Marta Evans",
-    images: ["/model38 1.jpeg", "/model38 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model38%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model38%202.jpeg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -886,7 +886,7 @@ export const marketplaceModels = [
   {
     id: 47,
     name: "Kaori Nishimura",
-    images: ["/model47 1.jpeg", "/model47 2.jpeg", "/model47 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model47%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model47%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model47%203.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -900,7 +900,7 @@ export const marketplaceModels = [
   {
     id: 15,
     name: "Zara Hassan",
-    images: ["/model15 1.png", "/model15 2.png", "/model15 3.png", "/model15 4.png", "/model15 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model15%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model15%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model15%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model15%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model15%205.png"],
     claimed: "1/5",
     fullyClaimed: false,
     hair: "dark brown",
@@ -913,7 +913,7 @@ export const marketplaceModels = [
   {
     id: 53,
     name: "Mio Ishikawa",
-    images: ["/model53 1.jpeg", "/model53 2.jpeg", "/model53 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model53%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model53%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model53%203.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -927,7 +927,7 @@ export const marketplaceModels = [
   {
     id: 78,
     name: "Isabella Cross",
-    images: ["/model78 1.PNG", "/model78 2.PNG", "/model78 3.PNG", "/model78 4.PNG", "/model78 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model78%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model78%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model78%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model78%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model78%205.PNG"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -941,7 +941,7 @@ export const marketplaceModels = [
   {
     id: 79,
     name: "Autumn Fisher",
-    images: ["/model70 1.PNG", "/model70 2.PNG", "/model70 3.PNG", "/model70 4.PNG", "/model70 5.PNG"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%201.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%202.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%203.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%204.PNG", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model70%205.PNG"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -955,7 +955,7 @@ export const marketplaceModels = [
   {
     id: 44,
     name: "Reina Arai",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -968,7 +968,7 @@ export const marketplaceModels = [
   {
     id: 16,
     name: "Zoey Paige",
-    images: ["/model16 1.png", "/model16 2.png", "/model16 3.png", "/model16 4.png", "/model16 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model16%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model16%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model16%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model16%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model16%205.png"],
     claimed: "2/5",
     fullyClaimed: false,
     hair: "brown",
@@ -981,7 +981,7 @@ export const marketplaceModels = [
   {
     id: 56,
     name: "Natsumi Kato",
-    images: ["/model56 1.jpeg", "/model56 2.jpeg", "/model56 3.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model56%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model56%202.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model56%203.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -995,7 +995,7 @@ export const marketplaceModels = [
   {
     id: 17,
     name: "Zara Vee",
-    images: ["/model17 1.png", "/model17 2.png", "/model17 3.png", "/model17 4.png", "/model17 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model17%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model17%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model17%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model17%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model17%205.png"],
     claimed: "2/5",
     fullyClaimed: false,
     hair: "black",
@@ -1008,7 +1008,7 @@ export const marketplaceModels = [
   {
     id: 45,
     name: "Sayaka Mori",
-    images: ["/model45 1.jpeg", "/model45 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model45%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model45%202.jpeg"],
     isLive: true,
     claimed: "1/5",
     fullyClaimed: false,
@@ -1022,7 +1022,7 @@ export const marketplaceModels = [
   {
     id: 55,
     name: "Hana Yamamoto",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -1035,7 +1035,7 @@ export const marketplaceModels = [
   {
     id: 40,
     name: "Alexis Collins",
-    images: ["/model40 1.jpeg", "/model40 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model40%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model40%202.jpeg"],
     isLive: true,
     claimed: "2/5",
     fullyClaimed: false,
@@ -1049,7 +1049,7 @@ export const marketplaceModels = [
   {
     id: 41,
     name: "Gaia Bailey",
-    images: ["/model41 1.jpeg", "/model41 2.jpeg"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model41%201.jpeg", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model41%202.jpeg"],
     isLive: true,
     claimed: "3/5",
     fullyClaimed: false,
@@ -1063,7 +1063,7 @@ export const marketplaceModels = [
   {
     id: 46,
     name: "Ami Takeda",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
@@ -1076,7 +1076,7 @@ export const marketplaceModels = [
   {
     id: 18,
     name: "Mila Dash",
-    images: ["/model18 1.png", "/model18 2.png", "/model18 3.png", "/model18 4.png", "/model18 5.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model18%201.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model18%202.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model18%203.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model18%204.png", "https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/model18%205.png"],
     claimed: "3/5",
     fullyClaimed: false,
     hair: "black",
@@ -1089,7 +1089,7 @@ export const marketplaceModels = [
   {
     id: 58,
     name: "Hikari Ono",
-    images: ["/preview_1.png"],
+    images: ["https://eyteuevblxvhjhyeivqh.supabase.co/storage/v1/object/public/marketplace-assets/preview_1.png"],
     claimed: "5/5",
     fullyClaimed: true,
     isBlackedOut: true,
