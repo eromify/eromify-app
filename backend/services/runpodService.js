@@ -221,23 +221,7 @@ async function generateImageWithRunPod(prompt, influencerId, options = {}) {
   } catch (error) {
     console.error('❌ RunPod image generation error:', error.message);
     if (error.response) {
-      console.error('❌ RunPod response status:', error.response.status);
-      console.error('❌ RunPod response data:', JSON.stringify(error.response.data, null, 2));
-      
-      // Extract the actual error message from RunPod
-      let runpodError = error.message;
-      if (error.response.data) {
-        if (typeof error.response.data === 'string') {
-          runpodError = error.response.data;
-        } else if (error.response.data.error) {
-          runpodError = error.response.data.error;
-        } else if (error.response.data.message) {
-          runpodError = error.response.data.message;
-        } else {
-          runpodError = JSON.stringify(error.response.data);
-        }
-      }
-      throw new Error(`Failed to generate image with RunPod: ${runpodError}`);
+      console.error('Response data:', error.response.data);
     }
     throw new Error(`Failed to generate image with RunPod: ${error.message}`);
   }
