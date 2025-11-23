@@ -117,7 +117,7 @@ async function generateVideoWithRunPod(prompt, influencerId, options = {}) {
     console.log(`📏 Dimensions: ${dimensions.width}x${dimensions.height}`);
     
     // Load the workflow template
-    const workflowTemplate = require('../../eromify-video-gen.json');
+    const workflowTemplate = require('../eromify-video-gen.json');
     
     // Clone the workflow to avoid mutating the original
     const workflow = JSON.parse(JSON.stringify(workflowTemplate));

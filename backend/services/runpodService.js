@@ -124,7 +124,7 @@ async function generateImageWithRunPod(prompt, influencerId, options = {}) {
     console.log(`📏 Dimensions: ${dimensions.width}x${dimensions.height}`);
     
     // Load the workflow template (optimized with 25 steps)
-    const workflowTemplate = require('../../eromify-image-gen.json');
+    const workflowTemplate = require('../eromify-image-gen.json');
     
     // Clone the workflow to avoid mutating the original
     const workflow = JSON.parse(JSON.stringify(workflowTemplate));
