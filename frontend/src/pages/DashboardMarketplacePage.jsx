@@ -17,9 +17,9 @@ const DashboardMarketplacePage = () => {
   const [claiming, setClaiming] = useState(false)
   const [showLimitModal, setShowLimitModal] = useState(false)
 
-  // Filter out duplicate models (27, 11, 12)
+  // Filter out duplicate models (27, 11, 12) and archived/blacked-out models
   const filteredModels = marketplaceModels.filter(model => 
-    ![27, 11, 12].includes(model.id)
+    ![27, 11, 12].includes(model.id) && !model.isBlackedOut
   )
 
   // Fetch subscription and influencers on mount

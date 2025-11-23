@@ -65,9 +65,9 @@ const OnboardingPage = () => {
   }, [navigate, searchParams])
   
   // Use shared marketplace models data - order can be changed in /src/data/marketplaceModels.js
-  // Filter out fully claimed models - show all available models
+  // Filter out fully claimed and archived models - show only available models
   const allMarketplaceModels = marketplaceModels;
-  const marketplaceModelsFiltered = allMarketplaceModels.filter(m => !m.fullyClaimed)
+  const marketplaceModelsFiltered = allMarketplaceModels.filter(m => !m.fullyClaimed && !m.isBlackedOut)
 
   // Countdown timer effect
   useEffect(() => {

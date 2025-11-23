@@ -21,7 +21,8 @@ const MarketplacePage = () => {
   }, [user?.email]);
 
   // Use shared models data - order can be changed in /src/data/marketplaceModels.js
-  const models = marketplaceModels;
+  // Filter out archived/blacked-out models
+  const models = marketplaceModels.filter(model => !model.isBlackedOut);
 
   const nextImage = () => {
     if (selectedModel) {
