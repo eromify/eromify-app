@@ -5,8 +5,8 @@ const { promisify } = require('util');
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
 
-// RunPod ComfyUI endpoint for VIDEO generation
-const RUNPOD_ENDPOINT = 'https://2k9rz5l136lrge-8188.proxy.runpod.net';
+// RunPod ComfyUI endpoint for VIDEO generation (from environment variable or fallback to local)
+const RUNPOD_ENDPOINT = process.env.RUNPOD_VIDEO_ENDPOINT || 'https://2k9rz5l136lrge-8188.proxy.runpod.net';
 
 // Map influencer IDs to their LoRA filenames (video needs high and low noise)
 const INFLUENCER_VIDEO_LORA_MAP = {
