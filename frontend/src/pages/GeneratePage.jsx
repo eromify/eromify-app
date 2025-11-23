@@ -165,7 +165,7 @@ const GeneratePage = () => {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="e.g., beautiful woman with long blonde hair wearing a black dress, professional photography, golden hour lighting, city skyline background"
+              placeholder="e.g., A high resolution DSLR photo. Beautiful woman with long blonde hair wearing a black dress, professional photography, golden hour lighting, city skyline background"
               className="w-full h-32 px-4 py-3 bg-gray-950 border border-gray-800 rounded-lg text-white resize-none focus:outline-none focus:border-pink-500"
             />
           </div>

@@ -6,8 +6,11 @@ import influencerService from '../services/influencerService'
 import toast from 'react-hot-toast'
 import { Plus, Edit, Trash2, Users, Star } from 'lucide-react'
 
+const ONBOARDING_SELECTION_STORAGE_KEY = 'eromify/onboardingSelection'
+
 const InfluencersPage = () => {
   const [influencers, setInfluencers] = useState([])
+  const [fallbackInfluencer, setFallbackInfluencer] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showInfluencerLimitModal, setShowInfluencerLimitModal] = useState(false)
@@ -32,6 +35,76 @@ const InfluencersPage = () => {
     }
   }
 
+  useEffect(() => {
+    if (loading) return
+
+    if (influencers && influencers.length > 0) {
+      setFallbackInfluencer(null)
+      return
+    }
+
+    if (typeof window === 'undefined') return
+
+    try {
+      const storedSelection = localStorage.getItem(ONBOARDING_SELECTION_STORAGE_KEY)
+      if (!storedSelection) {
+        setFallbackInfluencer(null)
+        return
+      }
+
+      const parsed = JSON.parse(storedSelection)
+      if (!parsed?.modelId) {
+        setFallbackInfluencer(null)
+        return
+      }
+
+      const {
+        aiName,
+        modelName,
+        selectedNiche,
+        selectedVisualStyle,
+        selectedPlatforms,
+        selectedContentTypes,
+        selectedFrequency,
+        description,
+        personality,
+        targetAudience,
+        contentStyle
+      } = parsed
+
+      const platformsText = Array.isArray(selectedPlatforms) && selectedPlatforms.length
+        ? selectedPlatforms.join(', ')
+        : 'major social platforms'
+
+      const contentTypesText = Array.isArray(selectedContentTypes) && selectedContentTypes.length
+        ? selectedContentTypes.join(', ')
+        : 'high-impact formats'
+
+      setFallbackInfluencer({
+        id: `local-${parsed.modelId}`,
+        name: aiName || modelName || 'Marketplace Influencer',
+        niche: selectedNiche || 'lifestyle',
+        description:
+          description ||
+          `AI influencer inspired by ${modelName || 'your selected marketplace model'}.`,
+        personality:
+          personality ||
+          `Confident and engaging persona with a ${selectedVisualStyle || 'signature'} visual style.`,
+        target_audience:
+          targetAudience ||
+          `Ideal for audiences on ${platformsText}.`,
+        content_style:
+          contentStyle ||
+          `Delivers ${contentTypesText} at a ${selectedFrequency || 'steady'} cadence.`,
+        created_at: new Date().toISOString(),
+        _isLocal: true
+      })
+    } catch (error) {
+      console.error('Failed to load onboarding selection as fallback influencer:', error)
+      setFallbackInfluencer(null)
+    }
+  }, [loading, influencers])
+
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this influencer?')) {
       try {
@@ -51,6 +124,13 @@ const InfluencersPage = () => {
   const handleCreateSuccess = () => {
     fetchInfluencers()
   }
+
+  const displayedInfluencers =
+    influencers && influencers.length > 0
+      ? influencers
+      : fallbackInfluencer
+      ? [fallbackInfluencer]
+      : []
 
   return (
     <>
@@ -80,9 +160,9 @@ const InfluencersPage = () => {
           </div>
 
           {/* Influencers Grid */}
-          {influencers.length > 0 ? (
+        {displayedInfluencers.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {influencers.map((influencer) => (
+              {displayedInfluencers.map((influencer) => (
                 <div key={influencer.id} className="bg-gradient-to-br from-gray-950/80 to-gray-900/50 border border-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:border-purple-500/30 transition-all duration-300 group">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
@@ -98,12 +178,14 @@ const InfluencersPage = () => {
                       <button className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition-all duration-200">
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button 
-                        onClick={() => handleDelete(influencer.id)}
-                        className="text-gray-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-900/20 transition-all duration-200"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {!influencer._isLocal && (
+                        <button 
+                          onClick={() => handleDelete(influencer.id)}
+                          className="text-gray-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-900/20 transition-all duration-200"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
                   
@@ -124,7 +206,9 @@ const InfluencersPage = () => {
                   
                   <div className="mt-4 pt-4 border-t border-gray-800">
                     <span className="text-xs text-gray-500">
-                      Created {new Date(influencer.created_at).toLocaleDateString()}
+                      {influencer._isLocal
+                        ? 'Synced from your onboarding selection'
+                        : `Created ${new Date(influencer.created_at).toLocaleDateString()}`}
                     </span>
                   </div>
                 </div>

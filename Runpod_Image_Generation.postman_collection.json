@@ -1,0 +1,287 @@
+{
+  "info": {
+    "name": "Runpod Image Generation API",
+    "description": "API collection for testing Runpod image generation with Eromify backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "AUTH_TOKEN",
+      "value": "YOUR_AUTH_TOKEN_HERE",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/health",
+          "host": ["{{BASE_URL}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the backend server is running"
+      }
+    },
+    {
+      "name": "Generate Image - Simple Portrait 1:1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"beautiful woman, professional photo, high quality, 8k\",\n  \"aspectRatio\": \"1:1\",\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate a simple 1:1 portrait image"
+      }
+    },
+    {
+      "name": "Generate Image - Landscape 16:9",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"stunning woman at the beach, sunset, golden hour, professional photography, cinematic\",\n  \"aspectRatio\": \"16:9\",\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate a 16:9 landscape image"
+      }
+    },
+    {
+      "name": "Generate Image - Portrait 9:16",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"attractive influencer, instagram style, fashion photo, professional lighting\",\n  \"aspectRatio\": \"9:16\",\n  \"numInferenceSteps\": 30,\n  \"guidanceScale\": 8.0\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate a 9:16 portrait image (Instagram/TikTok style)"
+      }
+    },
+    {
+      "name": "Generate Image - With LoRA Model",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"professional headshot, studio lighting, high quality\",\n  \"aspectRatio\": \"2:3\",\n  \"loraModel\": \"influencer_model_v1\",\n  \"numInferenceSteps\": 30,\n  \"guidanceScale\": 8.0\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate image using a specific LoRA model"
+      }
+    },
+    {
+      "name": "Generate Image - With Seed (Reproducible)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"beautiful woman, professional photo, high quality\",\n  \"aspectRatio\": \"1:1\",\n  \"seed\": 12345,\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate reproducible image using a seed value"
+      }
+    },
+    {
+      "name": "Generate Image - With Negative Prompt",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"beautiful woman, professional photo, high quality, detailed\",\n  \"aspectRatio\": \"1:1\",\n  \"negativePrompt\": \"ugly, blurry, low quality, distorted, deformed, bad anatomy\",\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate image with negative prompt to avoid unwanted elements"
+      }
+    },
+    {
+      "name": "Generate Image - High Quality (40 steps)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"stunning woman, professional photography, highly detailed, 8k, masterpiece\",\n  \"aspectRatio\": \"1:1\",\n  \"numInferenceSteps\": 40,\n  \"guidanceScale\": 9.0\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate high quality image with more inference steps"
+      }
+    },
+    {
+      "name": "Generate Image - Fast (20 steps)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"beautiful woman, professional photo\",\n  \"aspectRatio\": \"1:1\",\n  \"numInferenceSteps\": 20,\n  \"guidanceScale\": 7.0\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate image quickly with fewer inference steps"
+      }
+    },
+    {
+      "name": "Generate Image - Square Portrait 4:5",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"fashion influencer, professional photoshoot, trendy outfit, modern aesthetic\",\n  \"aspectRatio\": \"4:5\",\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate 4:5 square portrait (Instagram Post style)"
+      }
+    },
+    {
+      "name": "Generate Image - With Influencer Context",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"instagram style fashion photo\",\n  \"aspectRatio\": \"2:3\",\n  \"influencerId\": \"YOUR_INFLUENCER_UUID_HERE\",\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate image with influencer context (auto LoRA selection)"
+      }
+    },
+    {
+      "name": "Generate Image - Ultra Wide 3:2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"lifestyle influencer, outdoor setting, natural lighting, professional photography\",\n  \"aspectRatio\": \"3:2\",\n  \"numInferenceSteps\": 28,\n  \"guidanceScale\": 7.5\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/content/generate-image-runpod",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "content", "generate-image-runpod"]
+        },
+        "description": "Generate 3:2 ultra wide image"
+      }
+    }
+  ]
+}
+

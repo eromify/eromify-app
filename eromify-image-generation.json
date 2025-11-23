@@ -1,0 +1,414 @@
+{
+  "2": {
+    "inputs": {
+      "model": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "ModelPassThrough",
+    "_meta": {
+      "title": "ModelPass"
+    }
+  },
+  "4": {
+    "inputs": {
+      "+ve": [
+        "46",
+        0
+      ],
+      "-ve": [
+        "47",
+        0
+      ]
+    },
+    "class_type": "Prompts Everywhere",
+    "_meta": {
+      "title": "Prompts Everywhere"
+    }
+  },
+  "7": {
+    "inputs": {
+      "noise_seed": 263359644863608
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "8": {
+    "inputs": {
+      "model": [
+        "58",
+        0
+      ],
+      "conditioning": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "9": {
+    "inputs": {
+      "guidance": 7,
+      "conditioning": [
+        "46",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "FluxGuidance"
+    }
+  },
+  "10": {
+    "inputs": {
+      "pixels": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "11": {
+    "inputs": {
+      "ckpt_name": "bigLust_v16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "12": {
+    "inputs": {
+      "segs": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "SegsToCombinedMask",
+    "_meta": {
+      "title": "SEGS to MASK (combined)"
+    }
+  },
+  "15": {
+    "inputs": {
+      "samples": [
+        "30",
+        1
+      ],
+      "vae": [
+        "11",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "16": {
+    "inputs": {
+      "scheduler": "karras",
+      "steps": 30,
+      "denoise": 0.35000000000000003,
+      "model": [
+        "58",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "17": {
+    "inputs": {
+      "images": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "18": {
+    "inputs": {
+      "sampler_name": "euler_ancestral"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "19": {
+    "inputs": {
+      "detail_amount": 0.26,
+      "start": 0.2,
+      "end": 0.6,
+      "bias": 0.5,
+      "exponent": 1,
+      "start_offset": 0,
+      "end_offset": 0,
+      "fade": 0,
+      "smooth": true,
+      "cfg_scale_override": 3,
+      "sampler": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "DetailDaemonSamplerNode",
+    "_meta": {
+      "title": "Detail Daemon Sampler"
+    }
+  },
+  "24": {
+    "inputs": {
+      "anything": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "25": {
+    "inputs": {
+      "seed": 663692353718515
+    },
+    "class_type": "Seed Everywhere",
+    "_meta": {
+      "title": "Seed Everywhere"
+    }
+  },
+  "30": {
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "8",
+        0
+      ],
+      "sampler": [
+        "19",
+        0
+      ],
+      "sigmas": [
+        "16",
+        0
+      ],
+      "latent_image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "31": {
+    "inputs": {
+      "samples": [
+        "33",
+        0
+      ],
+      "mask": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "32": {
+    "inputs": {
+      "upscale_method": "bicubic",
+      "scale_by": 1.3,
+      "samples": [
+        "42",
+        0
+      ]
+    },
+    "class_type": "LatentUpscaleBy",
+    "_meta": {
+      "title": "Upscale Latent By"
+    }
+  },
+  "33": {
+    "inputs": {
+      "seed": 1066509953055257,
+      "steps": 40,
+      "cfg": 6.1000000000000005,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "58",
+        0
+      ],
+      "latent_image": [
+        "32",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "34": {
+    "inputs": {
+      "images": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "35": {
+    "inputs": {
+      "samples": [
+        "33",
+        0
+      ],
+      "vae": [
+        "11",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "36": {
+    "inputs": {
+      "model_name": "segm/person_yolov8m-seg.pt"
+    },
+    "class_type": "UltralyticsDetectorProvider",
+    "_meta": {
+      "title": "UltralyticsDetectorProvider"
+    }
+  },
+  "37": {
+    "inputs": {
+      "threshold": 0,
+      "dilation": 10,
+      "crop_factor": 3,
+      "drop_size": 10,
+      "labels": "all",
+      "segm_detector": [
+        "36",
+        1
+      ],
+      "image": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "SegmDetectorSEGS",
+    "_meta": {
+      "title": "SEGM Detector (SEGS)"
+    }
+  },
+  "39": {
+    "inputs": {
+      "model_name": "OmniSR_X2_DIV2K.safetensors"
+    },
+    "class_type": "Upscale Model Loader",
+    "_meta": {
+      "title": "Upscale Model Loader"
+    }
+  },
+  "42": {
+    "inputs": {
+      "width": [
+        "43",
+        0
+      ],
+      "height": [
+        "43",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "43": {
+    "inputs": {
+      "resolution": "portrait - 896x1152 (3:4)"
+    },
+    "class_type": "SDXL Resolutions (JPS)",
+    "_meta": {
+      "title": "SDXL Resolutions (JPS)"
+    }
+  },
+  "46": {
+    "inputs": {
+      "text": "A high resolution DSLR photo, Adriana takes a selfie of her naked self",
+      "clip": [
+        "58",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Positive Prompt"
+    }
+  },
+  "47": {
+    "inputs": {
+      "text": "text, watermark",
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negative Prompt"
+    }
+  },
+  "58": {
+    "inputs": {
+      "lora_name": "adriana.safetensors",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "model": [
+        "2",
+        0
+      ],
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  }
+}

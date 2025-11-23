@@ -1,0 +1,289 @@
+
+> eromify-backend@1.0.0 start
+> node server.js
+
+🔧 CORS Configuration: {
+  FRONTEND_URL: 'http://localhost:5174',
+  allowedOrigins: [
+    'http://localhost:5174',
+    'http://localhost:5183',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5181',
+    'https://eromify.com',
+    'https://www.eromify.com',
+    'https://app.eromify.com'
+  ]
+}
+🚀 Server running on port 3001
+📊 Health check: http://localhost:3001/health
+🌍 Environment: development
+🔧 CORS enabled for: http://localhost:5174, http://localhost:5183, http://localhost:5173, http://localhost:5174, http://localhost:5181, https://eromify.com, https://www.eromify.com, https://app.eromify.com
+127.0.0.1 - - [23/Nov/2025:09:42:39 +0000] "GET /api/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+127.0.0.1 - - [23/Nov/2025:09:42:39 +0000] "GET /api/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:42:40 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:42:40 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎬 Video Generation Request: {
+  prompt: 'bria naked in her bedroom...',
+  aspectRatio: '9:16',
+  duration: 5,
+  influencerId: 'cb01522f-1edc-45c9-9f3a-8e9d3fe990fa'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 10
+✅ User has unlimited credits
+🔍 Mapped "Bria Sanchez" → marketplace ID 24
+🎬 Generating video with RunPod ComfyUI...
+📦 Influencer ID: 24
+🎭 LoRA Name: bria
+🎭 High Noise LoRA: bria high 100.safetensors
+🎭 Low Noise LoRA: bria low 100.safetensors
+📐 Aspect Ratio: 9:16
+⏱️  Duration: 5 seconds (120 frames)
+💬 Prompt: bria naked in her bedroom
+📏 Dimensions: 480x832
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: 'eba72a3e-1708-49fa-a340-b982da6f8f19',
+  number: 17,
+  node_errors: {}
+}
+⏳ Waiting for completion... (attempt 1/180, elapsed: 0 min 0 sec)
+⏳ Waiting for completion... (attempt 2/180, elapsed: 0 min 5 sec)
+⏳ Waiting for completion... (attempt 3/180, elapsed: 0 min 10 sec)
+⏳ Waiting for completion... (attempt 4/180, elapsed: 0 min 15 sec)
+⏳ Waiting for completion... (attempt 5/180, elapsed: 0 min 20 sec)
+⏳ Waiting for completion... (attempt 6/180, elapsed: 0 min 25 sec)
+⏳ Waiting for completion... (attempt 7/180, elapsed: 1 min 30 sec)
+⏳ Waiting for completion... (attempt 8/180, elapsed: 1 min 35 sec)
+⏳ Waiting for completion... (attempt 9/180, elapsed: 1 min 40 sec)
+⏳ Waiting for completion... (attempt 10/180, elapsed: 1 min 45 sec)
+⏳ Waiting for completion... (attempt 11/180, elapsed: 1 min 50 sec)
+⏳ Waiting for completion... (attempt 12/180, elapsed: 1 min 55 sec)
+⏳ Waiting for completion... (attempt 13/180, elapsed: 1 min 0 sec)
+⏳ Waiting for completion... (attempt 14/180, elapsed: 1 min 5 sec)
+⏳ Waiting for completion... (attempt 15/180, elapsed: 1 min 10 sec)
+⏳ Waiting for completion... (attempt 16/180, elapsed: 1 min 15 sec)
+⏳ Waiting for completion... (attempt 17/180, elapsed: 1 min 20 sec)
+⏳ Waiting for completion... (attempt 18/180, elapsed: 1 min 25 sec)
+⏳ Waiting for completion... (attempt 19/180, elapsed: 2 min 30 sec)
+⏳ Waiting for completion... (attempt 20/180, elapsed: 2 min 35 sec)
+⏳ Waiting for completion... (attempt 21/180, elapsed: 2 min 40 sec)
+⏳ Waiting for completion... (attempt 22/180, elapsed: 2 min 45 sec)
+⏳ Waiting for completion... (attempt 23/180, elapsed: 2 min 50 sec)
+⏳ Waiting for completion... (attempt 24/180, elapsed: 2 min 55 sec)
+⏳ Waiting for completion... (attempt 25/180, elapsed: 2 min 0 sec)
+⏳ Waiting for completion... (attempt 26/180, elapsed: 2 min 5 sec)
+⏳ Waiting for completion... (attempt 27/180, elapsed: 2 min 10 sec)
+⏳ Waiting for completion... (attempt 28/180, elapsed: 2 min 15 sec)
+⏳ Waiting for completion... (attempt 29/180, elapsed: 2 min 20 sec)
+⏳ Waiting for completion... (attempt 30/180, elapsed: 2 min 25 sec)
+⏳ Waiting for completion... (attempt 31/180, elapsed: 3 min 30 sec)
+⏳ Waiting for completion... (attempt 32/180, elapsed: 3 min 35 sec)
+⏳ Waiting for completion... (attempt 33/180, elapsed: 3 min 40 sec)
+⏳ Waiting for completion... (attempt 34/180, elapsed: 3 min 45 sec)
+⏳ Waiting for completion... (attempt 35/180, elapsed: 3 min 50 sec)
+⏳ Waiting for completion... (attempt 36/180, elapsed: 3 min 55 sec)
+⏳ Waiting for completion... (attempt 37/180, elapsed: 3 min 0 sec)
+⏳ Waiting for completion... (attempt 38/180, elapsed: 3 min 5 sec)
+⏳ Waiting for completion... (attempt 39/180, elapsed: 3 min 10 sec)
+⏳ Waiting for completion... (attempt 40/180, elapsed: 3 min 15 sec)
+⏳ Waiting for completion... (attempt 41/180, elapsed: 3 min 20 sec)
+⏳ Waiting for completion... (attempt 42/180, elapsed: 3 min 25 sec)
+⏳ Waiting for completion... (attempt 43/180, elapsed: 4 min 30 sec)
+⏳ Waiting for completion... (attempt 44/180, elapsed: 4 min 35 sec)
+⏳ Waiting for completion... (attempt 45/180, elapsed: 4 min 40 sec)
+⏳ Waiting for completion... (attempt 46/180, elapsed: 4 min 45 sec)
+⏳ Waiting for completion... (attempt 47/180, elapsed: 4 min 50 sec)
+⏳ Waiting for completion... (attempt 48/180, elapsed: 4 min 55 sec)
+⏳ Waiting for completion... (attempt 49/180, elapsed: 4 min 0 sec)
+⏳ Waiting for completion... (attempt 50/180, elapsed: 4 min 5 sec)
+⏳ Waiting for completion... (attempt 51/180, elapsed: 4 min 10 sec)
+⏳ Waiting for completion... (attempt 52/180, elapsed: 4 min 15 sec)
+⏳ Waiting for completion... (attempt 53/180, elapsed: 4 min 20 sec)
+⏳ Waiting for completion... (attempt 54/180, elapsed: 4 min 25 sec)
+⏳ Waiting for completion... (attempt 55/180, elapsed: 5 min 30 sec)
+⏳ Waiting for completion... (attempt 56/180, elapsed: 5 min 35 sec)
+⏳ Waiting for completion... (attempt 57/180, elapsed: 5 min 40 sec)
+⏳ Waiting for completion... (attempt 58/180, elapsed: 5 min 45 sec)
+⏳ Waiting for completion... (attempt 59/180, elapsed: 5 min 50 sec)
+⏳ Waiting for completion... (attempt 60/180, elapsed: 5 min 55 sec)
+⏳ Waiting for completion... (attempt 61/180, elapsed: 5 min 0 sec)
+⏳ Waiting for completion... (attempt 62/180, elapsed: 5 min 5 sec)
+⏳ Waiting for completion... (attempt 63/180, elapsed: 5 min 10 sec)
+⏳ Waiting for completion... (attempt 64/180, elapsed: 5 min 15 sec)
+⏳ Waiting for completion... (attempt 65/180, elapsed: 5 min 20 sec)
+⏳ Waiting for completion... (attempt 66/180, elapsed: 5 min 25 sec)
+⏳ Waiting for completion... (attempt 67/180, elapsed: 6 min 30 sec)
+⏳ Waiting for completion... (attempt 68/180, elapsed: 6 min 35 sec)
+⏳ Waiting for completion... (attempt 69/180, elapsed: 6 min 40 sec)
+⏳ Waiting for completion... (attempt 70/180, elapsed: 6 min 45 sec)
+⏳ Waiting for completion... (attempt 71/180, elapsed: 6 min 50 sec)
+✅ Video generation completed!
+🎬 Video URL from RunPod: https://2k9rz5l136lrge-8188.proxy.runpod.net/view?filename=AnimateDiff_00017.mp4&subfolder=&type=output
+📥 Downloading video from: https://2k9rz5l136lrge-8188.proxy.runpod.net/view?filename=AnimateDiff_00017.mp4&subfolder=&type=output
+📦 Downloaded 885335 bytes
+💾 Video saved to: /Users/vincentcampbell/Desktop/Eromify 2/frontend/public/videos/video_24_1763891352561.mp4
+🌐 Public URL: /videos/video_24_1763891352561.mp4
+Failed to save generated content: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
+}
+127.0.0.1 - - [23/Nov/2025:09:49:12 +0000] "POST /api/content/generate-video HTTP/1.1" 200 495 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎬 Video Generation Request: {
+  prompt: 'riya naked in her bedroom...',
+  aspectRatio: '9:16',
+  duration: 5,
+  influencerId: 'd1282b3c-e2cd-4a4d-bfb6-fb87f34cbc67'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 10
+✅ User has unlimited credits
+🔍 Mapped "Riya Yasin" → marketplace ID 22
+🎬 Generating video with RunPod ComfyUI...
+📦 Influencer ID: 22
+🎭 LoRA Name: riya
+🎭 High Noise LoRA: riya high 100.safetensors
+🎭 Low Noise LoRA: riya low 100.safetensors
+📐 Aspect Ratio: 9:16
+⏱️  Duration: 5 seconds (120 frames)
+💬 Prompt: riya naked in her bedroom
+📏 Dimensions: 480x832
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: 'fb718668-48e6-4351-85fd-5eeb00cff26a',
+  number: 18,
+  node_errors: {}
+}
+⏳ Waiting for completion... (attempt 1/180, elapsed: 0 min 0 sec)
+⏳ Waiting for completion... (attempt 2/180, elapsed: 0 min 5 sec)
+⏳ Waiting for completion... (attempt 3/180, elapsed: 0 min 10 sec)
+⏳ Waiting for completion... (attempt 4/180, elapsed: 0 min 15 sec)
+⏳ Waiting for completion... (attempt 5/180, elapsed: 0 min 20 sec)
+⏳ Waiting for completion... (attempt 6/180, elapsed: 0 min 25 sec)
+⏳ Waiting for completion... (attempt 7/180, elapsed: 1 min 30 sec)
+⏳ Waiting for completion... (attempt 8/180, elapsed: 1 min 35 sec)
+⏳ Waiting for completion... (attempt 9/180, elapsed: 1 min 40 sec)
+⏳ Waiting for completion... (attempt 10/180, elapsed: 1 min 45 sec)
+⏳ Waiting for completion... (attempt 11/180, elapsed: 1 min 50 sec)
+⏳ Waiting for completion... (attempt 12/180, elapsed: 1 min 55 sec)
+⏳ Waiting for completion... (attempt 13/180, elapsed: 1 min 0 sec)
+⏳ Waiting for completion... (attempt 14/180, elapsed: 1 min 5 sec)
+⏳ Waiting for completion... (attempt 15/180, elapsed: 1 min 10 sec)
+⏳ Waiting for completion... (attempt 16/180, elapsed: 1 min 15 sec)
+⏳ Waiting for completion... (attempt 17/180, elapsed: 1 min 20 sec)
+⏳ Waiting for completion... (attempt 18/180, elapsed: 1 min 25 sec)
+⏳ Waiting for completion... (attempt 19/180, elapsed: 2 min 30 sec)
+⏳ Waiting for completion... (attempt 20/180, elapsed: 2 min 35 sec)
+⏳ Waiting for completion... (attempt 21/180, elapsed: 2 min 40 sec)
+⏳ Waiting for completion... (attempt 22/180, elapsed: 2 min 45 sec)
+⏳ Waiting for completion... (attempt 23/180, elapsed: 2 min 50 sec)
+⏳ Waiting for completion... (attempt 24/180, elapsed: 2 min 55 sec)
+⏳ Waiting for completion... (attempt 25/180, elapsed: 2 min 0 sec)
+⏳ Waiting for completion... (attempt 26/180, elapsed: 2 min 5 sec)
+⏳ Waiting for completion... (attempt 27/180, elapsed: 2 min 10 sec)
+⏳ Waiting for completion... (attempt 28/180, elapsed: 2 min 15 sec)
+⏳ Waiting for completion... (attempt 29/180, elapsed: 2 min 20 sec)
+⏳ Waiting for completion... (attempt 30/180, elapsed: 2 min 25 sec)
+⏳ Waiting for completion... (attempt 31/180, elapsed: 3 min 30 sec)
+⏳ Waiting for completion... (attempt 32/180, elapsed: 3 min 35 sec)
+⏳ Waiting for completion... (attempt 33/180, elapsed: 3 min 40 sec)
+⏳ Waiting for completion... (attempt 34/180, elapsed: 3 min 45 sec)
+⏳ Waiting for completion... (attempt 35/180, elapsed: 3 min 50 sec)
+⏳ Waiting for completion... (attempt 36/180, elapsed: 3 min 55 sec)
+⏳ Waiting for completion... (attempt 37/180, elapsed: 3 min 0 sec)
+⏳ Waiting for completion... (attempt 38/180, elapsed: 3 min 5 sec)
+⏳ Waiting for completion... (attempt 39/180, elapsed: 3 min 10 sec)
+⏳ Waiting for completion... (attempt 40/180, elapsed: 3 min 15 sec)
+⏳ Waiting for completion... (attempt 41/180, elapsed: 3 min 20 sec)
+⏳ Waiting for completion... (attempt 42/180, elapsed: 3 min 25 sec)
+⏳ Waiting for completion... (attempt 43/180, elapsed: 4 min 30 sec)
+⏳ Waiting for completion... (attempt 44/180, elapsed: 4 min 35 sec)
+⏳ Waiting for completion... (attempt 45/180, elapsed: 4 min 40 sec)
+⏳ Waiting for completion... (attempt 46/180, elapsed: 4 min 45 sec)
+⏳ Waiting for completion... (attempt 47/180, elapsed: 4 min 50 sec)
+⏳ Waiting for completion... (attempt 48/180, elapsed: 4 min 55 sec)
+⏳ Waiting for completion... (attempt 49/180, elapsed: 4 min 0 sec)
+⏳ Waiting for completion... (attempt 50/180, elapsed: 4 min 5 sec)
+⏳ Waiting for completion... (attempt 51/180, elapsed: 4 min 10 sec)
+⏳ Waiting for completion... (attempt 52/180, elapsed: 4 min 15 sec)
+⏳ Waiting for completion... (attempt 53/180, elapsed: 4 min 20 sec)
+⏳ Waiting for completion... (attempt 54/180, elapsed: 4 min 25 sec)
+⏳ Waiting for completion... (attempt 55/180, elapsed: 5 min 30 sec)
+⏳ Waiting for completion... (attempt 56/180, elapsed: 5 min 35 sec)
+⏳ Waiting for completion... (attempt 57/180, elapsed: 5 min 40 sec)
+⏳ Waiting for completion... (attempt 58/180, elapsed: 5 min 45 sec)
+⏳ Waiting for completion... (attempt 59/180, elapsed: 5 min 50 sec)
+⏳ Waiting for completion... (attempt 60/180, elapsed: 5 min 55 sec)
+⏳ Waiting for completion... (attempt 61/180, elapsed: 5 min 0 sec)
+⏳ Waiting for completion... (attempt 62/180, elapsed: 5 min 5 sec)
+⏳ Waiting for completion... (attempt 63/180, elapsed: 5 min 10 sec)
+⏳ Waiting for completion... (attempt 64/180, elapsed: 5 min 15 sec)
+⏳ Waiting for completion... (attempt 65/180, elapsed: 5 min 20 sec)
+⏳ Waiting for completion... (attempt 66/180, elapsed: 5 min 25 sec)
+⏳ Waiting for completion... (attempt 67/180, elapsed: 6 min 30 sec)
+⏳ Waiting for completion... (attempt 68/180, elapsed: 6 min 35 sec)
+⏳ Waiting for completion... (attempt 69/180, elapsed: 6 min 40 sec)
+⏳ Waiting for completion... (attempt 70/180, elapsed: 6 min 45 sec)
+⏳ Waiting for completion... (attempt 71/180, elapsed: 6 min 50 sec)
+⏳ Waiting for completion... (attempt 72/180, elapsed: 6 min 55 sec)
+✅ Video generation completed!
+🎬 Video URL from RunPod: https://2k9rz5l136lrge-8188.proxy.runpod.net/view?filename=AnimateDiff_00018.mp4&subfolder=&type=output
+📥 Downloading video from: https://2k9rz5l136lrge-8188.proxy.runpod.net/view?filename=AnimateDiff_00018.mp4&subfolder=&type=output
+📦 Downloaded 707129 bytes
+💾 Video saved to: /Users/vincentcampbell/Desktop/Eromify 2/frontend/public/videos/video_22_1763891763280.mp4
+🌐 Public URL: /videos/video_22_1763891763280.mp4
+Failed to save generated content: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
+}
+127.0.0.1 - - [23/Nov/2025:09:56:03 +0000] "POST /api/content/generate-video HTTP/1.1" 200 493 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:56:46 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:56:47 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:57:51 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:57:51 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:58:23 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:58:23 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:09:58:25 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"

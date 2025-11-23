@@ -19,15 +19,17 @@ export const contentService = {
     return response.data
   },
 
-  // Generate AI image
+  // Generate AI image with ComfyUI (uses LoRA models)
   generateImage: async (imageData) => {
-    const response = await api.post('/content/generate-image', imageData)
+    const response = await api.post('/content/generate-image-comfyui', imageData)
     return response.data
   },
 
   // Generate AI video
   generateVideo: async (videoData) => {
-    const response = await api.post('/content/generate-video', videoData)
+    const response = await api.post('/content/generate-video', videoData, {
+      timeout: 900000 // 15 minutes timeout for video generation
+    })
     return response.data
   },
 

@@ -5,6 +5,9 @@ const OpenAI = require('openai');
 const Joi = require('joi');
 const { generateImageWithFaceConsistency } = require('../services/replicateService');
 const { generateVideoFromImage, checkGenerationStatus } = require('../services/runwayService');
+const { generateImageWithRunPod } = require('../services/runpodService');
+const { generateVideoWithRunPod } = require('../services/runpodVideoService');
+const { generateImageWithComfyUI } = require('../services/comfyuiService');
 
 const supabase = getSupabaseAdmin();
 
@@ -373,17 +376,316 @@ router.post('/generate-image', authenticateToken, requireSubscription('free'), a
   }
 });
 
-// Generate AI video from image
-router.post('/generate-video', authenticateToken, requireSubscription('free'), async (req, res) => {
+// Generate AI image using RunPod ComfyUI (with LoRA models for marketplace influencers)
+router.post('/generate-image-runpod', authenticateToken, requireSubscription('free'), async (req, res) => {
   try {
-    const { imageUrl, prompt, duration = 5, influencerId } = req.body;
+    const { 
+      marketplaceModelId,  // ID from marketplaceModels.js (1-83)
+      prompt
+    } = req.body;
 
-    if (!imageUrl || !prompt) {
+    if (!prompt) {
       return res.status(400).json({
         success: false,
-        error: 'Image URL and prompt are required'
+        error: 'Prompt is required'
       });
     }
+
+    if (!marketplaceModelId) {
+      return res.status(400).json({
+        success: false,
+        error: 'marketplaceModelId is required'
+      });
+    }
+
+    console.log('🎨 RunPod ComfyUI Image Generation Request:', {
+      prompt: prompt.substring(0, 100) + '...',
+      marketplaceModelId
+    });
+
+    // Check and deduct credits (handles unlimited plans automatically)
+    const creditCheck = await checkAndDeductCredits(req.user.id, IMAGE_COST);
+    if (!creditCheck.success) {
+      return res.status(402).json({
+        success: false,
+        error: `Insufficient credits. Required: ${creditCheck.required}, Available: ${creditCheck.remaining}`,
+        credits: creditCheck.remaining
+      });
+    }
+
+    // Generate image using RunPod with ComfyUI and influencer LoRA
+    const imageUrl = await generateImageWithRunPod(prompt, marketplaceModelId);
+
+    // Store generated content in database
+    const { error: saveError } = await supabase
+      .from('generated_content')
+      .insert([
+        {
+          user_id: req.user.id,
+          influencer_id: null, // Not tied to user's influencer, but to marketplace model
+          content_type: 'image',
+          content: imageUrl,
+          metadata: {
+            marketplace_model_id: marketplaceModelId,
+            prompt,
+            credits_used: IMAGE_COST,
+            generation_service: 'runpod_comfyui'
+          },
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+    if (saveError) {
+      console.error('Failed to save generated content:', saveError);
+    }
+
+    res.json({
+      success: true,
+      message: 'Image generated successfully with RunPod ComfyUI',
+      image: {
+        url: imageUrl,
+        creditsUsed: IMAGE_COST,
+        creditsRemaining: creditCheck.remaining,
+        metadata: {
+          marketplaceModelId,
+          prompt,
+          generationService: 'runpod_comfyui',
+          generatedAt: new Date().toISOString()
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ RunPod ComfyUI image generation error:', error);
+    
+    const errorMessage = error.message || 'Failed to generate image with RunPod ComfyUI';
+    
+    res.status(500).json({
+      success: false,
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
+// Generate AI image using ComfyUI on Runpod (recommended for testing)
+router.post('/generate-image-comfyui', authenticateToken, requireSubscription('free'), async (req, res) => {
+  try {
+    const { 
+      influencerId, 
+      prompt, 
+      aspectRatio = '2:3',
+      style
+    } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({
+        success: false,
+        error: 'Prompt is required'
+      });
+    }
+
+    console.log('🎨 ComfyUI Image Generation Request:', {
+      prompt: prompt.substring(0, 100) + '...',
+      aspectRatio,
+      influencerId
+    });
+
+    // Check and deduct credits (handles unlimited plans automatically)
+    const creditCheck = await checkAndDeductCredits(req.user.id, IMAGE_COST);
+    if (!creditCheck.success) {
+      return res.status(402).json({
+        success: false,
+        error: `Insufficient credits. Required: ${creditCheck.required}, Available: ${creditCheck.remaining}`,
+        credits: creditCheck.remaining
+      });
+    }
+
+    let influencer = null;
+    let marketplaceModelId = null;
+
+    // Name-based mapping of influencers to marketplace model IDs
+    const nameToMarketplaceIdMap = {
+      'adriana': 19,
+      'audrey': 1,
+      'mackenzie': 2,
+      'bria': 24,
+      'riya': 22,
+      'valentina': 25,
+      'ava': 21,
+      'aiko': 50,
+      'yumi': 42,
+      'kimberly': 60,
+      'jessica': 67,
+      'kim': 43,
+      'lina': 26,
+      'rina': 40,
+      'alexis': 61,
+      'madison': 68,
+      'lauren': 70,
+      'clara': 72,
+      'lila': 28,
+      'haruna': 39,
+      'hailey': 66,
+      'amber': 69,
+      'brianna': 73,
+      'tara': 74,
+      'alice': 29,
+      'bailey': 30,
+      'rose': 31,
+      'camilla': 32,
+      'briar': 35,
+      'ariana': 33,
+      'kylie': 58,
+      'addison': 76,
+      'mei': 41,
+      'chloe': 52,
+      'ayaka': 51,
+      'emma': 81,
+      'naima': 82,
+      'holly': 83,
+      'paige': 64,
+      'alia': 34,
+      'sloane': 9,
+      'sakura': 37,
+      'scarlet': 38,
+      'helena': 36,
+      'gaia': 62,
+      'megan': 77,
+      'gabriella': 65,
+      'aria': 10,
+      'julia': 71,
+      'marta': 63,
+      'mia': 13,
+      'nina': 14,
+      'erika': 56,
+      'karina': 75,
+      'kaori': 17,
+      'zara': 18,
+      'mio': 53,
+      'isabella': 78,
+      'autumn': 70,
+      'reina': 44,
+      'zoey': 45,
+      'natsumi': 47,
+      'hana': 55,
+      'ami': 46,
+      'mila': 57,
+      'hikari': 58,
+      'sayaka': 49,
+      'veronica': 20,
+      'luna': 23
+    };
+
+    // Get influencer details and map to marketplace model ID
+    if (influencerId && influencerId !== 'temp-new') {
+      const { data: influencerData, error: influencerError } = await supabase
+        .from('influencers')
+        .select('*')
+        .eq('id', influencerId)
+        .eq('user_id', req.user.id)
+        .single();
+
+      if (!influencerError && influencerData) {
+        influencer = influencerData;
+        
+        // Try to get marketplace model ID from metadata first
+        marketplaceModelId = influencerData.metadata?.marketplace_model_id || influencerData.marketplace_model_id;
+        
+        // If not found, try to match by name
+        if (!marketplaceModelId && influencerData.name) {
+          const firstName = influencerData.name.toLowerCase().split(' ')[0];
+          marketplaceModelId = nameToMarketplaceIdMap[firstName];
+          console.log(`🔍 Mapped "${influencerData.name}" → marketplace ID ${marketplaceModelId} via first name "${firstName}"`);
+        }
+      }
+    }
+
+    // If no marketplace model ID found, default to a random one
+    if (!marketplaceModelId) {
+      marketplaceModelId = 19; // Default to Adriana Perez
+      console.log('⚠️ No marketplace model ID found, defaulting to 19 (Adriana)');
+    }
+
+    // Generate image using RunPod ComfyUI with aspect ratio support
+    const imageUrl = await generateImageWithRunPod(prompt, marketplaceModelId, { aspectRatio });
+
+    // Store generated content in database
+    const { error: saveError } = await supabase
+      .from('generated_content')
+      .insert([
+        {
+          user_id: req.user.id,
+          influencer_id: influencerId,
+          content_type: 'image',
+          content: imageUrl,
+          metadata: {
+            influencer: influencer ? influencer.name : null,
+            marketplace_model_id: marketplaceModelId,
+            prompt,
+            aspectRatio,
+            style,
+            credits_used: IMAGE_COST,
+            generation_service: 'runpod_comfyui'
+          },
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+    if (saveError) {
+      console.error('Failed to save generated content:', saveError);
+    }
+
+    res.json({
+      success: true,
+      message: 'Image generated successfully with ComfyUI',
+      image: {
+        url: imageUrl,
+        creditsUsed: IMAGE_COST,
+        creditsRemaining: creditCheck.remaining,
+        metadata: {
+          influencer: influencer ? influencer.name : null,
+          marketplaceModelId,
+          prompt,
+          aspectRatio,
+          style,
+          generationService: 'runpod_comfyui',
+          generatedAt: new Date().toISOString()
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ ComfyUI image generation error:', error);
+    
+    const errorMessage = error.message || 'Failed to generate image with ComfyUI';
+    
+    res.status(500).json({
+      success: false,
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
+// Generate AI video with RunPod ComfyUI
+router.post('/generate-video', authenticateToken, requireSubscription('free'), async (req, res) => {
+  try {
+    const { influencerId, prompt, aspectRatio = '16:9', duration = 49 } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({
+        success: false,
+        error: 'Prompt is required'
+      });
+    }
+
+    console.log('🎬 Video Generation Request:', {
+      prompt: prompt.substring(0, 100) + '...',
+      aspectRatio,
+      duration,
+      influencerId
+    });
 
     // Check and deduct credits
     const creditCheck = await checkAndDeductCredits(req.user.id, VIDEO_COST);
@@ -395,10 +697,54 @@ router.post('/generate-video', authenticateToken, requireSubscription('free'), a
       });
     }
 
-    // Generate video using Runway
-    const job = await generateVideoFromImage(imageUrl, prompt, { duration });
+    let influencer = null;
+    let marketplaceModelId = null;
 
-    // Store job in database (will update with video URL when complete)
+    // Name-based mapping (same as images)
+    const nameToMarketplaceIdMap = {
+      'adriana': 19, 'audrey': 1, 'mackenzie': 2, 'bria': 24, 'riya': 22,
+      'valentina': 25, 'ava': 21, 'aiko': 50, 'yumi': 42, 'kimberly': 60,
+      'jessica': 67, 'kim': 43, 'lina': 26, 'rina': 40, 'alexis': 61,
+      'madison': 68, 'lauren': 70, 'clara': 72, 'lila': 28, 'haruna': 39,
+      'hailey': 66, 'amber': 69, 'brianna': 73, 'tara': 74, 'alice': 29,
+      'bailey': 30, 'ariana': 33, 'kylie': 58, 'addison': 76, 'mei': 41,
+      'chloe': 52, 'ayaka': 51, 'emma': 81, 'naima': 82, 'holly': 83,
+      'paige': 64, 'alia': 34, 'sakura': 37, 'scarlet': 38, 'gaia': 62,
+      'megan': 77, 'aria': 10, 'julia': 71, 'marta': 63, 'mia': 13,
+      'nina': 14, 'erika': 56, 'karina': 75, 'kaori': 17, 'zara': 18,
+      'mio': 53, 'isabella': 78, 'autumn': 70, 'veronica': 20, 'luna': 23
+    };
+
+    // Get influencer and map to marketplace ID
+    if (influencerId && influencerId !== 'temp-new') {
+      const { data: influencerData, error: influencerError } = await supabase
+        .from('influencers')
+        .select('*')
+        .eq('id', influencerId)
+        .eq('user_id', req.user.id)
+        .single();
+
+      if (!influencerError && influencerData) {
+        influencer = influencerData;
+        marketplaceModelId = influencerData.metadata?.marketplace_model_id || influencerData.marketplace_model_id;
+        
+        if (!marketplaceModelId && influencerData.name) {
+          const firstName = influencerData.name.toLowerCase().split(' ')[0];
+          marketplaceModelId = nameToMarketplaceIdMap[firstName];
+          console.log(`🔍 Mapped "${influencerData.name}" → marketplace ID ${marketplaceModelId}`);
+        }
+      }
+    }
+
+    if (!marketplaceModelId) {
+      marketplaceModelId = 19; // Default to Adriana
+      console.log('⚠️ No marketplace model ID found, defaulting to 19 (Adriana)');
+    }
+
+    // Generate video using RunPod ComfyUI
+    const videoUrl = await generateVideoWithRunPod(prompt, marketplaceModelId, { aspectRatio, duration });
+
+    // Store generated content in database
     const { error: saveError } = await supabase
       .from('generated_content')
       .insert([
@@ -406,35 +752,50 @@ router.post('/generate-video', authenticateToken, requireSubscription('free'), a
           user_id: req.user.id,
           influencer_id: influencerId || null,
           content_type: 'video',
-          content: null, // Will be updated when video is ready
+          content: videoUrl,
           metadata: {
-            job_id: job.jobId,
-            status: job.status,
+            influencer: influencer ? influencer.name : null,
+            marketplace_model_id: marketplaceModelId,
             prompt,
+            aspectRatio,
             duration,
             credits_used: VIDEO_COST,
-            image_url: imageUrl
+            generation_service: 'runpod_comfyui'
           },
           created_at: new Date().toISOString()
         }
       ]);
 
     if (saveError) {
-      console.error('Failed to save video job:', saveError);
+      console.error('Failed to save generated content:', saveError);
     }
 
     res.json({
       success: true,
-      message: 'Video generation started',
-      jobId: job.jobId,
-      status: job.status,
+      message: 'Video generated successfully',
+      jobId: 'completed', // Fake jobId since it's already done
+      status: 'completed',
+      videoUrl: videoUrl, // Include video URL immediately
       creditsUsed: VIDEO_COST,
       creditsRemaining: creditCheck.remaining,
-      checkStatusUrl: `/content/video-status/${job.jobId}`
+      video: {
+        url: videoUrl,
+        creditsUsed: VIDEO_COST,
+        creditsRemaining: creditCheck.remaining,
+        metadata: {
+          influencer: influencer ? influencer.name : null,
+          marketplaceModelId,
+          prompt,
+          aspectRatio,
+          duration,
+          generationService: 'runpod_comfyui',
+          generatedAt: new Date().toISOString()
+        }
+      }
     });
 
   } catch (error) {
-    console.error('Video generation error:', error);
+    console.error('❌ Video generation error:', error);
     res.status(500).json({
       success: false,
       error: error.message || 'Failed to generate video'
@@ -446,31 +807,14 @@ router.post('/generate-video', authenticateToken, requireSubscription('free'), a
 router.get('/video-status/:jobId', authenticateToken, async (req, res) => {
   try {
     const { jobId } = req.params;
-    const status = await checkGenerationStatus(jobId);
-
-    // If video is complete, update database with video URL
-    if (status.status === 'completed' && status.videoUrl) {
-      const { error: updateError } = await supabase
-        .from('generated_content')
-        .update({
-          content: status.videoUrl,
-          metadata: {
-            ...status.metadata,
-            status: 'completed',
-            completed_at: status.completedAt
-          }
-        })
-        .eq('metadata->job_id', jobId)
-        .eq('user_id', req.user.id);
-
-      if (updateError) {
-        console.error('Failed to update video URL:', updateError);
-      }
-    }
-
+    
+    // For RunPod synchronous generation, video is already completed
+    // Just return completed status (frontend shouldn't be calling this anymore)
     res.json({
       success: true,
-      ...status
+      status: 'completed',
+      videoUrl: null, // Video URL was already returned in the initial response
+      message: 'Video already completed and returned'
     });
 
   } catch (error) {

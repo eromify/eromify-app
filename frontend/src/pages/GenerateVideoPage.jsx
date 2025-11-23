@@ -62,10 +62,17 @@ const GenerateVideoPage = () => {
 
       setJobId(response.jobId)
       setStatus(response.status)
-      toast.success('Video generation started!')
       
-      // Start polling for status
-      pollStatus(response.jobId)
+      // Check if video is already completed (RunPod returns it immediately)
+      if (response.status === 'completed' && response.videoUrl) {
+        setVideoUrl(response.videoUrl)
+        setGenerating(false)
+        toast.success('Video generated successfully!')
+      } else {
+        toast.success('Video generation started!')
+        // Start polling for status only if not completed
+        pollStatus(response.jobId)
+      }
 
     } catch (error) {
       console.error('Video generation error:', error)

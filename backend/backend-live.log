@@ -1,0 +1,214 @@
+
+> eromify-backend@1.0.0 start
+> node server.js
+
+🔧 CORS Configuration: {
+  FRONTEND_URL: 'http://localhost:5174',
+  allowedOrigins: [
+    'http://localhost:5174',
+    'http://localhost:5183',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5181',
+    'https://eromify.com',
+    'https://www.eromify.com',
+    'https://app.eromify.com'
+  ]
+}
+🚀 Server running on port 3001
+📊 Health check: http://localhost:3001/health
+🌍 Environment: development
+🔧 CORS enabled for: http://localhost:5174, http://localhost:5183, http://localhost:5173, http://localhost:5174, http://localhost:5181, https://eromify.com, https://www.eromify.com, https://app.eromify.com
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎬 Video Generation Request: {
+  prompt: 'bria naked in her bedroom...',
+  aspectRatio: '9:16',
+  duration: 5,
+  influencerId: 'cb01522f-1edc-45c9-9f3a-8e9d3fe990fa'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 10
+✅ User has unlimited credits
+🔍 Mapped "Bria Sanchez" → marketplace ID 24
+🎬 Generating video with RunPod ComfyUI...
+📦 Influencer ID: 24
+🎭 LoRA Name: bria
+🎭 High Noise LoRA: bria high 100.safetensors
+🎭 Low Noise LoRA: bria low 100.safetensors
+📐 Aspect Ratio: 9:16
+⏱️  Duration: 5 seconds (120 frames)
+💬 Prompt: bria naked in her bedroom
+📏 Dimensions: 480x832
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: '9d2679cc-274d-4a5e-b5d7-8e740ee6f626',
+  number: 13,
+  node_errors: {}
+}
+⏳ Waiting for completion... (attempt 1/120)
+⏳ Waiting for completion... (attempt 2/120)
+⏳ Waiting for completion... (attempt 3/120)
+⏳ Waiting for completion... (attempt 4/120)
+⏳ Waiting for completion... (attempt 5/120)
+⏳ Waiting for completion... (attempt 6/120)
+⏳ Waiting for completion... (attempt 7/120)
+⏳ Waiting for completion... (attempt 8/120)
+⏳ Waiting for completion... (attempt 9/120)
+⏳ Waiting for completion... (attempt 10/120)
+⏳ Waiting for completion... (attempt 11/120)
+⏳ Waiting for completion... (attempt 12/120)
+⏳ Waiting for completion... (attempt 13/120)
+⏳ Waiting for completion... (attempt 14/120)
+⏳ Waiting for completion... (attempt 15/120)
+⏳ Waiting for completion... (attempt 16/120)
+⏳ Waiting for completion... (attempt 17/120)
+⏳ Waiting for completion... (attempt 18/120)
+⏳ Waiting for completion... (attempt 19/120)
+⏳ Waiting for completion... (attempt 20/120)
+⏳ Waiting for completion... (attempt 21/120)
+⏳ Waiting for completion... (attempt 22/120)
+127.0.0.1 - - [23/Nov/2025:06:40:07 +0000] "POST /api/content/generate-video HTTP/1.1" - - "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎬 Video Generation Request: {
+  prompt: 'bria naked in her bedroom...',
+  aspectRatio: '9:16',
+  duration: 5,
+  influencerId: 'cb01522f-1edc-45c9-9f3a-8e9d3fe990fa'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 10
+✅ User has unlimited credits
+🔍 Mapped "Bria Sanchez" → marketplace ID 24
+🎬 Generating video with RunPod ComfyUI...
+📦 Influencer ID: 24
+🎭 LoRA Name: bria
+🎭 High Noise LoRA: bria high 100.safetensors
+🎭 Low Noise LoRA: bria low 100.safetensors
+📐 Aspect Ratio: 9:16
+⏱️  Duration: 5 seconds (120 frames)
+💬 Prompt: bria naked in her bedroom
+📏 Dimensions: 480x832
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: 'd1c6add8-4da3-4a9b-af50-d18b0ef3722e',
+  number: 14,
+  node_errors: {}
+}
+⏳ Waiting for completion... (attempt 23/120)
+⏳ Waiting for completion... (attempt 1/120)
+⏳ Waiting for completion... (attempt 24/120)
+⏳ Waiting for completion... (attempt 2/120)
+⏳ Waiting for completion... (attempt 25/120)
+⏳ Waiting for completion... (attempt 3/120)
+⏳ Waiting for completion... (attempt 26/120)
+⏳ Waiting for completion... (attempt 4/120)
+⏳ Waiting for completion... (attempt 27/120)
+⏳ Waiting for completion... (attempt 5/120)
+⏳ Waiting for completion... (attempt 28/120)
+⏳ Waiting for completion... (attempt 6/120)
+⏳ Waiting for completion... (attempt 29/120)
+⏳ Waiting for completion... (attempt 7/120)
+⏳ Waiting for completion... (attempt 30/120)
+⏳ Waiting for completion... (attempt 8/120)
+⏳ Waiting for completion... (attempt 31/120)
+⏳ Waiting for completion... (attempt 9/120)
+⏳ Waiting for completion... (attempt 32/120)
+⏳ Waiting for completion... (attempt 10/120)
+⏳ Waiting for completion... (attempt 33/120)
+⏳ Waiting for completion... (attempt 11/120)
+⏳ Waiting for completion... (attempt 34/120)
+⏳ Waiting for completion... (attempt 12/120)
+⏳ Waiting for completion... (attempt 35/120)
+⏳ Waiting for completion... (attempt 13/120)
+⏳ Waiting for completion... (attempt 36/120)
+⏳ Waiting for completion... (attempt 14/120)
+⏳ Waiting for completion... (attempt 37/120)
+⏳ Waiting for completion... (attempt 15/120)
+⏳ Waiting for completion... (attempt 38/120)
+⏳ Waiting for completion... (attempt 16/120)
+⏳ Waiting for completion... (attempt 39/120)
+⏳ Waiting for completion... (attempt 17/120)
+⏳ Waiting for completion... (attempt 40/120)
+⏳ Waiting for completion... (attempt 18/120)
+⏳ Waiting for completion... (attempt 41/120)
+⏳ Waiting for completion... (attempt 19/120)
+⏳ Waiting for completion... (attempt 42/120)
+⏳ Waiting for completion... (attempt 20/120)
+⏳ Waiting for completion... (attempt 43/120)
+⏳ Waiting for completion... (attempt 21/120)
+⏳ Waiting for completion... (attempt 44/120)
+⏳ Waiting for completion... (attempt 22/120)
+⏳ Waiting for completion... (attempt 45/120)
+⏳ Waiting for completion... (attempt 23/120)
+127.0.0.1 - - [23/Nov/2025:06:42:07 +0000] "POST /api/content/generate-video HTTP/1.1" - - "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+⏳ Waiting for completion... (attempt 46/120)
+⏳ Waiting for completion... (attempt 24/120)
+⏳ Waiting for completion... (attempt 47/120)
+⏳ Waiting for completion... (attempt 25/120)
+⏳ Waiting for completion... (attempt 48/120)
+⏳ Waiting for completion... (attempt 26/120)
+⏳ Waiting for completion... (attempt 49/120)
+⏳ Waiting for completion... (attempt 27/120)
+⏳ Waiting for completion... (attempt 50/120)
+⏳ Waiting for completion... (attempt 28/120)
+⏳ Waiting for completion... (attempt 51/120)
+⏳ Waiting for completion... (attempt 29/120)
+⏳ Waiting for completion... (attempt 52/120)
+⏳ Waiting for completion... (attempt 30/120)
+⏳ Waiting for completion... (attempt 53/120)
+⏳ Waiting for completion... (attempt 31/120)
+⏳ Waiting for completion... (attempt 54/120)
+⏳ Waiting for completion... (attempt 32/120)
+⏳ Waiting for completion... (attempt 55/120)
+⏳ Waiting for completion... (attempt 33/120)
+⏳ Waiting for completion... (attempt 56/120)
+⏳ Waiting for completion... (attempt 34/120)
+⏳ Waiting for completion... (attempt 57/120)
+⏳ Waiting for completion... (attempt 35/120)
+⏳ Waiting for completion... (attempt 58/120)
+⏳ Waiting for completion... (attempt 36/120)
+⏳ Waiting for completion... (attempt 59/120)
+⏳ Waiting for completion... (attempt 37/120)
+⏳ Waiting for completion... (attempt 60/120)
+⏳ Waiting for completion... (attempt 38/120)
+⏳ Waiting for completion... (attempt 61/120)
+⏳ Waiting for completion... (attempt 39/120)
+⏳ Waiting for completion... (attempt 62/120)
+⏳ Waiting for completion... (attempt 40/120)
+⏳ Waiting for completion... (attempt 63/120)
+⏳ Waiting for completion... (attempt 41/120)
+⏳ Waiting for completion... (attempt 64/120)
+⏳ Waiting for completion... (attempt 42/120)
+⏳ Waiting for completion... (attempt 65/120)
+⏳ Waiting for completion... (attempt 43/120)
+⏳ Waiting for completion... (attempt 66/120)
+⏳ Waiting for completion... (attempt 44/120)
+⏳ Waiting for completion... (attempt 67/120)
+⏳ Waiting for completion... (attempt 45/120)
+⏳ Waiting for completion... (attempt 68/120)
+⏳ Waiting for completion... (attempt 46/120)
+⏳ Waiting for completion... (attempt 69/120)
+⏳ Waiting for completion... (attempt 47/120)
+⏳ Waiting for completion... (attempt 70/120)
+⏳ Waiting for completion... (attempt 48/120)
+⏳ Waiting for completion... (attempt 71/120)
+⏳ Waiting for completion... (attempt 49/120)
+⏳ Waiting for completion... (attempt 72/120)
+⏳ Waiting for completion... (attempt 50/120)
+⏳ Waiting for completion... (attempt 73/120)
+⏳ Waiting for completion... (attempt 51/120)
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:06:44:29 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+⏳ Waiting for completion... (attempt 74/120)
+⏳ Waiting for completion... (attempt 52/120)
+⏳ Waiting for completion... (attempt 75/120)
+⏳ Waiting for completion... (attempt 53/120)
+⏳ Waiting for completion... (attempt 76/120)
+⏳ Waiting for completion... (attempt 54/120)
+⏳ Waiting for completion... (attempt 77/120)
+⏳ Waiting for completion... (attempt 55/120)
+⏳ Waiting for completion... (attempt 78/120)
+⏳ Waiting for completion... (attempt 56/120)

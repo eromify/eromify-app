@@ -1,0 +1,682 @@
+{
+  "1": {
+    "inputs": {
+      "anything2": [
+        "11",
+        1
+      ],
+      "anything3": [
+        "11",
+        2
+      ]
+    },
+    "class_type": "Anything Everywhere3",
+    "_meta": {
+      "title": "Anything Everywhere3"
+    }
+  },
+  "2": {
+    "inputs": {
+      "model": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "ModelPassThrough",
+    "_meta": {
+      "title": "ModelPass"
+    }
+  },
+  "3": {
+    "inputs": {
+      "anything": [
+        "58",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "4": {
+    "inputs": {
+      "+ve": [
+        "46",
+        0
+      ],
+      "-ve": [
+        "47",
+        0
+      ]
+    },
+    "class_type": "Prompts Everywhere",
+    "_meta": {
+      "title": "Prompts Everywhere"
+    }
+  },
+  "7": {
+    "inputs": {
+      "noise_seed": 1027804550816418
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "8": {
+    "inputs": {
+      "conditioning": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "9": {
+    "inputs": {
+      "guidance": 7,
+      "conditioning": [
+        "46",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "FluxGuidance"
+    }
+  },
+  "10": {
+    "inputs": {
+      "pixels": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "11": {
+    "inputs": {
+      "ckpt_name": "bigLust_v16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "12": {
+    "inputs": {
+      "segs": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "SegsToCombinedMask",
+    "_meta": {
+      "title": "SEGS to MASK (combined)"
+    }
+  },
+  "14": {
+    "inputs": {
+      "anything": [
+        "39",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "15": {
+    "inputs": {
+      "samples": [
+        "30",
+        1
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "16": {
+    "inputs": {
+      "scheduler": "karras",
+      "steps": 30,
+      "denoise": 0.35000000000000003
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "17": {
+    "inputs": {
+      "images": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "18": {
+    "inputs": {
+      "sampler_name": "euler_ancestral"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "19": {
+    "inputs": {
+      "detail_amount": 0.26,
+      "start": 0.2,
+      "end": 0.6,
+      "bias": 0.5,
+      "exponent": 1,
+      "start_offset": 0,
+      "end_offset": 0,
+      "fade": 0,
+      "smooth": true,
+      "cfg_scale_override": 3,
+      "sampler": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "DetailDaemonSamplerNode",
+    "_meta": {
+      "title": "Detail Daemon Sampler"
+    }
+  },
+  "23": {
+    "inputs": {
+      "anything": [
+        "42",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "24": {
+    "inputs": {
+      "anything": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "25": {
+    "inputs": {
+      "seed": 822709495086308
+    },
+    "class_type": "Seed Everywhere",
+    "_meta": {
+      "title": "Seed Everywhere"
+    }
+  },
+  "26": {
+    "inputs": {
+      "images": [
+        "48",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "27": {
+    "inputs": {
+      "image": [
+        "50",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "30": {
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "8",
+        0
+      ],
+      "sampler": [
+        "19",
+        0
+      ],
+      "sigmas": [
+        "16",
+        0
+      ],
+      "latent_image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "31": {
+    "inputs": {
+      "samples": [
+        "33",
+        0
+      ],
+      "mask": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "32": {
+    "inputs": {
+      "upscale_method": "bicubic",
+      "scale_by": 1.3
+    },
+    "class_type": "LatentUpscaleBy",
+    "_meta": {
+      "title": "Upscale Latent By"
+    }
+  },
+  "33": {
+    "inputs": {
+      "seed": 262004104883929,
+      "steps": 40,
+      "cfg": 6.1000000000000005,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "latent_image": [
+        "32",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "34": {
+    "inputs": {
+      "images": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "35": {
+    "inputs": {
+      "samples": [
+        "33",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "36": {
+    "inputs": {
+      "model_name": "segm/person_yolov8m-seg.pt"
+    },
+    "class_type": "UltralyticsDetectorProvider",
+    "_meta": {
+      "title": "UltralyticsDetectorProvider"
+    }
+  },
+  "37": {
+    "inputs": {
+      "threshold": 0.5,
+      "dilation": 10,
+      "crop_factor": 3,
+      "drop_size": 10,
+      "labels": "all",
+      "segm_detector": [
+        "36",
+        1
+      ],
+      "image": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "SegmDetectorSEGS",
+    "_meta": {
+      "title": "SEGM Detector (SEGS)"
+    }
+  },
+  "38": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "scale_by": 1,
+      "image": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "ImageScaleBy",
+    "_meta": {
+      "title": "Upscale Image By"
+    }
+  },
+  "39": {
+    "inputs": {
+      "model_name": "OmniSR_X2_DIV2K.safetensors"
+    },
+    "class_type": "Upscale Model Loader",
+    "_meta": {
+      "title": "Upscale Model Loader"
+    }
+  },
+  "42": {
+    "inputs": {
+      "width": [
+        "43",
+        0
+      ],
+      "height": [
+        "43",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "43": {
+    "inputs": {
+      "resolution": "portrait - 896x1152 (3:4)"
+    },
+    "class_type": "SDXL Resolutions (JPS)",
+    "_meta": {
+      "title": "SDXL Resolutions (JPS)"
+    }
+  },
+  "44": {
+    "inputs": {
+      "images": [
+        "38",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "46": {
+    "inputs": {
+      "text": "A high resolution DSLR photo, A candid portrait of a 21 year old brunette woman with ocean blue eyes and dialated pupils wearing an orange knit sweater",
+      "clip": [
+        "58",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Positive Prompt"
+    }
+  },
+  "47": {
+    "inputs": {
+      "text": "text, watermark"
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negative Prompt"
+    }
+  },
+  "48": {
+    "inputs": {
+      "upscale_by": 2,
+      "seed": 227062355388497,
+      "steps": 20,
+      "cfg": 3.5,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "karras",
+      "denoise": 0.28,
+      "mode_type": "Chess",
+      "tile_width": 1024,
+      "tile_height": 1024,
+      "mask_blur": 8,
+      "tile_padding": 32,
+      "seam_fix_mode": "None",
+      "seam_fix_denoise": 1,
+      "seam_fix_width": 64,
+      "seam_fix_mask_blur": 8,
+      "seam_fix_padding": 16,
+      "force_uniform_tiles": true,
+      "tiled_decode": false,
+      "image": [
+        "49",
+        0
+      ]
+    },
+    "class_type": "UltimateSDUpscale",
+    "_meta": {
+      "title": "Ultimate SD Upscale"
+    }
+  },
+  "49": {
+    "inputs": {
+      "width": [
+        "43",
+        0
+      ],
+      "height": [
+        "43",
+        1
+      ],
+      "interpolation": "lanczos",
+      "method": "stretch",
+      "condition": "always",
+      "multiple_of": 0,
+      "image": [
+        "38",
+        0
+      ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
+    }
+  },
+  "50": {
+    "inputs": {
+      "guide_size": 512,
+      "guide_size_for": true,
+      "max_size": 1024,
+      "seed": 524124321018698,
+      "steps": 30,
+      "cfg": 5,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 0.38,
+      "feather": 5,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "wildcard": "Perfect blue eyes, dialated pupils",
+      "cycle": 1,
+      "inpaint_model": true,
+      "noise_mask_feather": 20,
+      "tiled_encode": false,
+      "tiled_decode": false,
+      "image": [
+        "51",
+        0
+      ],
+      "segs": [
+        "55",
+        0
+      ],
+      "model": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "DetailerForEach",
+    "_meta": {
+      "title": "Detailer (SEGS)"
+    }
+  },
+  "51": {
+    "inputs": {
+      "guide_size": 512,
+      "guide_size_for": true,
+      "max_size": 1024,
+      "seed": 38217325768746,
+      "steps": 30,
+      "cfg": 4,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 0.33,
+      "feather": 5,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "bbox_threshold": 0.5,
+      "bbox_dilation": 10,
+      "bbox_crop_factor": 3,
+      "sam_detection_hint": "center-1",
+      "sam_dilation": 0,
+      "sam_threshold": 0.93,
+      "sam_bbox_expansion": 0,
+      "sam_mask_hint_threshold": 0.7,
+      "sam_mask_hint_use_negative": "False",
+      "drop_size": 10,
+      "wildcard": "Detailed face, imperfection, pores",
+      "cycle": 2,
+      "inpaint_model": true,
+      "noise_mask_feather": 20,
+      "tiled_encode": false,
+      "tiled_decode": false,
+      "image": [
+        "15",
+        0
+      ],
+      "bbox_detector": [
+        "53",
+        0
+      ],
+      "sam_model_opt": [
+        "54",
+        0
+      ],
+      "segm_detector_opt": [
+        "53",
+        1
+      ]
+    },
+    "class_type": "FaceDetailer",
+    "_meta": {
+      "title": "FaceDetailer"
+    }
+  },
+  "53": {
+    "inputs": {
+      "model_name": "segm/face_yolov8m-seg_60.pt"
+    },
+    "class_type": "UltralyticsDetectorProvider",
+    "_meta": {
+      "title": "UltralyticsDetectorProvider"
+    }
+  },
+  "54": {
+    "inputs": {
+      "model_name": "sam_vit_b_01ec64.pth",
+      "device_mode": "AUTO"
+    },
+    "class_type": "SAMLoader",
+    "_meta": {
+      "title": "SAMLoader (Impact)"
+    }
+  },
+  "55": {
+    "inputs": {
+      "threshold": 0.35000000000000003,
+      "dilation": 10,
+      "crop_factor": 3,
+      "drop_size": 10,
+      "labels": "all",
+      "bbox_detector": [
+        "56",
+        0
+      ],
+      "image": [
+        "51",
+        0
+      ]
+    },
+    "class_type": "BboxDetectorSEGS",
+    "_meta": {
+      "title": "BBOX Detector (SEGS)"
+    }
+  },
+  "56": {
+    "inputs": {
+      "model_name": "bbox/Eyes.pt"
+    },
+    "class_type": "UltralyticsDetectorProvider",
+    "_meta": {
+      "title": "UltralyticsDetectorProvider"
+    }
+  },
+  "58": {
+    "inputs": {
+      "lora_name": "adriana.safetensors",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "model": [
+        "2",
+        0
+      ],
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  }
+}

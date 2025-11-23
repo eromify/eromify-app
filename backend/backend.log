@@ -1,0 +1,151 @@
+
+> eromify-backend@1.0.0 start
+> node server.js
+
+🔧 CORS Configuration: {
+  FRONTEND_URL: 'http://localhost:5174',
+  allowedOrigins: [
+    'http://localhost:5174',
+    'http://localhost:5183',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5181',
+    'https://eromify.com',
+    'https://www.eromify.com',
+    'https://app.eromify.com'
+  ]
+}
+🚀 Server running on port 3001
+📊 Health check: http://localhost:3001/health
+🌍 Environment: development
+🔧 CORS enabled for: http://localhost:5174, http://localhost:5183, http://localhost:5173, http://localhost:5174, http://localhost:5181, https://eromify.com, https://www.eromify.com, https://app.eromify.com
+127.0.0.1 - - [23/Nov/2025:06:25:41 +0000] "POST /api/auth/login HTTP/1.1" 200 439 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍🔍🔍 ===== SUBSCRIPTION CHECK START =====
+🔍 User ID: 9f918d40-a793-4f6e-99cd-d0344d8a92fb
+🔍 User email: vintorpzo@gmail.com
+🔍 Supabase client type: SupabaseClient
+🔍 Querying public.users table...
+🔍 Query completed. Error: NO
+🔍 User data: FOUND
+📊 Subscription data found in users table: {
+  userId: '9f918d40-a793-4f6e-99cd-d0344d8a92fb',
+  subscription_status: 'active',
+  subscription_plan: 'growth',
+  subscription_billing: 'monthly',
+  credits: null,
+  influencer_trainings: null,
+  hasStripeCustomerId: true,
+  hasSubscriptionId: false
+}
+✅ User has active subscription in users table
+127.0.0.1 - - [23/Nov/2025:06:25:41 +0000] "GET /api/payments/subscription HTTP/1.1" 200 126 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍🔍🔍 ===== SUBSCRIPTION CHECK START =====
+🔍 User ID: 9f918d40-a793-4f6e-99cd-d0344d8a92fb
+🔍 User email: vintorpzo@gmail.com
+🔍 Supabase client type: SupabaseClient
+🔍 Querying public.users table...
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+🔍 Query completed. Error: NO
+🔍 User data: FOUND
+📊 Subscription data found in users table: {
+  userId: '9f918d40-a793-4f6e-99cd-d0344d8a92fb',
+  subscription_status: 'active',
+  subscription_plan: 'growth',
+  subscription_billing: 'monthly',
+  credits: null,
+  influencer_trainings: null,
+  hasStripeCustomerId: true,
+  hasSubscriptionId: false
+}
+✅ User has active subscription in users table
+127.0.0.1 - - [23/Nov/2025:06:25:42 +0000] "GET /api/payments/subscription HTTP/1.1" 200 126 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍🔍🔍 ===== SUBSCRIPTION CHECK START =====
+🔍 User ID: 9f918d40-a793-4f6e-99cd-d0344d8a92fb
+🔍 User email: vintorpzo@gmail.com
+🔍 Supabase client type: SupabaseClient
+🔍 Querying public.users table...
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:06:25:42 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+🔍 Query completed. Error: NO
+🔍 User data: FOUND
+📊 Subscription data found in users table: {
+  userId: '9f918d40-a793-4f6e-99cd-d0344d8a92fb',
+  subscription_status: 'active',
+  subscription_plan: 'growth',
+  subscription_billing: 'monthly',
+  credits: null,
+  influencer_trainings: null,
+  hasStripeCustomerId: true,
+  hasSubscriptionId: false
+}
+✅ User has active subscription in users table
+127.0.0.1 - - [23/Nov/2025:06:25:42 +0000] "GET /api/payments/subscription HTTP/1.1" 200 126 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:06:25:42 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+127.0.0.1 - - [23/Nov/2025:06:25:42 +0000] "GET /api/users/dashboard HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+127.0.0.1 - - [23/Nov/2025:06:25:42 +0000] "GET /api/users/dashboard HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:06:25:43 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🔍 Fetching influencers for user: 9f918d40-a793-4f6e-99cd-d0344d8a92fb vintorpzo@gmail.com
+✅ Influencers fetched: 2
+127.0.0.1 - - [23/Nov/2025:06:25:44 +0000] "GET /api/influencers HTTP/1.1" 200 2165 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎬 Video Generation Request: {
+  prompt: 'bria naked in her bedroom...',
+  aspectRatio: '9:16',
+  duration: 4,
+  influencerId: 'cb01522f-1edc-45c9-9f3a-8e9d3fe990fa'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 10
+✅ User has unlimited credits
+🔍 Mapped "Bria Sanchez" → marketplace ID 24
+🎬 Generating video with RunPod ComfyUI...
+📦 Influencer ID: 24
+🎭 LoRA Name: bria
+🎭 High Noise LoRA: bria high 100.safetensors
+🎭 Low Noise LoRA: bria low 100.safetensors
+📐 Aspect Ratio: 9:16
+⏱️  Duration: 4 frames
+💬 Prompt: bria naked in her bedroom
+📏 Dimensions: 480x832
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: 'f17dec55-1973-424b-b1eb-4c692672ed3b',
+  number: 10,
+  node_errors: {}
+}
+⏳ Waiting for completion... (attempt 1/120)
+✅ Video generation completed!
+🎬 Video URL from RunPod: https://2k9rz5l136lrge-8188.proxy.runpod.net/view?filename=AnimateDiff_00010.mp4&subfolder=&type=output
+📥 Downloading video from: https://2k9rz5l136lrge-8188.proxy.runpod.net/view?filename=AnimateDiff_00010.mp4&subfolder=&type=output
+📦 Downloaded 24127 bytes
+💾 Video saved to: /Users/vincentcampbell/Desktop/Eromify 2/frontend/public/videos/video_24_1763879181527.mp4
+🌐 Public URL: /videos/video_24_1763879181527.mp4
+Failed to save generated content: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
+}
+127.0.0.1 - - [23/Nov/2025:06:26:21 +0000] "POST /api/content/generate-video HTTP/1.1" 200 495 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"

@@ -1,0 +1,359 @@
+{
+  "3": {
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "4": {
+    "inputs": {
+      "VAE": [
+        "26",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "6": {
+    "inputs": {
+      "model_name": "4xLSDIR.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Upscaler"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+      "clip": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negative Prompt"
+    }
+  },
+  "10": {
+    "inputs": {
+      "model": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "ModelPassThrough",
+    "_meta": {
+      "title": "ModelPass"
+    }
+  },
+  "12": {
+    "inputs": {
+      "model": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "ModelPassThrough",
+    "_meta": {
+      "title": "ModelPass"
+    }
+  },
+  "18": {
+    "inputs": {
+      "shift": 5.000000000000001,
+      "model": [
+        "22",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "Shift"
+    }
+  },
+  "20": {
+    "inputs": {
+      "unet_name": "wan2.1_t2v_1.3B_bf16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "21": {
+    "inputs": {
+      "shift": 5.000000000000001,
+      "model": [
+        "20",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "Shift"
+    }
+  },
+  "22": {
+    "inputs": {
+      "unet_name": "wan2.1_t2v_1.3B_bf16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "24": {
+    "inputs": {
+      "eta": 0.7500000000000001,
+      "sampler_name": "multistep/res_3m",
+      "scheduler": "bong_tangent",
+      "steps": 30,
+      "steps_to_run": -1,
+      "denoise": 1,
+      "cfg": 3.0000000000000004,
+      "seed": 0,
+      "sampler_mode": "resample",
+      "bongmath": true,
+      "model": [
+        "40",
+        0
+      ],
+      "positive": [
+        "29",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "30",
+        0
+      ]
+    },
+    "class_type": "ClownsharKSampler_Beta",
+    "_meta": {
+      "title": "ClownsharKSampler"
+    }
+  },
+  "25": {
+    "inputs": {
+      "samples": [
+        "24",
+        1
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "26": {
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "27": {
+    "inputs": {
+      "frame_rate": 24,
+      "loop_count": 0,
+      "filename_prefix": "AnimateDiff",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "25",
+        0
+      ],
+      "vae": [
+        "26",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
+    }
+  },
+  "28": {
+    "inputs": {
+      "width": 832,
+      "height": 480,
+      "length": 49,
+      "batch_size": 1
+    },
+    "class_type": "EmptyHunyuanLatentVideo",
+    "_meta": {
+      "title": "Select video size/length"
+    }
+  },
+  "29": {
+    "inputs": {
+      "text": "adriana naked in her bedroom",
+      "clip": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Positive Prompt"
+    }
+  },
+  "30": {
+    "inputs": {
+      "eta": 0.7500000000000001,
+      "sampler_name": "multistep/res_2m",
+      "scheduler": "bong_tangent",
+      "steps": 30,
+      "steps_to_run": 9,
+      "denoise": 1,
+      "cfg": 4.000000000000001,
+      "seed": 90722486560108,
+      "sampler_mode": "standard",
+      "bongmath": true,
+      "model": [
+        "38",
+        0
+      ],
+      "positive": [
+        "29",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "28",
+        0
+      ],
+      "options": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "ClownsharKSampler_Beta",
+    "_meta": {
+      "title": "ClownsharKSampler"
+    }
+  },
+  "31": {
+    "inputs": {
+      "weight": 20.000000000000004,
+      "method": "model",
+      "mode": "hard",
+      "eta": 0.5,
+      "start_step": 3,
+      "end_step": 9
+    },
+    "class_type": "ClownOptions_DetailBoost_Beta",
+    "_meta": {
+      "title": "ClownOptions Detail Boost"
+    }
+  },
+  "32": {
+    "inputs": {
+      "value": 9
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "High Noise Steps"
+    }
+  },
+  "35": {
+    "inputs": {
+      "value": 24
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Steps ( MUST BE EVEN NUMBER )"
+    }
+  },
+  "38": {
+    "inputs": {
+      "sage_attention": "auto",
+      "allow_compile": false,
+      "model": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "PathchSageAttentionKJ",
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
+    }
+  },
+  "40": {
+    "inputs": {
+      "sage_attention": "auto",
+      "allow_compile": false,
+      "model": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "PathchSageAttentionKJ",
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
+    }
+  },
+  "44": {
+    "inputs": {
+      "lora_name": "adriana high 100.safetensors",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "model": [
+        "12",
+        0
+      ],
+      "clip": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "45": {
+    "inputs": {
+      "lora_name": "adriana low 100.safetensors",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "model": [
+        "10",
+        0
+      ],
+      "clip": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  }
+}

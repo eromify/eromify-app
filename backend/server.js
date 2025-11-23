@@ -125,6 +125,9 @@ const upload = multer({
 // Make uploads directory accessible
 app.use('/uploads', express.static('uploads'));
 
+// Make videos directory accessible (for generated videos)
+app.use('/videos', express.static(path.join(__dirname, '../frontend/public/videos')));
+
 // Scope upload middleware only where needed (no global multer)
 
 // Health check endpoint
@@ -164,9 +167,10 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 });
 
 // Set timeouts to prevent 502 errors on Render
-server.keepAliveTimeout = 120000; // 120 seconds
-server.headersTimeout = 120000;   // 120 seconds
-server.timeout = 120000;          // 120 seconds
+// Increased for video generation which can take up to 15 minutes
+server.keepAliveTimeout = 900000; // 15 minutes
+server.headersTimeout = 910000;   // Slightly higher
+server.timeout = 900000;          // 15 minutes
 
 module.exports = app;
 
