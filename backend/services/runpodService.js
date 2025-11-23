@@ -2,6 +2,7 @@ const axios = require('axios');
 
 // RunPod ComfyUI endpoint (from environment variable or fallback to local)
 const RUNPOD_ENDPOINT = process.env.RUNPOD_IMAGE_ENDPOINT || 'https://qwner9w79n2dyp-8188.proxy.runpod.net';
+console.log('🔧 RUNPOD_IMAGE_ENDPOINT configured as:', RUNPOD_ENDPOINT);
 
 // Map influencer IDs to their LoRA filenames
 const INFLUENCER_LORA_MAP = {
