@@ -1,9 +1,4 @@
 const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
-const writeFile = promisify(fs.writeFile);
-const mkdir = promisify(fs.mkdir);
 
 // RunPod ComfyUI endpoint for VIDEO generation (from environment variable or fallback to local)
 const RUNPOD_ENDPOINT = process.env.RUNPOD_VIDEO_ENDPOINT || 'https://2k9rz5l136lrge-8188.proxy.runpod.net';
@@ -191,38 +186,9 @@ async function generateVideoWithRunPod(prompt, influencerId, options = {}) {
               const videoUrl = `${RUNPOD_ENDPOINT}/view?filename=${video.filename}&subfolder=${video.subfolder || ''}&type=${video.type || 'output'}`;
               console.log(`🎬 Video URL from RunPod:`, videoUrl);
               
-              // Download the video and save it locally
-              console.log(`📥 Downloading video from:`, videoUrl);
-              const videoResponse = await axios.get(videoUrl, { 
-                responseType: 'arraybuffer',
-                maxContentLength: Infinity,
-                maxBodyLength: Infinity,
-                timeout: 60000 // 60 second timeout
-              });
-              
-              console.log(`📦 Downloaded ${videoResponse.data.byteLength} bytes`);
-              
-              // Create videos directory if it doesn't exist
-              const videosDir = path.join(__dirname, '../../frontend/public/videos');
-              try {
-                await mkdir(videosDir, { recursive: true });
-              } catch (err) {
-                // Directory might already exist
-              }
-              
-              // Generate unique filename
-              const timestamp = Date.now();
-              const filename = `video_${influencerId}_${timestamp}.mp4`;
-              const filePath = path.join(videosDir, filename);
-              
-              // Save video file
-              await writeFile(filePath, videoResponse.data);
-              console.log(`💾 Video saved to:`, filePath);
-              
-              // Return the public URL
-              const publicUrl = `/videos/${filename}`;
-              console.log(`🌐 Public URL:`, publicUrl);
-              return publicUrl;
+              // Return the RunPod URL directly (works in both dev and production)
+              console.log(`🌐 Returning RunPod video URL directly`);
+              return videoUrl;
             }
           }
           
