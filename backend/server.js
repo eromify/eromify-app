@@ -164,6 +164,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔧 CORS enabled for: ${allowedOrigins.join(', ')}`);
+  console.log(`✅ CODE VERSION: e37b5545 - Growth plan support added`);
 });
 
 // Set timeouts to prevent 502 errors on Render
