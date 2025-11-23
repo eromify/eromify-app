@@ -92,7 +92,16 @@ const requireSubscription = (plan) => {
       }
 
       // Check if user's plan meets requirements
-      const planLevels = { free: 0, basic: 1, growth: 2, pro: 2, enterprise: 3 };
+      // builder: 0, launch: 1, growth: 2, pro/enterprise: 3
+      const planLevels = { 
+        free: 0, 
+        builder: 0, 
+        basic: 1, 
+        launch: 1, 
+        growth: 2, 
+        pro: 3, 
+        enterprise: 3 
+      };
       const userPlanLevel = planLevels[subscription.subscription_plan] || 0;
       const requiredPlanLevel = planLevels[plan] || 0;
       

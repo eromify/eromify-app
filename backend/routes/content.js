@@ -193,8 +193,8 @@ Generate engaging, authentic content that matches this influencer's brand and re
 });
 
 // Credit costs
-const IMAGE_COST = 5;
-const VIDEO_COST = 10;
+const IMAGE_COST = 15;
+const VIDEO_COST = 25;
 
 // Helper function to check and deduct credits
 async function checkAndDeductCredits(userId, cost) {
@@ -669,7 +669,7 @@ router.post('/generate-image-comfyui', authenticateToken, requireSubscription('f
 });
 
 // Generate AI video with RunPod ComfyUI
-router.post('/generate-video', authenticateToken, requireSubscription('free'), async (req, res) => {
+router.post('/generate-video', authenticateToken, requireSubscription('launch'), async (req, res) => {
   try {
     const { influencerId, prompt, aspectRatio = '16:9', duration = 49 } = req.body;
 
