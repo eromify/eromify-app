@@ -1,0 +1,3 @@
+Using environment variables from system
+❌ SUPABASE_SERVICE_ROLE_KEY not found in environment variables
+Please set it in backend/.env file

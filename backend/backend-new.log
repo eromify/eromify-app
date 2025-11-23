@@ -330,3 +330,93 @@ Failed to save generated content: {
   message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
 }
 127.0.0.1 - - [23/Nov/2025:11:39:35 +0000] "POST /api/content/generate-image-comfyui HTTP/1.1" 200 463 "http://localhost:5173/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+127.0.0.1 - - [23/Nov/2025:14:01:35 +0000] "GET /api/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+127.0.0.1 - - [23/Nov/2025:14:01:35 +0000] "GET /api/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎨 ComfyUI Image Generation Request: {
+  prompt: 'a high resolution DSLR photo, riya takes a selfie of her self, full body shot, she wears white tank ...',
+  aspectRatio: '9:16',
+  influencerId: 'd1282b3c-e2cd-4a4d-bfb6-fb87f34cbc67'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 5
+✅ User has unlimited credits
+🔍 Mapped "Riya Yasin" → marketplace ID 22 via first name "riya"
+🎨 Generating image with RunPod ComfyUI...
+📦 Influencer ID: 22
+🎭 LoRA: riya.safetensors
+📐 Aspect Ratio: 9:16
+💬 Prompt: a high resolution DSLR photo, riya takes a selfie of her self, full body shot, she wears white tank ...
+📏 Dimensions: 768x1344
+📐 Resolution: portrait - 768x1344 (9:16)
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: '5210523a-1d82-4d27-829f-63a9e38696e8',
+  number: 54,
+  node_errors: {
+    '17': {
+      errors: [Array],
+      dependent_outputs: [Array],
+      class_type: 'PreviewImage'
+    }
+  }
+}
+⏳ Waiting for completion... (attempt 1/60)
+⏳ Waiting for completion... (attempt 2/60)
+⏳ Waiting for completion... (attempt 3/60)
+⏳ Waiting for completion... (attempt 4/60)
+⏳ Waiting for completion... (attempt 5/60)
+⏳ Waiting for completion... (attempt 6/60)
+✅ Image generation completed!
+🖼️ Image URL: https://qwner9w79n2dyp-8188.proxy.runpod.net/view?filename=ComfyUI_temp_rsjby_00039_.png&subfolder=&type=temp
+Failed to save generated content: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
+}
+127.0.0.1 - - [23/Nov/2025:14:08:00 +0000] "POST /api/content/generate-image-comfyui HTTP/1.1" 200 565 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+Auth middleware - token received: eyJhbGciOiJIUzI1NiIs...
+Auth middleware - JWT token verified, user: vintorpzo@gmail.com
+🎨 ComfyUI Image Generation Request: {
+  prompt: 'a high resolution DSLR photo, riya is topless and wears oversized blue jeans...',
+  aspectRatio: '9:16',
+  influencerId: 'd1282b3c-e2cd-4a4d-bfb6-fb87f34cbc67'
+}
+💳 Checking credits for user 9f918d40-a793-4f6e-99cd-d0344d8a92fb, cost: 5
+✅ User has unlimited credits
+🔍 Mapped "Riya Yasin" → marketplace ID 22 via first name "riya"
+🎨 Generating image with RunPod ComfyUI...
+📦 Influencer ID: 22
+🎭 LoRA: riya.safetensors
+📐 Aspect Ratio: 9:16
+💬 Prompt: a high resolution DSLR photo, riya is topless and wears oversized blue jeans...
+📏 Dimensions: 768x1344
+📐 Resolution: portrait - 768x1344 (9:16)
+🚀 Sending request to RunPod...
+✅ RunPod response received: {
+  prompt_id: 'aee9fe1d-186d-4035-a2c9-f5aff0ee99ec',
+  number: 58,
+  node_errors: {
+    '17': {
+      errors: [Array],
+      dependent_outputs: [Array],
+      class_type: 'PreviewImage'
+    }
+  }
+}
+⏳ Waiting for completion... (attempt 1/60)
+⏳ Waiting for completion... (attempt 2/60)
+⏳ Waiting for completion... (attempt 3/60)
+⏳ Waiting for completion... (attempt 4/60)
+⏳ Waiting for completion... (attempt 5/60)
+⏳ Waiting for completion... (attempt 6/60)
+✅ Image generation completed!
+🖼️ Image URL: https://qwner9w79n2dyp-8188.proxy.runpod.net/view?filename=ComfyUI_temp_rsjby_00043_.png&subfolder=&type=temp
+Failed to save generated content: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'metadata' column of 'generated_content' in the schema cache"
+}
+127.0.0.1 - - [23/Nov/2025:14:15:05 +0000] "POST /api/content/generate-image-comfyui HTTP/1.1" 200 513 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"

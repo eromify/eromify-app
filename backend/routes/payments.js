@@ -3,14 +3,11 @@ const router = express.Router();
 require('dotenv').config();
 const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
 const stripe = stripeKey ? require('stripe')(stripeKey) : null;
-const { createClient } = require('@supabase/supabase-js');
+const { getSupabaseAdmin } = require('../lib/supabaseAdmin');
 const { authenticateToken } = require('../middleware/auth');
 
-// Use fallback values for development if env vars are not set
-const supabaseUrl = process.env.SUPABASE_URL || 'https://eyteuevblxvhjhyeivqh.supabase.co';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGV1ZXZibHh2aGpoeWVpdnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MzYzNjAsImV4cCI6MjA3NTAxMjM2MH0.aTPGEVfNom78Cm9ZmwbMwyzTJ0KkqUE0uIHjBo-MZUA';
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Use admin client to bypass RLS (required for subscription updates)
+const supabase = getSupabaseAdmin();
 
 // Pricing plans configuration
 const PRICING_PLANS = {
