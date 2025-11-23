@@ -1,4 +1,6 @@
 const axios = require('axios');
+const { getSupabaseAdmin } = require('../lib/supabaseAdmin');
+const supabase = getSupabaseAdmin();
 
 // RunPod ComfyUI endpoint for VIDEO generation (from environment variable or fallback to local)
 const RUNPOD_ENDPOINT = process.env.RUNPOD_VIDEO_ENDPOINT || 'https://2k9rz5l136lrge-8188.proxy.runpod.net';
@@ -186,9 +188,42 @@ async function generateVideoWithRunPod(prompt, influencerId, options = {}) {
               const videoUrl = `${RUNPOD_ENDPOINT}/view?filename=${video.filename}&subfolder=${video.subfolder || ''}&type=${video.type || 'output'}`;
               console.log(`🎬 Video URL from RunPod:`, videoUrl);
               
-              // Return the RunPod URL directly (works in both dev and production)
-              console.log(`🌐 Returning RunPod video URL directly`);
-              return videoUrl;
+              // Download video from RunPod
+              console.log(`📥 Downloading video from RunPod...`);
+              const videoResponse = await axios.get(videoUrl, {
+                responseType: 'arraybuffer',
+                timeout: 300000, // 5 minute timeout for large videos
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity
+              });
+              
+              console.log(`✅ Downloaded ${Math.round(videoResponse.data.byteLength / 1024 / 1024)}MB`);
+              
+              // Upload to Supabase Storage
+              const timestamp = Date.now();
+              const filename = `video_${influencerId}_${timestamp}.mp4`;
+              
+              console.log(`📤 Uploading to Supabase Storage: ${filename}`);
+              const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('marketplace-assets')
+                .upload(`videos/${filename}`, videoResponse.data, {
+                  contentType: 'video/mp4',
+                  upsert: false
+                });
+              
+              if (uploadError) {
+                console.error('❌ Failed to upload to Supabase:', uploadError);
+                // Fallback to RunPod URL
+                return videoUrl;
+              }
+              
+              // Get public URL
+              const { data: { publicUrl } } = supabase.storage
+                .from('marketplace-assets')
+                .getPublicUrl(`videos/${filename}`);
+              
+              console.log(`✅ Video uploaded to Supabase:`, publicUrl);
+              return publicUrl;
             }
           }
           
