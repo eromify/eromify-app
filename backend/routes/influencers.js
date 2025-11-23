@@ -121,8 +121,15 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Create new influencer
+// Create new influencer (DISABLED - Coming soon feature)
 router.post('/', authenticateToken, requireSubscription('free'), async (req, res) => {
+  // Custom influencer creation is disabled for now
+  return res.status(403).json({
+    success: false,
+    error: 'Custom influencer creation is coming soon. Please claim influencers from the marketplace for now.'
+  });
+
+  /* DISABLED FOR NOW
   try {
     const { error, value } = createInfluencerSchema.validate(req.body);
     if (error) {
@@ -195,6 +202,7 @@ router.post('/', authenticateToken, requireSubscription('free'), async (req, res
       error: 'Failed to create influencer'
     });
   }
+  */ // END DISABLED CODE
 });
 
 // Update influencer
