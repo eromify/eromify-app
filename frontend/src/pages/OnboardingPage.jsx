@@ -40,6 +40,9 @@ const OnboardingPage = () => {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false)
+  
+  // Billing period toggle (monthly/yearly)
+  const [billingPeriod, setBillingPeriod] = useState('yearly')
 
   // If user already has an active subscription (or local flag/payment param), skip onboarding
   useEffect(() => {
@@ -99,6 +102,12 @@ const OnboardingPage = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
     }
+  }
+
+  // Helper function to format price for display
+  const formatPrice = (price) => {
+    // If price is a whole number, add .99, otherwise display as is
+    return Number.isInteger(price) ? `${price}.99` : price.toString()
   }
 
   const handleSelectPlan = (plan) => {
@@ -172,7 +181,7 @@ const OnboardingPage = () => {
       // Create checkout session
       const response = await paymentService.createCheckoutSession(
         backendPlan,
-        'monthly', // Default to monthly billing
+        billingPeriod, // Use the selected billing period (monthly or yearly)
         null, // No promo code
         selectedModel
           ? {
@@ -1345,7 +1354,7 @@ const OnboardingPage = () => {
             {/* Content with top padding to account for fixed header */}
             <div className="pt-6">
               <div className="max-w-6xl mx-auto px-8 pb-12">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-6">
               {/* Left Side - Model Preview */}
               <div className="relative">
                 <div className="bg-gray-900/30 border border-gray-800 rounded-2xl overflow-hidden">
@@ -1358,7 +1367,7 @@ const OnboardingPage = () => {
                       <img 
                         src={selectedModelPage7.images[0]} 
                         alt={selectedModelPage7.name}
-                        className="w-full h-auto object-cover"
+                        className="w-full h-auto object-cover lg:max-h-[92vh] lg:object-contain lg:mx-auto"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-center">
                         <h3 className="text-white text-xl font-bold mb-1">{selectedModelPage7.name} is Ready</h3>
@@ -1379,6 +1388,32 @@ const OnboardingPage = () => {
 
               {/* Right Side - Pricing */}
               <div className="space-y-4">
+                {/* Billing Period Toggle */}
+                <div className="flex items-center justify-center mb-2">
+                  <div className="bg-gray-900/50 border border-gray-800 rounded-full p-1 flex items-center">
+                    <button
+                      onClick={() => setBillingPeriod('monthly')}
+                      className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                        billingPeriod === 'monthly'
+                          ? 'bg-purple-600 text-white'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                    <button
+                      onClick={() => setBillingPeriod('yearly')}
+                      className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                        billingPeriod === 'yearly'
+                          ? 'bg-purple-600 text-white'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      Yearly
+                    </button>
+                  </div>
+                </div>
+
                 {/* Pro Plan - Main */}
                 <div className="bg-gray-900/50 border border-purple-500 rounded-xl p-3 relative">
                   <div className="absolute top-2 right-2 bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded-md">
@@ -1386,12 +1421,23 @@ const OnboardingPage = () => {
                   </div>
                   <h3 className="text-white text-xl font-bold mb-1.5">Pro Plan</h3>
                   <div className="mb-2">
-                    <span className="text-white text-3xl font-bold">$29</span>
+                    <span className="text-white text-3xl font-bold">
+                      {billingPeriod === 'monthly' ? '$29' : '$7.99'}
+                    </span>
                     <span className="text-gray-400 text-base"> /month</span>
                   </div>
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-gray-500 line-through text-sm">$50</span>
-                    <span className="text-green-500 font-semibold text-sm">SAVE 50%</span>
+                    {billingPeriod === 'monthly' ? (
+                      <>
+                        <span className="text-gray-500 line-through text-base">$59</span>
+                        <span className="text-green-500 font-semibold text-base">SAVE 50%</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-gray-500 line-through text-base">$29</span>
+                        <span className="text-green-500 font-semibold text-base">SAVE 73%</span>
+                      </>
+                    )}
                   </div>
                   <div className="text-orange-500 text-xs mb-3 flex items-center">
                     <span className="mr-1">🔥</span> Offer ends in {formatCountdown(countdown)}
@@ -1413,7 +1459,7 @@ const OnboardingPage = () => {
                   </div>
 
                   <button 
-                    onClick={() => handleSelectPlan({ name: 'Pro Plan', price: 29, originalPrice: 50, credits: 2000, features: ['2000 Credits (photos & videos)', '2 Model Tokens/month', '60 scheduled posts'] })}
+                    onClick={() => handleSelectPlan({ name: 'Pro Plan', price: billingPeriod === 'monthly' ? 29 : 7.99, originalPrice: billingPeriod === 'monthly' ? 59 : 29, credits: 2000, features: ['2000 Credits (photos & videos)', '2 Model Tokens/month', '60 scheduled posts'] })}
                     className="w-full bg-white text-black py-2.5 rounded-lg font-bold text-base hover:bg-gray-100 transition-colors"
                   >
                     Get Started
@@ -1425,16 +1471,23 @@ const OnboardingPage = () => {
                   {/* Basic Plan */}
                   <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex flex-col h-full">
                     <h4 className="text-white text-lg font-bold mb-2">Basic Plan</h4>
-                    <div className="mb-3">
-                      <span className="text-white text-2xl font-bold">$15</span>
+                    <div className={billingPeriod === 'yearly' ? 'mb-1' : 'mb-3'}>
+                      <span className="text-white text-2xl font-bold">
+                        {billingPeriod === 'monthly' ? '$15' : '$2.99'}
+                      </span>
                       <span className="text-gray-400 text-xs"> /mo</span>
                     </div>
+                    {billingPeriod === 'yearly' && (
+                      <div className="mb-1">
+                        <span className="text-gray-500 line-through text-sm">$15</span>
+                      </div>
+                    )}
                     <div className="space-y-1 mb-3 text-xs">
                       <p className="text-gray-300">500 Credits</p>
                       <p className="text-red-400">No video</p>
                     </div>
                     <button 
-                      onClick={() => handleSelectPlan({ name: 'Basic Plan', price: 15, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
+                      onClick={() => handleSelectPlan({ name: 'Basic Plan', price: billingPeriod === 'monthly' ? 15 : 2.99, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
                       className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
@@ -1444,16 +1497,23 @@ const OnboardingPage = () => {
                   {/* Elite Plan */}
                   <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex flex-col h-full">
                     <h4 className="text-white text-lg font-bold mb-2">Elite Plan</h4>
-                    <div className="mb-3">
-                      <span className="text-white text-2xl font-bold">$79</span>
+                    <div className={billingPeriod === 'yearly' ? 'mb-1' : 'mb-3'}>
+                      <span className="text-white text-2xl font-bold">
+                        {billingPeriod === 'monthly' ? '$79' : '$15.99'}
+                      </span>
                       <span className="text-gray-400 text-xs"> /mo</span>
                     </div>
+                    {billingPeriod === 'yearly' && (
+                      <div className="mb-1">
+                        <span className="text-gray-500 line-through text-sm">$79</span>
+                      </div>
+                    )}
                     <div className="space-y-1 mb-3 text-xs">
                       <p className="text-gray-300">Unlimited credits (photos & videos)</p>
                       <p className="text-purple-400">Premium features</p>
                     </div>
                     <button 
-                      onClick={() => handleSelectPlan({ name: 'Elite Plan', price: 79, credits: null, features: ['Unlimited credits (photos & videos)', 'Unlimited models', 'Priority support', 'Premium features'] })}
+                      onClick={() => handleSelectPlan({ name: 'Elite Plan', price: billingPeriod === 'monthly' ? 79 : 15.99, credits: null, features: ['Unlimited credits (photos & videos)', 'Unlimited models', 'Priority support', 'Premium features'] })}
                       className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
@@ -1571,7 +1631,7 @@ const OnboardingPage = () => {
               {/* Header */}
               <div className="text-center mb-5">
                 <h2 className="text-xl font-bold text-white mb-1">Complete Your Purchase</h2>
-                <p className="text-gray-400 text-xs">{selectedPlan.name} - ${selectedPlan.price}.99/month</p>
+                <p className="text-gray-400 text-xs">{selectedPlan.name} - ${formatPrice(selectedPlan.price)}/month</p>
               </div>
 
               {/* Plan Summary */}
@@ -1579,10 +1639,10 @@ const OnboardingPage = () => {
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h3 className="text-lg font-bold text-white mb-0.5">{selectedPlan.name}</h3>
-                    <p className="text-xs text-gray-400">Monthly subscription</p>
+                    <p className="text-xs text-gray-400">{billingPeriod === 'yearly' ? 'Annual subscription' : 'Monthly subscription'}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-white">${selectedPlan.price}.99</div>
+                    <div className="text-2xl font-bold text-white">${formatPrice(selectedPlan.price)}</div>
                     <div className="text-xs text-gray-400">per month</div>
                   </div>
                 </div>
@@ -1590,7 +1650,9 @@ const OnboardingPage = () => {
                 {selectedPlan.originalPrice && (
                   <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-800">
                     <span className="text-gray-500 line-through text-xs">${selectedPlan.originalPrice}</span>
-                    <span className="text-green-400 font-semibold text-xs">SAVE 50%</span>
+                    <span className="text-green-400 font-semibold text-xs">
+                      SAVE {billingPeriod === 'yearly' && selectedPlan.name === 'Pro Plan' ? '73%' : '50%'}
+                    </span>
                   </div>
                 )}
 
