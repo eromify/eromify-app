@@ -1422,7 +1422,7 @@ const OnboardingPage = () => {
                   <h3 className="text-white text-xl font-bold mb-1.5">Pro Plan</h3>
                   <div className="mb-2">
                     <span className="text-white text-3xl font-bold">
-                      {billingPeriod === 'monthly' ? '$29' : '$7.99'}
+                      {billingPeriod === 'monthly' ? '$29' : '$8'}
                     </span>
                     <span className="text-gray-400 text-base"> /month</span>
                   </div>
@@ -1459,7 +1459,7 @@ const OnboardingPage = () => {
                   </div>
 
                   <button 
-                    onClick={() => handleSelectPlan({ name: 'Pro Plan', price: billingPeriod === 'monthly' ? 29 : 7.99, originalPrice: billingPeriod === 'monthly' ? 59 : 29, credits: 2000, features: ['2000 Credits (photos & videos)', '2 Model Tokens/month', '60 scheduled posts'] })}
+                    onClick={() => handleSelectPlan({ name: 'Pro Plan', price: billingPeriod === 'monthly' ? 29 : 8, originalPrice: billingPeriod === 'monthly' ? 59 : 29, credits: 2000, features: ['2000 Credits (photos & videos)', '2 Model Tokens/month', '60 scheduled posts'] })}
                     className="w-full bg-white text-black py-2.5 rounded-lg font-bold text-base hover:bg-gray-100 transition-colors"
                   >
                     Get Started
@@ -1473,7 +1473,7 @@ const OnboardingPage = () => {
                     <h4 className="text-white text-lg font-bold mb-2">Basic Plan</h4>
                     <div className={billingPeriod === 'yearly' ? 'mb-1' : 'mb-3'}>
                       <span className="text-white text-2xl font-bold">
-                        {billingPeriod === 'monthly' ? '$15' : '$2.99'}
+                        {billingPeriod === 'monthly' ? '$15' : '$3'}
                       </span>
                       <span className="text-gray-400 text-xs"> /mo</span>
                     </div>
@@ -1487,7 +1487,7 @@ const OnboardingPage = () => {
                       <p className="text-red-400">No video</p>
                     </div>
                     <button 
-                      onClick={() => handleSelectPlan({ name: 'Basic Plan', price: billingPeriod === 'monthly' ? 15 : 2.99, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
+                      onClick={() => handleSelectPlan({ name: 'Basic Plan', price: billingPeriod === 'monthly' ? 15 : 3, credits: 500, features: ['500 Credits', 'Photos only', 'No video support'] })}
                       className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
@@ -1499,7 +1499,7 @@ const OnboardingPage = () => {
                     <h4 className="text-white text-lg font-bold mb-2">Elite Plan</h4>
                     <div className={billingPeriod === 'yearly' ? 'mb-1' : 'mb-3'}>
                       <span className="text-white text-2xl font-bold">
-                        {billingPeriod === 'monthly' ? '$79' : '$15.99'}
+                        {billingPeriod === 'monthly' ? '$79' : '$15.92'}
                       </span>
                       <span className="text-gray-400 text-xs"> /mo</span>
                     </div>
@@ -1513,7 +1513,7 @@ const OnboardingPage = () => {
                       <p className="text-purple-400">Premium features</p>
                     </div>
                     <button 
-                      onClick={() => handleSelectPlan({ name: 'Elite Plan', price: billingPeriod === 'monthly' ? 79 : 15.99, credits: null, features: ['Unlimited credits (photos & videos)', 'Unlimited models', 'Priority support', 'Premium features'] })}
+                      onClick={() => handleSelectPlan({ name: 'Elite Plan', price: billingPeriod === 'monthly' ? 79 : 15.92, credits: null, features: ['Unlimited credits (photos & videos)', 'Unlimited models', 'Priority support', 'Premium features'] })}
                       className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors mt-auto"
                     >
                       Select
@@ -1631,7 +1631,9 @@ const OnboardingPage = () => {
               {/* Header */}
               <div className="text-center mb-5">
                 <h2 className="text-xl font-bold text-white mb-1">Complete Your Purchase</h2>
-                <p className="text-gray-400 text-xs">{selectedPlan.name} - ${formatPrice(selectedPlan.price)}/month</p>
+                <p className="text-gray-400 text-xs">
+                  {selectedPlan.name} - ${billingPeriod === 'yearly' ? (selectedPlan.price * 12).toFixed(2) : formatPrice(selectedPlan.price)}/{billingPeriod === 'yearly' ? 'year' : 'month'}
+                </p>
               </div>
 
               {/* Plan Summary */}
@@ -1642,8 +1644,10 @@ const OnboardingPage = () => {
                     <p className="text-xs text-gray-400">{billingPeriod === 'yearly' ? 'Annual subscription' : 'Monthly subscription'}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-white">${formatPrice(selectedPlan.price)}</div>
-                    <div className="text-xs text-gray-400">per month</div>
+                    <div className="text-2xl font-bold text-white">
+                      ${billingPeriod === 'yearly' ? (selectedPlan.price * 12).toFixed(2) : formatPrice(selectedPlan.price)}
+                    </div>
+                    <div className="text-xs text-gray-400">{billingPeriod === 'yearly' ? 'per year' : 'per month'}</div>
                   </div>
                 </div>
 

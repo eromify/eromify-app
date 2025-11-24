@@ -18,7 +18,7 @@ const PRICING_PLANS = {
       influencerTrainings: 1
     },
     yearly: {
-      price: 14400, // $144.00 in cents
+      price: 3600, // $36.00 in cents
       credits: 500,
       influencerTrainings: 1
     }
@@ -30,7 +30,7 @@ const PRICING_PLANS = {
       influencerTrainings: 2
     },
     yearly: {
-      price: 27600, // $276.00 in cents
+      price: 9600, // $96.00 in cents
       credits: 2000,
       influencerTrainings: 2
     }
@@ -42,7 +42,7 @@ const PRICING_PLANS = {
       influencerTrainings: null // Unlimited
     },
     yearly: {
-      price: 78000, // $780.00 in cents
+      price: 19100, // $191.00 in cents
       credits: null,
       influencerTrainings: null
     }
