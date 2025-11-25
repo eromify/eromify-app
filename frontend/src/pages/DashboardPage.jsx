@@ -186,13 +186,8 @@ const DashboardPage = () => {
       console.log('❌ Influencer limit reached, showing upgrade modal')
       setShowInfluencerLimitModal(true)
     } else {
-      console.log('✅ User has available influencer slots, proceeding...')
-      // TODO: Navigate to influencer creation page (to be implemented later)
-      if (maxInfluencers === null) {
-        alert(`You have unlimited influencers! Creation flow coming soon.`)
-      } else {
-        alert(`You can create ${maxInfluencers - currentInfluencers} more influencer(s)! Creation flow coming soon.`)
-      }
+      console.log('✅ User has available influencer slots, navigating to marketplace...')
+      navigate('/influencer-marketplace')
     }
   }
 
