@@ -3,7 +3,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import LandingPage from './pages/LandingPage'
 import PublicMarketplacePage from './pages/PublicMarketplacePage'
-import DashboardMarketplacePage from './pages/DashboardMarketplacePage'
+import DiscoverPage from './pages/DiscoverPage'
 import AffiliatePage from './pages/AffiliatePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -30,11 +30,12 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/marketplace" element={<PublicMarketplacePage />} />
+        <Route path="/discover" element={<DiscoverPage />} />
         <Route path="/affiliate" element={<AffiliatePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/marketplace" element={<PublicMarketplacePage />} />
         <Route path="/onboarding" element={
           <ProtectedRoute>
             <OnboardingPage />
@@ -48,11 +49,6 @@ function App() {
         <Route path="/influencers" element={
           <ProtectedRoute>
             <InfluencersPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/influencer-marketplace" element={
-          <ProtectedRoute>
-            <DashboardMarketplacePage />
           </ProtectedRoute>
         } />
         <Route path="/products" element={
