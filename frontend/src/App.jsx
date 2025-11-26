@@ -4,6 +4,10 @@ import ProtectedRoute from './components/ProtectedRoute'
 import LandingPage from './pages/LandingPage'
 import PublicMarketplacePage from './pages/PublicMarketplacePage'
 import DiscoverPage from './pages/DiscoverPage'
+import ChatPage from './pages/ChatPage'
+import GenerationPage from './pages/GenerationPage'
+import AIGirlfriendPricingPage from './pages/AIGirlfriendPricingPage'
+import AccountPage from './pages/AccountPage'
 import AffiliatePage from './pages/AffiliatePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -32,6 +36,10 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/marketplace" element={<PublicMarketplacePage />} />
         <Route path="/discover" element={<DiscoverPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/generation" element={<GenerationPage />} />
+        <Route path="/ai-girlfriend-pricing" element={<AIGirlfriendPricingPage />} />
+        <Route path="/account" element={<AccountPage />} />
         <Route path="/affiliate" element={<AffiliatePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { trackViewContent } from '../utils/metaPixel';
 import { useAuth } from '../contexts/AuthContext';
 import { marketplaceModels } from '../data/marketplaceModels';
@@ -10,6 +11,10 @@ const DiscoverPage = () => {
   const [selectedStory, setSelectedStory] = useState(null);
   const [currentInfluencerIndex, setCurrentInfluencerIndex] = useState(0);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [selectedChatModel, setSelectedChatModel] = useState(null);
+  const [chatMessage, setChatMessage] = useState('');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
 
   // Track ViewContent when discover page loads
@@ -45,30 +50,48 @@ const DiscoverPage = () => {
       <nav className="bg-black border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
+            <div className="flex items-center gap-1 md:gap-2">
+              {/* Mobile Hamburger Menu - Far Left */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden text-white p-2"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
               <div className="flex-shrink-0">
-                <Link to="/" className="flex items-center">
+                <Link to="/discover" className="flex items-center">
                   <img src="/logo.png" alt="Eromify" className="h-40 w-auto" />
                 </Link>
               </div>
             </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <Link to="/" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Home</Link>
-                <Link to="/marketplace" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Marketplace</Link>
-                <Link to="/#features" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Features</Link>
-                <Link to="/#pricing" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Pricing</Link>
-                <Link to="/#faq" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">FAQ</Link>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-4">
               <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
               <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
+            {/* Mobile buttons */}
+            <div className="md:hidden flex items-center space-x-2">
+              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                Get Started
+              </Link>
+            </div>
           </div>
         </div>
+        
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-800">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link to="/discover" onClick={() => setMobileMenuOpen(false)} className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Home</Link>
+              <Link to="/chat" onClick={() => setMobileMenuOpen(false)} className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Chat</Link>
+              <Link to="/generation" onClick={() => setMobileMenuOpen(false)} className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Generate Image</Link>
+              <Link to="/ai-girlfriend-pricing" onClick={() => setMobileMenuOpen(false)} className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Pricing</Link>
+              <Link to="/account" onClick={() => setMobileMenuOpen(false)} className="text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">Account</Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Main Content */}
@@ -149,8 +172,14 @@ const DiscoverPage = () => {
               key={model.id}
               onClick={() => {
                 if (!model.fullyClaimed && !model.isBlackedOut) {
-                  setCurrentImageIndex(0);
-                  setSelectedModel(model);
+                  setSelectedChatModel(model);
+                  // Initialize with a welcome message
+                  setChatMessages([{
+                    id: 1,
+                    text: `Hey! I'm ${model.name.split(' ')[0]}. What's on your mind? 😊`,
+                    sender: 'model',
+                    timestamp: new Date()
+                  }]);
                 }
               }}
               className={`bg-black rounded-2xl overflow-hidden border border-gray-800 relative group aspect-[9/16] ${
@@ -180,7 +209,7 @@ const DiscoverPage = () => {
                     )}
                     {/* Chat Button */}
                     <Link
-                      to="/login"
+                      to={`/chat?modelId=${model.id}`}
                       onClick={(e) => e.stopPropagation()}
                       className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all text-xs shadow-lg"
                     >
@@ -523,6 +552,132 @@ const DiscoverPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chat Interface Modal */}
+      {selectedChatModel && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1A1A1A] border border-gray-800 rounded-2xl max-w-4xl w-full h-full max-h-[90vh] flex flex-col">
+            {/* Chat Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <img
+                    src={selectedChatModel.images[0]}
+                    alt={selectedChatModel.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold">{selectedChatModel.name}</h3>
+                  <p className="text-gray-400 text-xs">Online</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedChatModel(null);
+                  setChatMessage('');
+                  setChatMessages([]);
+                }}
+                className="w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Chat Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {chatMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                      message.sender === 'user'
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                        : 'bg-gray-800 text-white'
+                    }`}
+                  >
+                    <p className="text-sm">{message.text}</p>
+                    <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-white/70' : 'text-gray-400'}`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat Input */}
+            <div className="p-4 border-t border-gray-800">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && chatMessage.trim()) {
+                      // Add user message
+                      const newMessage = {
+                        id: chatMessages.length + 1,
+                        text: chatMessage,
+                        sender: 'user',
+                        timestamp: new Date()
+                      };
+                      setChatMessages([...chatMessages, newMessage]);
+                      setChatMessage('');
+                      
+                      // Simulate AI response (simple for now)
+                      setTimeout(() => {
+                        const aiResponse = {
+                          id: chatMessages.length + 2,
+                          text: "That's interesting! Tell me more 😊",
+                          sender: 'model',
+                          timestamp: new Date()
+                        };
+                        setChatMessages(prev => [...prev, aiResponse]);
+                      }, 1000);
+                    }
+                  }}
+                  placeholder="Write a message..."
+                  className="flex-1 bg-gray-900 border border-gray-700 rounded-full px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                />
+                <button
+                  onClick={() => {
+                    if (chatMessage.trim()) {
+                      const newMessage = {
+                        id: chatMessages.length + 1,
+                        text: chatMessage,
+                        sender: 'user',
+                        timestamp: new Date()
+                      };
+                      setChatMessages([...chatMessages, newMessage]);
+                      setChatMessage('');
+                      
+                      // Simulate AI response
+                      setTimeout(() => {
+                        const aiResponse = {
+                          id: chatMessages.length + 2,
+                          text: "That's interesting! Tell me more 😊",
+                          sender: 'model',
+                          timestamp: new Date()
+                        };
+                        setChatMessages(prev => [...prev, aiResponse]);
+                      }, 1000);
+                    }
+                  }}
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center hover:from-purple-600 hover:to-pink-600 transition-all"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
