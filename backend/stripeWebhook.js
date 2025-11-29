@@ -53,11 +53,32 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
   const sig = req.headers['stripe-signature'];
   let event;
   
+  // Check if Stripe is configured
+  if (!stripe) {
+    console.error('❌ Stripe not configured - missing STRIPE_SECRET_KEY');
+    return res.status(503).json({ error: 'Stripe not configured' });
+  }
+  
+  // Check if webhook secret is configured
+  if (!process.env.STRIPE_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET === 'whsec_your_webhook_secret') {
+    console.error('❌ Stripe webhook secret not configured properly');
+    console.error('📝 Please set STRIPE_WEBHOOK_SECRET in your .env file');
+    console.error('🔗 Get it from: Stripe Dashboard → Webhooks → Your endpoint → Signing secret');
+    return res.status(503).json({ 
+      error: 'Stripe webhook secret not configured',
+      message: 'Please configure STRIPE_WEBHOOK_SECRET in environment variables'
+    });
+  }
+  
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     console.log('✅ Webhook signature verified for event:', event.type);
   } catch (err) {
     console.error('❌ Webhook signature verification failed:', err.message);
+    console.error('📝 This usually means:');
+    console.error('   1. Wrong webhook secret in .env');
+    console.error('   2. Webhook endpoint URL mismatch in Stripe');
+    console.error('   3. Request not from Stripe');
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -86,16 +107,98 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
     res.json({ received: true });
   } catch (e) {
     console.error('❌ Webhook processing error:', e);
-    res.status(500).json({ error: 'Webhook processing error' });
+    console.error('Stack trace:', e.stack);
+    // Return 500 so Stripe will retry, but log the error for debugging
+    res.status(500).json({ 
+      error: 'Webhook processing error',
+      message: e.message
+    });
   }
 });
+
+// AI Girlfriend Pricing Plans
+const AI_GIRLFRIEND_PRICING_PLANS = {
+  '1month': {
+    price: 1299,
+    tokens: 100,
+    billing: 'monthly'
+  },
+  '3months': {
+    price: 799,
+    tokens: 100,
+    billing: 'quarterly'
+  },
+  '12months': {
+    price: 399,
+    tokens: 100,
+    billing: 'yearly'
+  }
+};
 
 // Handle successful payment
 async function handleSuccessfulPayment(session) {
   try {
-    const { userId, plan, billing, credits, influencerTrainings, onboardingSelection } = session.metadata;
+    const { userId, plan, billing, credits, influencerTrainings, onboardingSelection, subscriptionType, tokens } = session.metadata || {};
 
-    console.log('💳 Processing successful payment:', { userId, plan, billing, credits, influencerTrainings, hasOnboardingSelection: !!onboardingSelection });
+    console.log('💳 Processing successful payment:', { userId, plan, billing, credits, influencerTrainings, subscriptionType, hasOnboardingSelection: !!onboardingSelection });
+
+    // Validate required metadata
+    if (!userId) {
+      throw new Error('Missing userId in session metadata');
+    }
+
+    // Check if this is an AI girlfriend subscription
+    if (subscriptionType === 'ai_girlfriend') {
+      console.log('💳 [AI Girlfriend] Processing AI girlfriend subscription');
+      
+      if (!plan) {
+        throw new Error(`Missing plan in session metadata for AI girlfriend subscription. Plan: ${plan}`);
+      }
+
+      if (!AI_GIRLFRIEND_PRICING_PLANS[plan]) {
+        throw new Error(`Invalid AI girlfriend plan configuration: ${plan}`);
+      }
+
+      const planConfig = AI_GIRLFRIEND_PRICING_PLANS[plan];
+      
+      // Calculate next token reset date (first day of next month)
+      const nextResetDate = new Date();
+      nextResetDate.setMonth(nextResetDate.getMonth() + 1);
+      nextResetDate.setDate(1);
+      nextResetDate.setHours(0, 0, 0, 0);
+
+      // Update AI girlfriend subscription in database
+      const { error } = await supabase
+        .from('users')
+        .update({
+          ai_girlfriend_subscription_plan: plan,
+          ai_girlfriend_subscription_billing: planConfig.billing,
+          ai_girlfriend_tokens: planConfig.tokens,
+          ai_girlfriend_tokens_reset_date: nextResetDate.toISOString(),
+          ai_girlfriend_subscription_status: 'active',
+          ai_girlfriend_stripe_customer_id: session.customer,
+          ai_girlfriend_subscription_id: session.subscription
+        })
+        .eq('id', userId);
+
+      if (error) {
+        console.error('❌ [AI Girlfriend] Database update error:', error);
+        throw error;
+      }
+
+      console.log(`✅ [AI Girlfriend] Payment successful for user ${userId}, plan: ${plan}`);
+      return; // Exit early, don't process influencer subscription logic
+    }
+
+    // Original influencer subscription logic
+    if (!plan || !billing) {
+      throw new Error(`Missing plan or billing in session metadata. Plan: ${plan}, Billing: ${billing}`);
+    }
+
+    // Validate plan configuration exists
+    if (!PRICING_PLANS[plan] || !PRICING_PLANS[plan][billing]) {
+      throw new Error(`Invalid plan configuration: ${plan}/${billing}`);
+    }
 
     // Update user subscription in database
     const { error } = await supabase
@@ -103,8 +206,8 @@ async function handleSuccessfulPayment(session) {
       .update({
         subscription_plan: plan,
         subscription_billing: billing,
-        credits: credits === 'unlimited' ? null : credits,
-        influencer_trainings: influencerTrainings === 'unlimited' ? null : influencerTrainings,
+        credits: credits === 'unlimited' ? null : (credits ? parseInt(credits) : PRICING_PLANS[plan][billing].credits),
+        influencer_trainings: influencerTrainings === 'unlimited' ? null : (influencerTrainings ? parseInt(influencerTrainings) : PRICING_PLANS[plan][billing].influencerTrainings),
         subscription_status: 'active',
         stripe_customer_id: session.customer,
         subscription_id: session.subscription
@@ -200,10 +303,50 @@ async function handleSuccessfulPayment(session) {
 async function handleSubscriptionRenewal(invoice) {
   try {
     const customerId = invoice.customer;
+    const subscriptionId = invoice.subscription;
     
-    console.log('🔄 Processing subscription renewal for customer:', customerId);
+    console.log('🔄 Processing subscription renewal for customer:', customerId, 'subscription:', subscriptionId);
     
-    // Get user by Stripe customer ID
+    // Check if this is an AI girlfriend subscription
+    const { data: aiGirlfriendUser } = await supabase
+      .from('users')
+      .select('id, ai_girlfriend_subscription_plan, ai_girlfriend_subscription_id')
+      .eq('ai_girlfriend_subscription_id', subscriptionId)
+      .single();
+
+    if (aiGirlfriendUser && aiGirlfriendUser.ai_girlfriend_subscription_id === subscriptionId) {
+      // This is an AI girlfriend subscription renewal
+      console.log('🔄 [AI Girlfriend] Processing AI girlfriend subscription renewal');
+      
+      const planConfig = AI_GIRLFRIEND_PRICING_PLANS[aiGirlfriendUser.ai_girlfriend_subscription_plan];
+      if (!planConfig) {
+        throw new Error(`Invalid AI girlfriend plan: ${aiGirlfriendUser.ai_girlfriend_subscription_plan}`);
+      }
+
+      // Calculate next token reset date
+      const nextResetDate = new Date();
+      nextResetDate.setMonth(nextResetDate.getMonth() + 1);
+      nextResetDate.setDate(1);
+      nextResetDate.setHours(0, 0, 0, 0);
+
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({
+          ai_girlfriend_tokens: planConfig.tokens,
+          ai_girlfriend_tokens_reset_date: nextResetDate.toISOString()
+        })
+        .eq('id', aiGirlfriendUser.id);
+
+      if (updateError) {
+        console.error('❌ [AI Girlfriend] Token renewal error:', updateError);
+        throw updateError;
+      }
+
+      console.log(`✅ [AI Girlfriend] Tokens renewed for user ${aiGirlfriendUser.id}`);
+      return; // Exit early
+    }
+
+    // Original influencer subscription renewal logic
     const { data: user, error } = await supabase
       .from('users')
       .select('*')
@@ -213,6 +356,15 @@ async function handleSubscriptionRenewal(invoice) {
     if (error || !user) {
       console.error('❌ User not found for customer ID:', customerId);
       throw new Error(`User not found for customer ID: ${customerId}`);
+    }
+
+    // Validate plan configuration exists
+    if (!user.subscription_plan || !user.subscription_billing) {
+      throw new Error(`User ${user.id} has no plan/billing configured`);
+    }
+
+    if (!PRICING_PLANS[user.subscription_plan] || !PRICING_PLANS[user.subscription_plan][user.subscription_billing]) {
+      throw new Error(`Invalid plan configuration for user ${user.id}: ${user.subscription_plan}/${user.subscription_billing}`);
     }
 
     // Renew credits based on plan
@@ -243,6 +395,37 @@ async function handleSubscriptionCancellation(subscription) {
   try {
     console.log('❌ Processing subscription cancellation for subscription:', subscription.id);
     
+    // Check if this is an AI girlfriend subscription
+    const { data: aiGirlfriendUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('ai_girlfriend_subscription_id', subscription.id)
+      .single();
+
+    if (aiGirlfriendUser) {
+      // This is an AI girlfriend subscription cancellation
+      console.log('❌ [AI Girlfriend] Processing AI girlfriend subscription cancellation');
+      
+      const { error } = await supabase
+        .from('users')
+        .update({
+          ai_girlfriend_subscription_status: 'cancelled',
+          ai_girlfriend_subscription_plan: null,
+          ai_girlfriend_subscription_billing: null,
+          ai_girlfriend_subscription_id: null
+        })
+        .eq('ai_girlfriend_subscription_id', subscription.id);
+
+      if (error) {
+        console.error('❌ [AI Girlfriend] Subscription cancellation error:', error);
+        throw error;
+      }
+
+      console.log(`✅ [AI Girlfriend] Subscription cancelled for subscription ${subscription.id}`);
+      return; // Exit early
+    }
+
+    // Original influencer subscription cancellation logic
     const { error } = await supabase
       .from('users')
       .update({

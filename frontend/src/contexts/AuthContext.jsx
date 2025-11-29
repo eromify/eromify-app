@@ -4,6 +4,10 @@ import { supabase } from '../lib/supabase'
 import api from '../utils/api'
 import { trackLead } from '../utils/metaPixel'
 import paymentService from '../services/paymentService'
+import { getReturnPath, getRedirectPath } from '../utils/redirectHelper'
+
+// AI girlfriend pages - need to check return path before subscription
+const AI_GIRLFRIEND_PAGES = ['/discover', '/chat', '/ai-girlfriend-pricing', '/account', '/generation']
 
 const AuthContext = createContext({})
 
@@ -29,6 +33,25 @@ export const AuthProvider = ({ children }) => {
       // Check both hash and query parameters for OAuth tokens
       if ((hash && hash.includes('access_token')) || (search && search.includes('access_token'))) {
         console.log('OAuth callback detected on app load:', { hash, search })
+        
+        // Check for return path in multiple places:
+        // 1. Query parameter (from redirect URL)
+        const urlParams = new URLSearchParams(window.location.search)
+        const returnToFromQuery = urlParams.get('returnTo')
+        
+        // 2. SessionStorage
+        let returnTo = sessionStorage.getItem('aiGirlfriendReturnTo')
+        
+        // 3. If query param exists, use it and save to sessionStorage
+        if (returnToFromQuery) {
+          returnTo = decodeURIComponent(returnToFromQuery)
+          sessionStorage.setItem('aiGirlfriendReturnTo', returnTo)
+          console.log('🔄 [AuthContext OAuth] Return path from query param:', returnTo)
+        } else if (returnTo) {
+          console.log('🔄 [AuthContext OAuth] Return path from sessionStorage:', returnTo)
+        } else {
+          console.log('⚠️ [AuthContext OAuth] No return path found!')
+        }
         
         try {
           // Extract token from hash or query parameters
@@ -56,7 +79,16 @@ export const AuthProvider = ({ children }) => {
                   source: 'google'
                 })
                 
-                // Check if user has paid subscription
+                // If we have a return path from AI girlfriend page, redirect immediately (skip subscription check)
+                if (returnTo && AI_GIRLFRIEND_PAGES.some(page => returnTo.startsWith(page))) {
+                  console.log('🔄 [AuthContext OAuth] AI girlfriend page detected, redirecting immediately to:', returnTo)
+                  window.history.replaceState({}, document.title, '/')
+                  sessionStorage.removeItem('aiGirlfriendReturnTo')
+                  navigate(returnTo, { replace: true })
+                  return
+                }
+                
+                // Only check subscription if NOT from AI girlfriend page
                 try {
                   const subscription = await paymentService.getSubscription()
                   console.log('Subscription response:', subscription)
@@ -73,22 +105,30 @@ export const AuthProvider = ({ children }) => {
                     hasPaid
                   })
                   
+                  const redirectPath = getRedirectPath(hasPaid, returnTo)
+                  
                   // Clear the hash from URL
                   window.history.replaceState({}, document.title, '/')
+                  console.log('🔄 [AuthContext OAuth] Redirecting to:', redirectPath, { hasPaid, returnTo })
                   
-                  if (hasPaid) {
-                    console.log('✅ User has active subscription, redirecting to dashboard')
-                    navigate('/dashboard', { replace: true })
-                  } else {
-                    console.log('❌ User has no active subscription, redirecting to onboarding')
-                    navigate('/onboarding', { replace: true })
+                  // Only remove return path after successful redirect
+                  if (returnTo) {
+                    sessionStorage.removeItem('aiGirlfriendReturnTo')
                   }
+                  
+                  navigate(redirectPath, { replace: true })
                 } catch (subError) {
                   console.error('❌ Error checking subscription:', subError)
                   console.error('Subscription error details:', subError.response?.data)
-                  // If subscription check fails, default to onboarding
+                  // If subscription check fails, use redirect helper
+                  const redirectPath = getRedirectPath(false, returnTo)
                   window.history.replaceState({}, document.title, '/')
-                  navigate('/onboarding', { replace: true })
+                  
+                  if (returnTo) {
+                    sessionStorage.removeItem('aiGirlfriendReturnTo')
+                  }
+                  
+                  navigate(redirectPath, { replace: true })
                 }
                 return
               }
@@ -138,22 +178,32 @@ export const AuthProvider = ({ children }) => {
                       hasPaid
                     })
                     
+                    // Check for return path (don't remove it yet)
+                    const returnTo = sessionStorage.getItem('aiGirlfriendReturnTo')
+                    const redirectPath = getRedirectPath(hasPaid, returnTo)
+                    
                     // Clear the hash from URL
                     window.history.replaceState({}, document.title, '/')
+                    console.log('🔄 [AuthContext OAuth Fallback] Redirecting to:', redirectPath, { hasPaid, returnTo })
                     
-                    if (hasPaid) {
-                      console.log('✅ User has active subscription, redirecting to dashboard')
-                      navigate('/dashboard', { replace: true })
-                    } else {
-                      console.log('❌ User has no active subscription, redirecting to onboarding')
-                      navigate('/onboarding', { replace: true })
+                    if (returnTo) {
+                      sessionStorage.removeItem('aiGirlfriendReturnTo')
                     }
+                    
+                    navigate(redirectPath, { replace: true })
                   } catch (subError) {
                     console.error('❌ Error checking subscription (fallback):', subError)
                     console.error('Subscription error details:', subError.response?.data)
-                    // If subscription check fails, default to onboarding
+                    // If subscription check fails, use redirect helper
+                    const returnTo = sessionStorage.getItem('aiGirlfriendReturnTo')
+                    const redirectPath = getRedirectPath(false, returnTo)
                     window.history.replaceState({}, document.title, '/')
-                    navigate('/onboarding', { replace: true })
+                    
+                    if (returnTo) {
+                      sessionStorage.removeItem('aiGirlfriendReturnTo')
+                    }
+                    
+                    navigate(redirectPath, { replace: true })
                   }
                   return
                 }
@@ -293,15 +343,25 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
+      // Check for return path BEFORE OAuth redirect
+      const returnPath = sessionStorage.getItem('aiGirlfriendReturnTo')
+      console.log('🔍 [signInWithGoogle] Return path BEFORE OAuth:', returnPath)
+      
       // Use the correct OAuth callback URL for production
       const redirectUrl = 'https://www.eromify.com/'
       
-      console.log('Starting Google OAuth with redirect:', redirectUrl);
+      // If we have a return path, add it as a query parameter to preserve it
+      const finalRedirectUrl = returnPath 
+        ? `${redirectUrl}?returnTo=${encodeURIComponent(returnPath)}`
+        : redirectUrl
+      
+      console.log('🚀 [signInWithGoogle] Starting Google OAuth with redirect:', finalRedirectUrl);
+      console.log('💾 [signInWithGoogle] SessionStorage returnPath:', sessionStorage.getItem('aiGirlfriendReturnTo'))
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: finalRedirectUrl,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',

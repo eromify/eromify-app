@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Menu, X, CreditCard } from 'lucide-react';
-import { paymentService } from '../services/paymentService';
+import aiGirlfriendPaymentService from '../services/aiGirlfriendPaymentService';
+import { saveReturnPath } from '../utils/redirectHelper';
 
 const AIGirlfriendPricingPage = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -44,7 +45,7 @@ const AIGirlfriendPricingPage = () => {
       price: 3.99,
       discount: 70,
       billing: 'yearly',
-      backendPlan: 'launch',
+      planId: '12months', // AI girlfriend plan ID
       features: premiumBenefits
     },
     {
@@ -54,7 +55,7 @@ const AIGirlfriendPricingPage = () => {
       price: 7.99,
       discount: 40,
       billing: 'quarterly',
-      backendPlan: 'launch',
+      planId: '3months', // AI girlfriend plan ID
       features: premiumBenefits
     },
     {
@@ -64,7 +65,7 @@ const AIGirlfriendPricingPage = () => {
       price: 12.99,
       discount: 0,
       billing: 'monthly',
-      backendPlan: 'launch',
+      planId: '1month', // AI girlfriend plan ID
       features: premiumBenefits
     }
   ];
@@ -85,15 +86,9 @@ const AIGirlfriendPricingPage = () => {
     setIsProcessingCheckout(true);
     
     try {
-      let billingPeriod = 'monthly';
-      if (selectedPlan.billing === 'yearly') {
-        billingPeriod = 'yearly';
-      }
-      
-      const response = await paymentService.createCheckoutSession(
-        selectedPlan.backendPlan,
-        billingPeriod,
-        null
+      // Use AI girlfriend payment service with the plan ID
+      const response = await aiGirlfriendPaymentService.createCheckoutSession(
+        selectedPlan.planId // '1month', '3months', or '12months'
       );
       
       if (response.url) {
@@ -127,15 +122,24 @@ const AIGirlfriendPricingPage = () => {
                 </Link>
               </div>
             </div>
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
+              <Link to="/discover" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Home</Link>
+              <Link to="/chat" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Chat</Link>
+              <Link to="/generation" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Generate Image</Link>
+              <Link to="/ai-girlfriend-pricing" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Pricing</Link>
+              <Link to="/account" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Account</Link>
+            </div>
+            {/* Desktop Auth Buttons - Right */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
             <div className="md:hidden flex items-center space-x-2">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Mail, CreditCard, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import paymentService from '../services/paymentService';
+import aiGirlfriendPaymentService from '../services/aiGirlfriendPaymentService';
 import toast from 'react-hot-toast';
+import { saveReturnPath } from '../utils/redirectHelper';
 
 const AccountPage = () => {
   const { user } = useAuth();
@@ -22,10 +23,11 @@ const AccountPage = () => {
     const fetchSubscription = async () => {
       try {
         setLoading(true);
-        const response = await paymentService.getSubscription();
+        // Fetch AI girlfriend subscription (separate from influencer subscription)
+        const response = await aiGirlfriendPaymentService.getSubscription();
         setSubscription(response);
       } catch (error) {
-        console.error('Failed to fetch subscription:', error);
+        console.error('Failed to fetch AI girlfriend subscription:', error);
         setSubscription(null);
       } finally {
         setLoading(false);
@@ -36,19 +38,19 @@ const AccountPage = () => {
   }, [user, navigate]);
 
   const handleCancelSubscription = async () => {
-    if (!window.confirm('Are you sure you want to cancel your subscription? This action cannot be undone.')) {
+    if (!window.confirm('Are you sure you want to cancel your AI girlfriend subscription? This action cannot be undone.')) {
       return;
     }
 
     try {
       setCancelling(true);
-      await paymentService.cancelSubscription();
-      toast.success('Subscription cancelled successfully');
+      await aiGirlfriendPaymentService.cancelSubscription();
+      toast.success('AI girlfriend subscription cancelled successfully');
       // Refresh subscription data
-      const response = await paymentService.getSubscription();
+      const response = await aiGirlfriendPaymentService.getSubscription();
       setSubscription(response);
     } catch (error) {
-      console.error('Failed to cancel subscription:', error);
+      console.error('Failed to cancel AI girlfriend subscription:', error);
       toast.error(error.response?.data?.error || 'Failed to cancel subscription');
     } finally {
       setCancelling(false);
@@ -59,11 +61,11 @@ const AccountPage = () => {
 
   const getPlanLabel = (plan) => {
     const planMap = {
-      builder: 'Basic Plan',
-      launch: 'Pro Plan',
-      growth: 'Elite Plan'
+      '1month': 'Monthly Plan',
+      '3months': 'Quarterly Plan',
+      '12months': 'Yearly Plan'
     };
-    return planMap[plan?.toLowerCase()] || plan || 'No Plan';
+    return planMap[plan] || plan || 'No Plan';
   };
 
   const getBillingLabel = (billing) => {
@@ -95,16 +97,25 @@ const AccountPage = () => {
                 </Link>
               </div>
             </div>
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
+              <Link to="/discover" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Home</Link>
+              <Link to="/chat" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Chat</Link>
+              <Link to="/generation" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Generate Image</Link>
+              <Link to="/ai-girlfriend-pricing" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Pricing</Link>
+              <Link to="/account" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Account</Link>
+            </div>
+            {/* Desktop Auth Buttons - Right */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
             {/* Mobile buttons */}
             <div className="md:hidden flex items-center space-x-2">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
@@ -184,18 +195,18 @@ const AccountPage = () => {
                       <span className="text-white font-medium">{getBillingLabel(subscription.billing)}</span>
                     </div>
                   )}
-                  {subscription?.credits !== null && subscription?.credits !== undefined && (
+                  {subscription?.tokens !== null && subscription?.tokens !== undefined && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Credits</span>
-                      <span className="text-white font-medium">{Number(subscription.credits).toLocaleString()}</span>
+                      <span className="text-gray-400">Monthly Tokens</span>
+                      <span className="text-white font-medium">{Number(subscription.tokens).toLocaleString()}</span>
                     </div>
                   )}
-                  {subscription?.credits === null || subscription?.credits === undefined ? (
+                  {subscription?.isFree && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Credits</span>
-                      <span className="text-white font-medium">Unlimited</span>
+                      <span className="text-gray-400">Status</span>
+                      <span className="text-yellow-500 font-medium">Free Tier</span>
                     </div>
-                  ) : null}
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-4">

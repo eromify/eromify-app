@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, ChevronDown, Menu, X, Users, Loader2 } from 'lucide-react';
 import { marketplaceModels } from '../data/marketplaceModels';
 import api from '../utils/api';
+import { saveReturnPath } from '../utils/redirectHelper';
+import { useAuth } from '../contexts/AuthContext';
+import aiGirlfriendPaymentService from '../services/aiGirlfriendPaymentService';
 
 const GenerationPage = () => {
   const [selectedModel, setSelectedModel] = useState(null);
@@ -13,6 +16,33 @@ const GenerationPage = () => {
   const [generating, setGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState(null);
   const [error, setError] = useState(null);
+  const [isPaid, setIsPaid] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Check subscription status on mount
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (!user) {
+        setIsPaid(false);
+        return;
+      }
+      
+      try {
+        const subscription = await aiGirlfriendPaymentService.getSubscription();
+        const hasPaidSubscription = subscription?.status === 'active' && 
+                                    subscription?.plan && 
+                                    ['1month', '3months', '12months'].includes(subscription.plan);
+        setIsPaid(hasPaidSubscription);
+      } catch (error) {
+        console.error('Error fetching subscription:', error);
+        setIsPaid(false);
+      }
+    };
+
+    checkSubscription();
+  }, [user]);
 
   // Get Ava Diaz (id: 21) as default
   const defaultModel = marketplaceModels.find(model => model.id === 21) || marketplaceModels[0];
@@ -40,18 +70,18 @@ const GenerationPage = () => {
     setGeneratedImage(null);
 
     try {
-      // Use the RunPod endpoint which accepts marketplaceModelId directly
-      // Note: This endpoint requires authentication
-      const response = await api.post('/content/generate-image-runpod', {
-        marketplaceModelId: currentModel.id,
+      // Use AI girlfriend-specific generation endpoint (unlimited for all users)
+      const response = await api.post('/ai-girlfriend-chat/generate-image', {
+        modelId: currentModel.id,
         prompt: prompt.trim(),
-        aspectRatio
+        aspectRatio: aspectRatio || '2:3'
       });
 
-      if (response.data.success) {
+      if (response.data.success && response.data.image?.url) {
         setGeneratedImage(response.data.image.url);
       } else {
-        setError(response.data.error || 'Failed to generate image');
+        const backendError = response.data.error || response.data.message;
+        setError(backendError || 'Failed to generate image');
       }
     } catch (err) {
       console.error('Generation error:', err);
@@ -87,16 +117,25 @@ const GenerationPage = () => {
                 </Link>
               </div>
             </div>
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
+              <Link to="/discover" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Home</Link>
+              <Link to="/chat" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Chat</Link>
+              <Link to="/generation" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Generate Image</Link>
+              <Link to="/ai-girlfriend-pricing" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Pricing</Link>
+              <Link to="/account" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Account</Link>
+            </div>
+            {/* Desktop Auth Buttons - Right */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
             {/* Mobile buttons */}
             <div className="md:hidden flex items-center space-x-2">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
@@ -145,7 +184,15 @@ const GenerationPage = () => {
               
               {/* Purple/Pink Selection Icon - Half on, half off (Bottom Right) */}
               <button
-                onClick={() => setShowModelSelector(!showModelSelector)}
+                onClick={() => {
+                  if (isPaid) {
+                    // Paid users can select influencers
+                    setShowModelSelector(!showModelSelector);
+                  } else {
+                    // Free users see upgrade modal
+                    setShowUpgradeModal(true);
+                  }
+                }}
                 className="absolute -bottom-2 -right-2 md:-bottom-4 md:-right-4 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full flex items-center justify-center shadow-lg transition-all z-20 border-2 border-black"
               >
                 <Users className="w-5 h-5 md:w-6 md:h-6 text-white" />
@@ -257,6 +304,52 @@ const GenerationPage = () => {
           )}
         </button>
       </main>
+
+      {/* Upgrade Modal */}
+      {showUpgradeModal && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowUpgradeModal(false)}
+        >
+          <div 
+            className="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowUpgradeModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Modal Content */}
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              
+              <h2 className="text-2xl font-semibold text-white mb-2">
+                Upgrade Required
+              </h2>
+              
+              <p className="text-gray-400 mb-6">
+                To generate images with different influencers, you need an active subscription. Upgrade now to unlock this feature and more!
+              </p>
+
+              <button
+                onClick={() => {
+                  setShowUpgradeModal(false);
+                  navigate('/ai-girlfriend-pricing');
+                }}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-600 transition-all"
+              >
+                View Plans
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

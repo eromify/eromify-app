@@ -36,6 +36,8 @@ const influencerRoutes = require('./routes/influencers');
 const contentRoutes = require('./routes/content');
 const userRoutes = require('./routes/users');
 const paymentRoutes = require('./routes/payments');
+const aiGirlfriendPaymentRoutes = require('./routes/aiGirlfriendPayments');
+const aiGirlfriendChatRoutes = require('./routes/aiGirlfriendChat');
 const analyticsRoutes = require('./routes/analytics');
 const { errorHandler } = require('./middleware/errorHandler');
 
@@ -145,6 +147,8 @@ app.use('/api/influencers', influencerRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/ai-girlfriend-payments', aiGirlfriendPaymentRoutes);
+app.use('/api/ai-girlfriend-chat', aiGirlfriendChatRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
 // 404 handler

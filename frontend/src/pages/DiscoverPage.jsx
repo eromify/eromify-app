@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { trackViewContent } from '../utils/metaPixel';
 import { useAuth } from '../contexts/AuthContext';
 import { marketplaceModels } from '../data/marketplaceModels';
+import { saveReturnPath } from '../utils/redirectHelper';
 
 const DiscoverPage = () => {
   const [selectedModel, setSelectedModel] = useState(null);
@@ -11,11 +12,9 @@ const DiscoverPage = () => {
   const [selectedStory, setSelectedStory] = useState(null);
   const [currentInfluencerIndex, setCurrentInfluencerIndex] = useState(0);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
-  const [selectedChatModel, setSelectedChatModel] = useState(null);
-  const [chatMessage, setChatMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Track ViewContent when discover page loads
   useEffect(() => {
@@ -64,16 +63,25 @@ const DiscoverPage = () => {
                 </Link>
               </div>
             </div>
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
+              <Link to="/discover" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Home</Link>
+              <Link to="/chat" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Chat</Link>
+              <Link to="/generation" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Generate Image</Link>
+              <Link to="/ai-girlfriend-pricing" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Pricing</Link>
+              <Link to="/account" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">Account</Link>
+            </div>
+            {/* Desktop Auth Buttons - Right */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
             {/* Mobile buttons */}
             <div className="md:hidden flex items-center space-x-2">
-              <Link to="/login" className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
-              <Link to="/register" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              <Link to="/login" onClick={saveReturnPath} className="text-white hover:text-gray-300 text-sm font-medium">Sign In</Link>
+              <Link to="/register" onClick={saveReturnPath} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
                 Get Started
               </Link>
             </div>
@@ -172,14 +180,8 @@ const DiscoverPage = () => {
               key={model.id}
               onClick={() => {
                 if (!model.fullyClaimed && !model.isBlackedOut) {
-                  setSelectedChatModel(model);
-                  // Initialize with a welcome message
-                  setChatMessages([{
-                    id: 1,
-                    text: `Hey! I'm ${model.name.split(' ')[0]}. What's on your mind? 😊`,
-                    sender: 'model',
-                    timestamp: new Date()
-                  }]);
+                  // Navigate to chat page with modelId (same as Chat CTA button)
+                  navigate(`/chat?modelId=${model.id}`);
                 }
               }}
               className={`bg-black rounded-2xl overflow-hidden border border-gray-800 relative group aspect-[9/16] ${
@@ -480,7 +482,17 @@ const DiscoverPage = () => {
               })()}
               
               {/* Story Info Overlay - Top Left */}
-              <div className="absolute top-8 left-4 flex items-center gap-2 z-10">
+              <div 
+                onClick={() => {
+                  const currentInfluencer = selectedStory[currentInfluencerIndex];
+                  if (currentInfluencer && currentInfluencer.id) {
+                    // Close story viewer and navigate to chat
+                    setSelectedStory(null);
+                    navigate(`/chat?modelId=${currentInfluencer.id}`);
+                  }
+                }}
+                className="absolute top-8 left-4 flex items-center gap-2 z-10 cursor-pointer hover:opacity-80 transition-opacity"
+              >
                 <div className="w-8 h-8 rounded-full overflow-hidden border border-white/50">
                   <img
                     src={selectedStory[currentInfluencerIndex]?.images[0] || "/main.webp"}
@@ -492,7 +504,32 @@ const DiscoverPage = () => {
                   <p className="text-white font-medium text-sm">
                     {selectedStory[currentInfluencerIndex]?.name.split(' ')[0] || "Story"}
                   </p>
-                  <p className="text-white/70 text-xs">about 12 hours</p>
+                  <p className="text-white/70 text-xs">
+                    {(() => {
+                      // Generate varied time based on influencer ID for consistency
+                      const influencerId = selectedStory[currentInfluencerIndex]?.id || 0;
+                      const timeOptions = [
+                        '2 hours ago',
+                        '5 hours ago',
+                        '8 hours ago',
+                        '12 hours ago',
+                        '15 hours ago',
+                        '18 hours ago',
+                        '1 day ago',
+                        '2 days ago',
+                        '3 hours ago',
+                        '6 hours ago',
+                        '9 hours ago',
+                        '14 hours ago',
+                        '20 hours ago',
+                        '1 day ago',
+                        '2 days ago',
+                        '4 hours ago'
+                      ];
+                      // Use influencer ID to consistently assign a time
+                      return timeOptions[influencerId % timeOptions.length];
+                    })()}
+                  </p>
                 </div>
               </div>
 
@@ -557,131 +594,6 @@ const DiscoverPage = () => {
         </div>
       )}
 
-      {/* Chat Interface Modal */}
-      {selectedChatModel && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1A1A1A] border border-gray-800 rounded-2xl max-w-4xl w-full h-full max-h-[90vh] flex flex-col">
-            {/* Chat Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-800">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full overflow-hidden">
-                  <img
-                    src={selectedChatModel.images[0]}
-                    alt={selectedChatModel.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold">{selectedChatModel.name}</h3>
-                  <p className="text-gray-400 text-xs">Online</p>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  setSelectedChatModel(null);
-                  setChatMessage('');
-                  setChatMessages([]);
-                }}
-                className="w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Chat Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {chatMessages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                      message.sender === 'user'
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                        : 'bg-gray-800 text-white'
-                    }`}
-                  >
-                    <p className="text-sm">{message.text}</p>
-                    <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-white/70' : 'text-gray-400'}`}>
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Chat Input */}
-            <div className="p-4 border-t border-gray-800">
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={chatMessage}
-                  onChange={(e) => setChatMessage(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && chatMessage.trim()) {
-                      // Add user message
-                      const newMessage = {
-                        id: chatMessages.length + 1,
-                        text: chatMessage,
-                        sender: 'user',
-                        timestamp: new Date()
-                      };
-                      setChatMessages([...chatMessages, newMessage]);
-                      setChatMessage('');
-                      
-                      // Simulate AI response (simple for now)
-                      setTimeout(() => {
-                        const aiResponse = {
-                          id: chatMessages.length + 2,
-                          text: "That's interesting! Tell me more 😊",
-                          sender: 'model',
-                          timestamp: new Date()
-                        };
-                        setChatMessages(prev => [...prev, aiResponse]);
-                      }, 1000);
-                    }
-                  }}
-                  placeholder="Write a message..."
-                  className="flex-1 bg-gray-900 border border-gray-700 rounded-full px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
-                />
-                <button
-                  onClick={() => {
-                    if (chatMessage.trim()) {
-                      const newMessage = {
-                        id: chatMessages.length + 1,
-                        text: chatMessage,
-                        sender: 'user',
-                        timestamp: new Date()
-                      };
-                      setChatMessages([...chatMessages, newMessage]);
-                      setChatMessage('');
-                      
-                      // Simulate AI response
-                      setTimeout(() => {
-                        const aiResponse = {
-                          id: chatMessages.length + 2,
-                          text: "That's interesting! Tell me more 😊",
-                          sender: 'model',
-                          timestamp: new Date()
-                        };
-                        setChatMessages(prev => [...prev, aiResponse]);
-                      }, 1000);
-                    }
-                  }}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center hover:from-purple-600 hover:to-pink-600 transition-all"
-                >
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

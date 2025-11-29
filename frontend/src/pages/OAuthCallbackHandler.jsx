@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../utils/api'
+import { getReturnPath, getRedirectPath } from '../utils/redirectHelper'
+import paymentService from '../services/paymentService'
+
+// AI girlfriend pages - need to check return path before subscription
+const AI_GIRLFRIEND_PAGES = ['/discover', '/chat', '/ai-girlfriend-pricing', '/account', '/generation']
 
 const OAuthCallbackHandler = () => {
   const navigate = useNavigate()
@@ -35,11 +40,66 @@ const OAuthCallbackHandler = () => {
                 localStorage.setItem('token', response.data.token)
                 setStatus('Authentication successful! Redirecting...')
                 
-                // Clear the hash from URL and redirect to onboarding
-                window.history.replaceState({}, document.title, '/')
-                // Use setTimeout to ensure state is updated before redirect
-                setTimeout(() => {
-                  navigate('/onboarding', { replace: true })
+                // Check for return path in multiple places:
+                // 1. Query parameter (from redirect URL)
+                const urlParams = new URLSearchParams(window.location.search)
+                const returnToFromQuery = urlParams.get('returnTo')
+                
+                // 2. SessionStorage
+                let returnTo = sessionStorage.getItem('aiGirlfriendReturnTo')
+                
+                // 3. If query param exists, use it and save to sessionStorage
+                if (returnToFromQuery) {
+                  returnTo = decodeURIComponent(returnToFromQuery)
+                  sessionStorage.setItem('aiGirlfriendReturnTo', returnTo)
+                  console.log('🔄 [OAuthCallbackHandler] Return path from query param:', returnTo)
+                } else if (returnTo) {
+                  console.log('🔄 [OAuthCallbackHandler] Return path from sessionStorage:', returnTo)
+                } else {
+                  console.log('⚠️ [OAuthCallbackHandler] No return path found!')
+                }
+                
+                // If we have a return path from AI girlfriend page, redirect immediately (skip subscription check)
+                if (returnTo && AI_GIRLFRIEND_PAGES.some(page => returnTo.startsWith(page))) {
+                  console.log('🔄 [OAuthCallbackHandler] AI girlfriend page detected, redirecting immediately to:', returnTo)
+                  window.history.replaceState({}, document.title, '/')
+                  sessionStorage.removeItem('aiGirlfriendReturnTo')
+                  setTimeout(() => {
+                    navigate(returnTo, { replace: true })
+                  }, 100)
+                  return
+                }
+                
+                // Only check subscription if NOT from AI girlfriend page
+                setTimeout(async () => {
+                  try {
+                    const subscription = await paymentService.getSubscription()
+                    const hasPaid = 
+                      subscription?.hasActiveSubscription === true || 
+                      subscription?.status === 'active' || 
+                      Boolean(subscription?.plan && subscription?.plan !== null)
+                    
+                    const redirectPath = getRedirectPath(hasPaid, returnTo)
+                    console.log('🔄 [OAuthCallbackHandler] Redirecting to:', redirectPath, { hasPaid, returnTo })
+                    window.history.replaceState({}, document.title, '/')
+                    
+                    // Remove return path after using it
+                    if (returnTo) {
+                      sessionStorage.removeItem('aiGirlfriendReturnTo')
+                    }
+                    
+                    navigate(redirectPath, { replace: true })
+                  } catch (subError) {
+                    const redirectPath = getRedirectPath(false, returnTo)
+                    console.log('🔄 [OAuthCallbackHandler] Error, redirecting to:', redirectPath, { returnTo })
+                    window.history.replaceState({}, document.title, '/')
+                    
+                    if (returnTo) {
+                      sessionStorage.removeItem('aiGirlfriendReturnTo')
+                    }
+                    
+                    navigate(redirectPath, { replace: true })
+                  }
                 }, 100)
                 return
               }
@@ -65,11 +125,19 @@ const OAuthCallbackHandler = () => {
                   localStorage.setItem('token', jwtResponse.data.token)
                   setStatus('Account created! Redirecting...')
                   
-                  // Clear the hash from URL and redirect to onboarding
+                  // Check for return path (don't remove it yet)
+                  const returnTo = sessionStorage.getItem('aiGirlfriendReturnTo')
+                  console.log('🔄 [OAuthCallbackHandler Fallback] Found return path:', returnTo)
                   window.history.replaceState({}, document.title, '/')
-                  // Use setTimeout to ensure state is updated before redirect
                   setTimeout(() => {
-                    navigate('/onboarding', { replace: true })
+                    const redirectPath = getRedirectPath(false, returnTo)
+                    console.log('🔄 [OAuthCallbackHandler Fallback] Redirecting to:', redirectPath, { returnTo })
+                    
+                    if (returnTo) {
+                      sessionStorage.removeItem('aiGirlfriendReturnTo')
+                    }
+                    
+                    navigate(redirectPath, { replace: true })
                   }, 100)
                   return
                 }
