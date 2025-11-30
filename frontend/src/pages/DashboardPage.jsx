@@ -186,8 +186,8 @@ const DashboardPage = () => {
       console.log('❌ Influencer limit reached, showing upgrade modal')
       setShowInfluencerLimitModal(true)
     } else {
-      console.log('✅ User has available influencer slots, navigating to marketplace...')
-      navigate('/influencer-marketplace')
+      console.log('✅ User has available influencer slots, navigating to influencers page...')
+      navigate('/influencers')
     }
   }
 

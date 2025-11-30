@@ -14,6 +14,7 @@ import RegisterPage from './pages/RegisterPage'
 import OnboardingPage from './pages/OnboardingPage'
 import DashboardPage from './pages/DashboardPage'
 import InfluencersPage from './pages/InfluencersPage'
+import DashboardMarketplacePage from './pages/DashboardMarketplacePage'
 import ProductsPage from './pages/ProductsPage'
 import GeneratePage from './pages/GeneratePage'
 import GenerateVideoPage from './pages/GenerateVideoPage'
@@ -57,6 +58,11 @@ function App() {
         <Route path="/influencers" element={
           <ProtectedRoute>
             <InfluencersPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/influencer-marketplace" element={
+          <ProtectedRoute>
+            <DashboardMarketplacePage />
           </ProtectedRoute>
         } />
         <Route path="/products" element={

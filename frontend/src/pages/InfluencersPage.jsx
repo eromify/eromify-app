@@ -230,13 +230,6 @@ const InfluencersPage = () => {
                 <Users className="h-5 w-5 mr-2 text-purple-400" />
                 <span>{influencers.length}/{subscription && (subscription.influencerTrainings === null || subscription.influencerTrainings === undefined) ? '∞' : (subscription?.influencerTrainings ?? 0)} Influencers</span>
               </div>
-              <button
-                onClick={handleCreateInfluencer}
-                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center w-full sm:w-auto whitespace-nowrap"
-              >
-                <Plus className="h-5 w-5 mr-2" />
-                Create Influencer
-              </button>
             </div>
           </section>
 
