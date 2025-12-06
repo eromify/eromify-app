@@ -75,7 +75,7 @@ const AffiliatePage = () => {
           <h1 className="text-5xl md:text-7xl font-medium mb-6">
             Get Paid{' '}
             <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-              $200/Month
+              $100/Month
             </span>
             <br />
             for Posting Daily Content!
@@ -128,13 +128,13 @@ const AffiliatePage = () => {
               , 20 Min/Day
             </h2>
             <p className="text-xl text-gray-400">
-              Earn <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent font-medium">$200/month</span> in Just 20 Minutes a Day
+              Earn <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent font-medium">$100/month</span> in Just 20 Minutes a Day
             </p>
           </div>
 
           {/* Steps */}
           <div className="max-w-4xl mx-auto space-y-8">
-            {/* Step 1: Sign Up */}
+            {/* Step 1: Onboarding */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
@@ -144,11 +144,11 @@ const AffiliatePage = () => {
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
                   <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                    Sign Up
+                    Onboarding
                   </span>
                 </h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Fill out a quick form with your name, email, and PayPal — you're instantly in the program.
+                  Join the Whop campaign and sign the contract.
                 </p>
               </div>
             </div>
@@ -186,7 +186,7 @@ const AffiliatePage = () => {
                   </span>
                 </h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Choose a luxury or wealth-themed photo for your profile picture. Set your bio as follows: "AI girls made me $270k DM 'print' to learn how" Add this link to your bio: https://www.eromify.com/
+                  Choose a luxury or wealth-themed photo for your profile picture. Set your bio as follows: "AI girls made me $270k DM 'print' to learn how"
                 </p>
               </div>
             </div>
@@ -229,11 +229,30 @@ const AffiliatePage = () => {
               </div>
             </div>
 
-            {/* Step 6: Post Daily */}
+            {/* Step 6: DM Automation */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">6</span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold mb-3">
+                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                    DM Automation
+                  </span>
+                </h3>
+                <p className="text-gray-400 text-lg leading-relaxed">
+                  Set up DM automation with Superprofile's free plan to send out 2 links to all people that comment the keyword in the comments.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 7: Post Daily */}
+            <div className="flex items-start space-x-6">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-lg font-bold">7</span>
                 </div>
               </div>
               <div className="flex-1">
@@ -248,11 +267,11 @@ const AffiliatePage = () => {
               </div>
             </div>
 
-            {/* Step 7: Get Paid */}
+            {/* Step 8: Get Paid */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-lg font-bold">7</span>
+                  <span className="text-white text-lg font-bold">8</span>
                 </div>
               </div>
               <div className="flex-1">
@@ -262,7 +281,7 @@ const AffiliatePage = () => {
                   </span>
                 </h3>
                 <p className="text-gray-400 text-lg leading-relaxed">
-                  Once your content hits a minimum of 100k views in 30 days, you automatically earn $200/month via PayPal. Each additional 1 million views earns $100 in bonuses. No maximum earnings limit.
+                  Once your content hits a minimum of 300k views in 30 days, you earn a monthly base pay of $100. With one million views, you earn a monthly base pay of $300.
                 </p>
               </div>
             </div>
@@ -309,7 +328,7 @@ const AffiliatePage = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="text-pink-400 mr-4 text-xl">•</span>
-                  <span>Check the following accounts for inspiration: @aimoneynick, @jimprintss</span>
+                  <span>Check the following accounts for inspiration: @aimoneynick, @aimoneyethann</span>
                 </li>
               </ul>
             </div>
