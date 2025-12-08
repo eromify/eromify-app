@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import LandingPage from './pages/LandingPage'
-import PublicMarketplacePage from './pages/PublicMarketplacePage'
+import MarketplacePage from './pages/PublicMarketplacePage'
 import DiscoverPage from './pages/DiscoverPage'
 import ChatPage from './pages/ChatPage'
 import GenerationPage from './pages/GenerationPage'
@@ -35,7 +35,7 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/marketplace" element={<PublicMarketplacePage />} />
+        <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/discover" element={<DiscoverPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/generation" element={<GenerationPage />} />

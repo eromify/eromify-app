@@ -19,15 +19,15 @@ const GetCreditsPage = () => {
     const pricing = {
       builder: {
         monthly: { value: 1500 }, // $15.00 in cents
-        yearly: { value: 14400 }  // $144.00 in cents
+        yearly: { value: 3588 }   // $35.88 in cents ($2.99 * 12)
       },
       launch: {
         monthly: { value: 2900 }, // $29.00 in cents
-        yearly: { value: 27600 }  // $276.00 in cents
+        yearly: { value: 9588 }   // $95.88 in cents ($7.99 * 12)
       },
       growth: {
         monthly: { value: 7900 }, // $79.00 in cents
-        yearly: { value: 78000 }  // $780.00 in cents
+        yearly: { value: 19188 }  // $191.88 in cents ($15.99 * 12)
       }
     }
     
@@ -218,12 +218,12 @@ const GetCreditsPage = () => {
                 <p className="text-gray-400 text-sm mb-6">For growing creators</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$15' : '$12'}
+                    {billingToggle === 'monthly' ? '$15' : '$2.99'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $144 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $35.88 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}
@@ -319,12 +319,12 @@ const GetCreditsPage = () => {
                 <p className="text-gray-400 text-sm mb-6">Ready to scale</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$29' : '$23'}
+                    {billingToggle === 'monthly' ? '$29' : '$7.99'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $276 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $95.88 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}
@@ -414,12 +414,12 @@ const GetCreditsPage = () => {
                 <p className="text-gray-400 text-sm mb-6">Best for businesses</p>
                 <div className="mb-4">
                   <span className="text-5xl font-semibold">
-                    {billingToggle === 'monthly' ? '$79' : '$65'}
+                    {billingToggle === 'monthly' ? '$79' : '$15.99'}
                   </span>
                   <span className="text-gray-400">/mo</span>
                 </div>
                 {billingToggle === 'yearly' && (
-                  <p className="text-gray-400 text-xs mb-6">Billed $780 yearly</p>
+                  <p className="text-gray-400 text-xs mb-6">Billed $191.88 yearly</p>
                 )}
                 
                 {/* Credits - Prominent like CelebifyAI */}
