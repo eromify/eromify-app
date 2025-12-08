@@ -15,6 +15,23 @@ const DiscoverPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  
+  // Age verification - check sessionStorage (shows once per browser session)
+  const [showAgeVerification, setShowAgeVerification] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const verified = window.sessionStorage.getItem('discoverAgeVerified');
+    return verified !== 'true';
+  });
+
+  const handleAgeVerification = (isAdult) => {
+    if (isAdult) {
+      window.sessionStorage.setItem('discoverAgeVerified', 'true');
+      setShowAgeVerification(false);
+    } else {
+      window.location.href = 'https://www.google.com';
+    }
+  };
+
 
   // Track ViewContent when discover page loads
   useEffect(() => {
@@ -45,6 +62,51 @@ const DiscoverPage = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Age Verification Modal Overlay */}
+      {showAgeVerification && (
+        <>
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-lg z-[99999]" />
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 pointer-events-none">
+            <div className="bg-black/90 backdrop-blur-xl border border-pink-500/30 rounded-3xl p-12 max-w-md w-full text-center shadow-2xl shadow-pink-500/20 pointer-events-auto">
+              <div className="mb-8">
+                <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-pink-500/30 mb-6 ring-2 ring-pink-500/30">
+                  <div className="text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+                    18+
+                  </div>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold mb-3">
+                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                    Age Verification Required
+                  </span>
+                </h2>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  You must be 18 years or older to access this content.
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-3 mb-6">
+                <button
+                  onClick={() => handleAgeVerification(true)}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-6 py-4 rounded-xl font-semibold transition-all shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  I am 18 or older
+                </button>
+                <button
+                  onClick={() => handleAgeVerification(false)}
+                  className="w-full bg-gray-800/80 hover:bg-gray-700/80 text-gray-200 px-6 py-4 rounded-xl font-medium transition-all border border-gray-600/50 hover:border-gray-500"
+                >
+                  I am under 18
+                </button>
+              </div>
+              
+              <p className="text-gray-400 text-xs leading-relaxed">
+                By entering, you confirm that you are of legal age and agree to our terms of service.
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Navigation */}
       <nav className="bg-black border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
