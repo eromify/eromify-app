@@ -16,16 +16,31 @@ const DiscoverPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   
-  // Age verification - check sessionStorage (shows once per browser session)
-  const [showAgeVerification, setShowAgeVerification] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    const verified = window.sessionStorage.getItem('discoverAgeVerified');
-    return verified !== 'true';
-  });
+  // Age verification - only show for non-logged-in users on first visit
+  // Once user creates an AI girlfriend account, it never shows again
+  const [showAgeVerification, setShowAgeVerification] = useState(true);
+
+  // Check if modal should be shown based on user status
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // If user is logged in (has AI girlfriend account), never show modal
+    if (user) {
+      setShowAgeVerification(false);
+      // Save to localStorage so it won't show if they log out and log back in
+      window.localStorage.setItem('discoverAgeVerified', 'true');
+      return;
+    }
+    
+    // For non-logged-in users, check localStorage
+    const verified = window.localStorage.getItem('discoverAgeVerified');
+    setShowAgeVerification(verified !== 'true');
+  }, [user]);
 
   const handleAgeVerification = (isAdult) => {
     if (isAdult) {
-      window.sessionStorage.setItem('discoverAgeVerified', 'true');
+      // Save to localStorage (persists across sessions)
+      window.localStorage.setItem('discoverAgeVerified', 'true');
       setShowAgeVerification(false);
     } else {
       window.location.href = 'https://www.google.com';
