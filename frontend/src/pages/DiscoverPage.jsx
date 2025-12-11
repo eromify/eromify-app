@@ -16,12 +16,19 @@ const DiscoverPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   
-  // Age verification - only show for non-logged-in users on first visit
-  // Once user creates an AI girlfriend account, it never shows again
-  const [showAgeVerification, setShowAgeVerification] = useState(true);
+  // Age verification - ARCHIVED (disabled but code preserved)
+  // Set to false to disable the modal completely
+  const AGE_VERIFICATION_ENABLED = false; // Set to true to re-enable
+  
+  const [showAgeVerification, setShowAgeVerification] = useState(false);
 
   // Check if modal should be shown based on user status
   useEffect(() => {
+    if (!AGE_VERIFICATION_ENABLED) {
+      setShowAgeVerification(false);
+      return;
+    }
+    
     if (typeof window === 'undefined') return;
     
     // If user is logged in (has AI girlfriend account), never show modal
@@ -180,29 +187,26 @@ const DiscoverPage = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-6">
-          <h1 className="text-5xl md:text-6xl font-semibold mb-4">
-            Your <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">Naughty Little Secret</span>
-          </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-4">
-            Ready to chat and send exclusive photos. Connect with your perfect AI companion.
-          </p>
-        </div>
-
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12">
         {/* Banner Image */}
-        <div className="mb-12 flex justify-center">
+        <Link to="/ai-girlfriend-pricing" className="block mb-5 -mx-4 sm:mx-0 cursor-pointer">
+          {/* Mobile Banner */}
           <img 
-            src="/main.webp" 
+            src="/banner1.webp" 
             alt="Eromify Banner" 
-            className="w-full max-w-2xl h-auto rounded-2xl"
+            className="w-full h-auto sm:hidden"
           />
-        </div>
+          {/* Desktop Banner */}
+          <img 
+            src="/banner-desktop.webp" 
+            alt="Eromify Banner" 
+            className="hidden sm:block w-full h-auto rounded-2xl"
+          />
+        </Link>
 
         {/* Instagram Story-like Profile Section */}
-        <div className="mb-4">
-          <div className="flex items-center gap-6 overflow-x-auto pb-4 px-4 sm:px-6">
+        <div className="mb-2">
+          <div className="flex items-center gap-6 overflow-x-auto pb-2 px-4 sm:px-6">
             {(() => {
               // Models in order: Hailey, Amber, Kim, Ava, Riya, Tara, Clara, Bria, Kimberly, Jessica, Gaia, Alexis, Madison, Lauren, Brianna, Naima
               const featuredModelIds = [66, 69, 43, 59, 22, 74, 72, 24, 60, 67, 62, 61, 68, 70, 73, 30];
@@ -244,7 +248,7 @@ const DiscoverPage = () => {
         </div>
 
         {/* Section Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4">
           <h2 className="text-2xl md:text-2xl font-semibold">
             Eromify AI <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">Characters</span>
           </h2>
