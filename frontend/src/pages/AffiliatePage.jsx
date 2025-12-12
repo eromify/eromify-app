@@ -6,9 +6,15 @@ const AffiliatePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Gradient Orbs for atmosphere */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Navigation */}
-      <nav className="bg-black border-b border-gray-800">
+      <nav className="bg-black/50 backdrop-blur-sm border-b border-gray-800 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -65,70 +71,40 @@ const AffiliatePage = () => {
         )}
       </nav>
 
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen">
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-20 pb-0 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-pink-400 text-white mb-6">
-            Affiliate Program
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-medium mb-6">
-            Get Paid{' '}
-            <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-              $100/Month
-            </span>
+          <h1 className="text-4xl md:text-6xl font-medium mb-6 text-white">
+            Start Earning Instantly
             <br />
-            for Posting Daily Content!
+            Join Our Affiliate Program
           </h1>
           
           <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-            Join the{' '}
-            <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent font-medium">
-              Eromify Affiliate Program
-            </span>
-            {' '}and earn guaranteed pay for sharing your faceless content. Minimum view threshold ensures you get paid.
+            Join the Eromify Affiliate Program and earn guaranteed pay for clipping faceless content. Automated monthly income.
           </p>
           
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                    <a href="https://whop.com/eromify/eromify-affiliate/" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-500 transition-all text-center">
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 px-4 sm:px-0">
+                    <a href="https://whop.com/eromify/eromify-affiliate/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-transparent border-[1.5px] border-purple-500/60 hover:border-purple-400 text-white px-5 sm:px-6 md:px-8 py-2.5 md:py-4 rounded-full text-base md:text-lg font-medium transition-all duration-200 hover:bg-purple-500/10 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] w-fit mx-auto sm:mx-0">
                       Join Now
                     </a>
                   </div>
         </div>
       </section>
 
-      {/* Video Section */}
-      <section className="-mt-12 mb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-sm mx-auto">
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-800">
-            <video 
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-auto"
-            >
-              <source src="/affiliate.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-      </section>
-
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-0 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-16 text-center">
             <p className="text-gray-500 uppercase tracking-widest text-sm font-bold mb-4">How It Works</p>
-            <h2 className="text-5xl md:text-6xl font-semibold mb-4">
-              <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                Step-by-Step
-              </span>
-              , 20 Min/Day
+            <h2 className="text-4xl md:text-6xl font-medium mb-4 text-white">
+              Step-by-Step, 20 Min/Day
             </h2>
             <p className="text-xl text-gray-400">
-              Earn <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent font-medium">$100/month</span> in Just 20 Minutes a Day
+              Automate your monthly income by working 20 minutes per day
             </p>
           </div>
 
@@ -137,13 +113,13 @@ const AffiliatePage = () => {
             {/* Step 1: Onboarding */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">1</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Onboarding
                   </span>
                 </h3>
@@ -156,13 +132,13 @@ const AffiliatePage = () => {
             {/* Step 2: Account Creation */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">2</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Account Creation
                   </span>
                 </h3>
@@ -175,13 +151,13 @@ const AffiliatePage = () => {
             {/* Step 3: Account Setup */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">3</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Account Setup
                   </span>
                 </h3>
@@ -194,13 +170,13 @@ const AffiliatePage = () => {
             {/* Step 4: Warm Up */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">4</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Warm Up
                   </span>
                 </h3>
@@ -213,13 +189,13 @@ const AffiliatePage = () => {
             {/* Step 5: Edit Content */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">5</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Edit Content
                   </span>
                 </h3>
@@ -232,13 +208,13 @@ const AffiliatePage = () => {
             {/* Step 6: DM Automation */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">6</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     DM Automation
                   </span>
                 </h3>
@@ -251,13 +227,13 @@ const AffiliatePage = () => {
             {/* Step 7: Post Daily */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">7</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Post Daily
                   </span>
                 </h3>
@@ -270,13 +246,13 @@ const AffiliatePage = () => {
             {/* Step 8: Get Paid */}
             <div className="flex items-start space-x-6">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center">
                   <span className="text-white text-lg font-bold">8</span>
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-3">
-                  <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Get Paid
                   </span>
                 </h3>
@@ -288,53 +264,59 @@ const AffiliatePage = () => {
           </div>
 
           {/* CTA Section */}
-          <div className="max-w-4xl mx-auto mt-16 text-center">
-            <a href="https://whop.com/eromify/eromify-affiliate/" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-12 py-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-500 transition-all text-xl">
+          <div className="max-w-4xl mx-auto mt-16 text-center px-4 sm:px-0">
+            <a href="https://whop.com/eromify/eromify-affiliate/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-transparent border-[1.5px] border-purple-500/60 hover:border-purple-400 text-white px-5 sm:px-6 md:px-8 py-2.5 md:py-4 rounded-full text-base md:text-lg font-medium transition-all duration-200 hover:bg-purple-500/10 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] w-fit mx-auto">
               Join Now
             </a>
           </div>
 
           {/* Tips for Success */}
           <div className="max-w-5xl mx-auto mt-20">
-            <h3 className="text-4xl md:text-5xl font-bold mb-6 text-center">
-              <span className="bg-gradient-to-r from-pink-400 to-purple-300 bg-clip-text text-transparent">
-                Tips for Success
-              </span>
+            <h3 className="text-4xl md:text-5xl font-bold mb-6 text-center text-white">
+              Tips for Success
             </h3>
             <p className="text-xl text-gray-400 mb-12 text-center">
               Maximize views, engagement, and earnings with these proven strategies.
             </p>
-            <div className="bg-black border border-gray-800 rounded-2xl p-10">
+            <div className="bg-transparent border border-purple-500/60 rounded-2xl p-10">
               <ul className="space-y-6 text-gray-300 text-lg">
                 <li className="flex items-start">
-                  <span className="text-pink-400 mr-4 text-xl">•</span>
+                  <span className="text-gray-400 mr-4 text-xl">•</span>
                   <span>Stick to the posting schedule.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-pink-400 mr-4 text-xl">•</span>
+                  <span className="text-gray-400 mr-4 text-xl">•</span>
                   <span>Engage with other accounts in the same niche.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-pink-400 mr-4 text-xl">•</span>
+                  <span className="text-gray-400 mr-4 text-xl">•</span>
                   <span>Consistency + style = higher virality potential.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-pink-400 mr-4 text-xl">•</span>
+                  <span className="text-gray-400 mr-4 text-xl">•</span>
                   <span>Don't post the same video repeatedly - mix it up to keep your audience engaged.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-pink-400 mr-4 text-xl">•</span>
+                  <span className="text-gray-400 mr-4 text-xl">•</span>
                   <span>Ask ChatGPT for engaging text hooks to make your captions and comments more attention-grabbing.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-pink-400 mr-4 text-xl">•</span>
-                  <span>Check the following accounts for inspiration: @aimoneynick, @aimoneyethann</span>
+                  <span className="text-gray-400 mr-4 text-xl">•</span>
+                  <span>Check the following accounts for inspiration: @aimoneynick, @aimoneyethann, @aimoneykevin, @aimoneypilot</span>
                 </li>
               </ul>
             </div>
           </div>
+
+          {/* CTA Section */}
+          <div className="max-w-4xl mx-auto mt-16 text-center px-4 sm:px-0">
+            <a href="https://whop.com/eromify/eromify-affiliate/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-transparent border-[1.5px] border-purple-500/60 hover:border-purple-400 text-white px-5 sm:px-6 md:px-8 py-2.5 md:py-4 rounded-full text-base md:text-lg font-medium transition-all duration-200 hover:bg-purple-500/10 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] w-fit mx-auto">
+              Join Now
+            </a>
+          </div>
         </div>
       </section>
+      </div>
     </div>
   )
 }
