@@ -93,6 +93,9 @@ app.use(cors({
 app.use(morgan('combined'));
 
 // Stripe webhook must be mounted BEFORE body parsers to preserve the raw body
+// Apply express.raw() middleware specifically for the webhook route to ensure raw body is available
+app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
+
 const stripeWebhook = require('./stripeWebhook');
 app.use('/api/payments/webhook', stripeWebhook);
 

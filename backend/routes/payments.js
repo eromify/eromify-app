@@ -60,7 +60,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
     console.log('💳 Creating checkout session for user:', req.user.id);
     console.log('💳 Request body:', req.body);
     
-    const { plan, billing, promoCode } = req.body;
+    const { plan, billing, promoCode, onboardingSelection } = req.body;
     const userId = req.user.id;
 
     // Validate plan and billing
@@ -71,6 +71,21 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
 
     const planConfig = PRICING_PLANS[plan][billing];
     const isYearly = billing === 'yearly';
+
+    // Prepare metadata - Stripe metadata values must be strings
+    const metadata = {
+      userId: userId,
+      plan: plan,
+      billing: billing,
+      credits: plan === 'growth' ? 'unlimited' : planConfig.credits.toString(),
+      influencerTrainings: plan === 'growth' ? 'unlimited' : planConfig.influencerTrainings.toString()
+    };
+
+    // Add onboardingSelection to metadata if provided
+    if (onboardingSelection && onboardingSelection.onboardingSelection) {
+      metadata.onboardingSelection = JSON.stringify(onboardingSelection.onboardingSelection);
+      console.log('📝 Including onboardingSelection in checkout metadata');
+    }
 
     // Prepare checkout session options
     const sessionOptions = {
@@ -105,13 +120,7 @@ router.post('/create-checkout-session', authenticateToken, async (req, res) => {
         : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/onboarding?payment=cancelled`,
       customer_email: req.user.email,
       ...(promoCode && { discounts: [{ promotion_code: promoCode }] }),
-      metadata: {
-        userId: userId,
-        plan: plan,
-        billing: billing,
-        credits: plan === 'growth' ? 'unlimited' : planConfig.credits,
-        influencerTrainings: plan === 'growth' ? 'unlimited' : planConfig.influencerTrainings
-      }
+      metadata: metadata
     };
 
 
@@ -265,19 +274,37 @@ router.get('/subscription', authenticateToken, async (req, res) => {
       hasSubscriptionId: !!user?.subscription_id
     });
 
-    // If users table indicates active, return immediately
-    if (user && user.subscription_status === 'active') {
+    // Check if user has active subscription
+    // Accept both 'active' status OR if they have a subscription_plan set (backwards compatibility)
+    const hasActiveStatus = user?.subscription_status === 'active';
+    const hasPlan = !!user?.subscription_plan;
+    const hasStripeIds = !!(user?.stripe_customer_id && user?.subscription_id);
+
+    console.log('🔍 Subscription check details:', {
+      hasActiveStatus,
+      hasPlan,
+      hasStripeIds,
+      subscription_status: user?.subscription_status,
+      subscription_plan: user?.subscription_plan
+    });
+
+    // If users table indicates active subscription, return immediately
+    if (hasActiveStatus || (hasPlan && hasStripeIds)) {
       console.log('✅ User has active subscription in users table');
       return res.status(200).json({
         plan: user.subscription_plan,
         billing: user.subscription_billing,
-        status: user.subscription_status,
+        status: hasActiveStatus ? 'active' : (hasPlan ? 'active' : user.subscription_status),
         credits: user.credits,
         influencerTrainings: user.influencer_trainings,
         hasActiveSubscription: true
       });
     } else {
-      console.log('⚠️ User subscription_status is NOT active:', user?.subscription_status);
+      console.log('⚠️ User subscription_status is NOT active:', {
+        subscription_status: user?.subscription_status,
+        subscription_plan: user?.subscription_plan,
+        hasStripeIds
+      });
     }
 
     // All subscription data is in users table (already fetched above)

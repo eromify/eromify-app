@@ -48,8 +48,34 @@ const PRICING_PLANS = {
   }
 };
 
+// Health check endpoint for webhook
+router.get('/', (req, res) => {
+  const hasSecret = !!(process.env.STRIPE_WEBHOOK_SECRET && process.env.STRIPE_WEBHOOK_SECRET !== 'whsec_your_webhook_secret');
+  const secretPrefix = process.env.STRIPE_WEBHOOK_SECRET ? process.env.STRIPE_WEBHOOK_SECRET.substring(0, 10) + '...' : 'NOT SET';
+  res.json({ 
+    status: 'ok', 
+    message: 'Stripe webhook endpoint is active',
+    configured: !!(stripe && hasSecret),
+    hasStripe: !!stripe,
+    hasWebhookSecret: hasSecret,
+    secretPrefix: secretPrefix
+  });
+});
+
 // This route must be mounted before express.json so we can verify the signature
-router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
+// Note: express.raw() is applied at app level in server.js for this route
+router.post('/', async (req, res) => {
+  // Verify we have the raw body as Buffer
+  if (!Buffer.isBuffer(req.body)) {
+    console.error('❌ CRITICAL: req.body is not a Buffer! Body type:', typeof req.body);
+    console.error('❌ This means middleware parsed the body before webhook handler');
+    return res.status(400).json({ 
+      error: 'Body must be raw buffer for signature verification',
+      bodyType: typeof req.body,
+      isBuffer: Buffer.isBuffer(req.body)
+    });
+  }
+
   const sig = req.headers['stripe-signature'];
   let event;
   
@@ -62,12 +88,7 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
   // Check if webhook secret is configured
   if (!process.env.STRIPE_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET === 'whsec_your_webhook_secret') {
     console.error('❌ Stripe webhook secret not configured properly');
-    console.error('📝 Please set STRIPE_WEBHOOK_SECRET in your .env file');
-    console.error('🔗 Get it from: Stripe Dashboard → Webhooks → Your endpoint → Signing secret');
-    return res.status(503).json({ 
-      error: 'Stripe webhook secret not configured',
-      message: 'Please configure STRIPE_WEBHOOK_SECRET in environment variables'
-    });
+    return res.status(503).json({ error: 'Stripe webhook secret not configured' });
   }
   
   try {
@@ -75,10 +96,6 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
     console.log('✅ Webhook signature verified for event:', event.type);
   } catch (err) {
     console.error('❌ Webhook signature verification failed:', err.message);
-    console.error('📝 This usually means:');
-    console.error('   1. Wrong webhook secret in .env');
-    console.error('   2. Webhook endpoint URL mismatch in Stripe');
-    console.error('   3. Request not from Stripe');
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -138,6 +155,12 @@ const AI_GIRLFRIEND_PRICING_PLANS = {
 // Handle successful payment
 async function handleSuccessfulPayment(session) {
   try {
+    console.log('💳 ===== WEBHOOK PAYMENT PROCESSING START =====');
+    console.log('💳 Session ID:', session.id);
+    console.log('💳 Session metadata:', JSON.stringify(session.metadata, null, 2));
+    console.log('💳 Session customer:', session.customer);
+    console.log('💳 Session subscription:', session.subscription);
+    
     const { userId, plan, billing, credits, influencerTrainings, onboardingSelection, subscriptionType, tokens } = session.metadata || {};
 
     console.log('💳 Processing successful payment:', { userId, plan, billing, credits, influencerTrainings, subscriptionType, hasOnboardingSelection: !!onboardingSelection });
@@ -192,34 +215,68 @@ async function handleSuccessfulPayment(session) {
 
     // Original influencer subscription logic
     if (!plan || !billing) {
+      console.error(`❌ Missing plan or billing in session metadata. Plan: ${plan}, Billing: ${billing}`);
       throw new Error(`Missing plan or billing in session metadata. Plan: ${plan}, Billing: ${billing}`);
     }
 
     // Validate plan configuration exists
     if (!PRICING_PLANS[plan] || !PRICING_PLANS[plan][billing]) {
+      console.error(`❌ Invalid plan configuration: ${plan}/${billing}`);
       throw new Error(`Invalid plan configuration: ${plan}/${billing}`);
     }
 
+    console.log(`✅ Valid plan configuration found: ${plan}/${billing}`);
+
+    // Parse credits and influencerTrainings from metadata
+    // Metadata values come as strings from Stripe
+    let finalCredits = null;
+    let finalInfluencerTrainings = null;
+    
+    if (credits === 'unlimited' || credits === null || credits === undefined) {
+      finalCredits = null;
+    } else {
+      finalCredits = typeof credits === 'string' ? parseInt(credits) : credits;
+      if (isNaN(finalCredits)) {
+        finalCredits = PRICING_PLANS[plan][billing].credits;
+      }
+    }
+    
+    if (influencerTrainings === 'unlimited' || influencerTrainings === null || influencerTrainings === undefined) {
+      finalInfluencerTrainings = null;
+    } else {
+      finalInfluencerTrainings = typeof influencerTrainings === 'string' ? parseInt(influencerTrainings) : influencerTrainings;
+      if (isNaN(finalInfluencerTrainings)) {
+        finalInfluencerTrainings = PRICING_PLANS[plan][billing].influencerTrainings;
+      }
+    }
+
     // Update user subscription in database
-    const { error } = await supabase
+    const updateData = {
+      subscription_plan: plan,
+      subscription_billing: billing,
+      credits: finalCredits,
+      influencer_trainings: finalInfluencerTrainings,
+      subscription_status: 'active',
+      stripe_customer_id: session.customer,
+      subscription_id: session.subscription
+    };
+
+    console.log(`💾 Updating user ${userId} with subscription data:`, updateData);
+
+    const { data: updatedUser, error } = await supabase
       .from('users')
-      .update({
-        subscription_plan: plan,
-        subscription_billing: billing,
-        credits: credits === 'unlimited' ? null : (credits ? parseInt(credits) : PRICING_PLANS[plan][billing].credits),
-        influencer_trainings: influencerTrainings === 'unlimited' ? null : (influencerTrainings ? parseInt(influencerTrainings) : PRICING_PLANS[plan][billing].influencerTrainings),
-        subscription_status: 'active',
-        stripe_customer_id: session.customer,
-        subscription_id: session.subscription
-      })
-      .eq('id', userId);
+      .update(updateData)
+      .eq('id', userId)
+      .select();
 
     if (error) {
       console.error('❌ Database update error:', error);
+      console.error('❌ Update data that failed:', updateData);
       throw error;
     }
 
     console.log(`✅ Payment successful for user ${userId}, plan: ${plan}, billing: ${billing}`);
+    console.log(`✅ Updated user record:`, updatedUser ? 'SUCCESS' : 'NO DATA RETURNED');
 
     // Create influencer from onboarding selection if provided
     if (onboardingSelection) {
