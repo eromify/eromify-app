@@ -76,7 +76,7 @@ const AffiliatePage = () => {
       {/* Hero Section */}
       <section className="pt-20 pb-0 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-medium mb-6 text-white">
+          <h1 className="text-4xl md:text-7xl font-medium mb-6 text-white">
             Start Earning Instantly
             <br />
             Join Our Affiliate Program
@@ -91,6 +91,32 @@ const AffiliatePage = () => {
                       Join Now
                     </a>
                   </div>
+        </div>
+      </section>
+
+      {/* Who is the affiliate program for? Section */}
+      <section className="pt-12 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Image Header */}
+          <div className="mb-12 text-center">
+            <h3 className="text-3xl md:text-4xl text-gray-300 font-medium">
+              Join 7,000+ affiliates worldwide and start stacking passive income with the #1 AI influencer platform.
+            </h3>
+          </div>
+
+          {/* Images */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <img 
+              src="/aff3.png" 
+              alt="Affiliate 3" 
+              className="w-full h-auto rounded-3xl border border-purple-500/60"
+            />
+            <img 
+              src="/aff4.png" 
+              alt="Affiliate 4" 
+              className="w-full h-auto rounded-3xl border border-purple-500/60"
+            />
+          </div>
         </div>
       </section>
 
